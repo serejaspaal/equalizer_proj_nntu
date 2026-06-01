@@ -10,3 +10,4 @@ msim/*
 *.log
 *.str
 venv/
+.Xil
