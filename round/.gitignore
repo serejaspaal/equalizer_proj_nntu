@@ -1,0 +1,11 @@
+round_block*/*
+round_block.xpr
+*.wlf
+*.vstf
+transcript
+msim/*
+!msim/wave.do
+!msim/run.do
+*.jou
+*.str
+venv/
