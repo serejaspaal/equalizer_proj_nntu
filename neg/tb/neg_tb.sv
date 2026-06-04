@@ -2,9 +2,10 @@
 
 
 module neg_tb ();
-    parameter WIDTH = 6;
+    parameter WIDTH = 4;
     logic clk;
-    logic [WIDTH-1:0] a, result;
+    logic [WIDTH-1:0] a;
+    logic [WIDTH:0] result;
 
     neg #(.WIDTH(WIDTH)) dut (.*);
 
@@ -17,6 +18,7 @@ module neg_tb ();
             a = i;
             #2;
         end
+        $finish;
     end
 endmodule
 
