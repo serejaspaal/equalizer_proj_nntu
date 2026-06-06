@@ -10,11 +10,15 @@ module mult #(
     input  logic clk,
     input  logic signed [A_WIDTH-1:0] a,
     input  logic signed [B_WIDTH-1:0] b,
-    (* use_dsp = USE_DSP_VALUE *)
     output logic signed [A_WIDTH+B_WIDTH-1:0] result
 );
+    (* use_dsp = USE_DSP_VALUE *)
+    logic signed [A_WIDTH+B_WIDTH-1:0] result_next;
+    
+    assign result_next = a * b;
+
     always_ff @(posedge clk) begin
-        result <= a * b;
+        result <= result_next;
     end
 endmodule
 

@@ -9,15 +9,17 @@ module neg_tb ();
 
     neg #(.WIDTH(WIDTH)) dut (.*);
 
-    always #1 clk = ~clk;
+    initial clk = 0;
+    always #4 clk = ~clk;
 
     initial begin
         integer i;
-        clk = 1;
         for (i = 0; i < 2**WIDTH; i++) begin
-            a = i;
-            #2;
+            @(posedge clk);
+            a <= i;
+            #1;
         end
+        #15;
         $finish;
     end
 endmodule

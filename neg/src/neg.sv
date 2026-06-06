@@ -9,8 +9,12 @@ module neg #(
     output logic signed [WIDTH:0] result
 );
     logic signed [WIDTH:0] result_next;
+    logic signed [WIDTH-1:0] neg_a, adder;
 
-    assign result_next = $signed({~a[WIDTH-1], ~a} + 1'sd1);
+    assign neg_a = ~a;
+    assign adder = WIDTH'(1);
+    
+    assign result_next = neg_a + adder;
     
     always_ff @(posedge clk) begin
         result <= result_next;
