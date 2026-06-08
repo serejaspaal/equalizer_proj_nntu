@@ -1,7 +1,6 @@
 `timescale 1ns / 1ps
 
-(* USE_DSP = "yes" *)
-module sum_pipeline #(
+module sum #(
     parameter int  A_WIDTH       = 8,
     parameter int  B_WIDTH       = 8,
     parameter string  USE_DSP_VALUE = "yes"
@@ -23,7 +22,7 @@ module sum_pipeline #(
     // Stage 0
     logic signed [MAX_WIDTH:0] A_ext;
     logic signed [MAX_WIDTH:0] B_ext;
-    logic signed [MAX_WIDTH:0] sum_comb;
+    (* USE_DSP = "yes" *) logic signed [MAX_WIDTH:0] sum_comb;
 
     always_comb begin
         A_ext = {{(MAX_WIDTH - A_WIDTH + 1){A[A_WIDTH-1]}}, A};
@@ -34,7 +33,6 @@ module sum_pipeline #(
         else
             sum_comb = A_ext + B_ext;
     end
-
 
     // Stage 1
     always_ff @(posedge clk) begin
