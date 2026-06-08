@@ -3,9 +3,9 @@ vlib work
 
 vlog -sv ../src/cmodule.sv
 
-vlog -sv ../tb/tb_cmodule.sv
+vlog -sv ../tb/cmodule_tb.sv
 
-vsim -t 1ns -voptargs="+acc" tb_cmodule
+vsim -t 1ns -voptargs="+acc" cmodule_tb
 
 do wave.do
 

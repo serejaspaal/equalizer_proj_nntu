@@ -1,5 +1,5 @@
-sum_pipeline*/*
-sum_pipeline.xpr
+sum*/*
+sum.xpr
 *.wlf
 *.vstf
 transcript
