@@ -24,24 +24,29 @@ module cmult_b_coupl_tb;
     initial begin
         errors = 0;
         @(posedge clk);
-        x0 = 2; y0 = 3; x1 = 4; y1 = 5;       @(posedge clk);
-        x0 = 0; y0 = 1; x1 = 0; y1 = 1;       @(posedge clk);
-        x0 = 1; y0 = 0; x1 = 1; y1 = 0;       @(posedge clk);
-
+        x0 = 2; y0 = 3; x1 = 4; y1 = 5;       
+	@(posedge clk);
+        x0 = 0; y0 = 1; x1 = 0; y1 = 1;       
+	@(posedge clk);
+        x0 = 1; y0 = 0; x1 = 1; y1 = 0;       
+	
+	repeat(2) @(posedge clk);
         if (out_re !== 23 || out_im !== 2) begin
             $error("Test1 FAIL: got (%0d,%0d), expected (23,2)", out_re, out_im);
             errors++;
         end else $display("Test1 PASS: (2+3i)*conj(4+5i) = (%0d,%0d)", out_re, out_im);
 
-        x0 = 7; y0 = 7; x1 = 31; y1 = 31;     @(posedge clk);
+        x0 = 7; y0 = 7; x1 = 31; y1 = 31;     
 
+	@(posedge clk);
         if (out_re !== 1 || out_im !== 0) begin
             $error("Test2 FAIL: got (%0d,%0d), expected (1,0)", out_re, out_im);
             errors++;
         end else $display("Test2 PASS: (0+i)*conj(0+i) = (%0d,%0d)", out_re, out_im);
 
-        x0 = 7; y0 = -8; x1 = 31; y1 = -32;   @(posedge clk);
+        x0 = 7; y0 = -8; x1 = 31; y1 = -32;   
 
+	repeat(2) @(posedge clk);
         if (out_re !== 1 || out_im !== 0) begin
             $error("Test3 FAIL: got (%0d,%0d), expected (1,0)", out_re, out_im);
             errors++;
