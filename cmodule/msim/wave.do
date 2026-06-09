@@ -4,7 +4,7 @@ add wave -noupdate /cmodule_tb/clk
 add wave -noupdate /cmodule_tb/rst
 add wave -noupdate /cmodule_tb/Re
 add wave -noupdate /cmodule_tb/Im
-add wave -noupdate /cmodule_tb/MagSq
+add wave -noupdate -radix unsigned /cmodule_tb/MagSq
 TreeUpdate [SetDefaultTree]
 WaveRestoreCursors {{Cursor 1} {55 ns} 0}
 quietly wave cursor active 1
@@ -22,4 +22,4 @@ configure wave -griddelta 40
 configure wave -timeline 0
 configure wave -timelineunits ns
 update
-WaveRestoreZoom {18 ns} {82 ns}
+WaveRestoreZoom {105 ns} {169 ns}
