@@ -22,18 +22,23 @@ module neg_tb ();
         for (i = 0; i < 2**WIDTH; i++) begin
             @(posedge clk);
             a <= i;
-            expected <= -$signed(a);
+	    expected <= -$signed(a);
             if (result != expected) begin
-                $display("FAIL: a=%sd (%sb) -> result=%sd (%sb), expected=%sd (%sb)", $signed(a), a, $signed(result), result, $signed(expected), expected);
+                $display("FAIL: a=%d (%b) -> result=%d (%b), expected=%d (%b)", $signed(a), a, $signed(result), result, $signed(expected), expected);
                 errors++;
             end
         end
         @(posedge clk);
         expected <= -$signed(a);
-            if (result != expected) begin
-                $display("FAIL: a=%sd (%sb) -> result=%sd (%sb), expected=%sd (%sb)", $signed(a), a, $signed(result), result, $signed(expected), expected);
-                errors++;
-            end
+        if (result != expected) begin
+            $display("FAIL: a=%d (%b) -> result=%d (%b), expected=%d (%b)", $signed(a), a, $signed(result), result, $signed(expected), expected);
+            errors++;
+        end
+        @(posedge clk);
+        if (result != expected) begin
+            $display("FAIL: a=%d (%b) -> result=%d (%b), expected=%d (%b)", $signed(a), a, $signed(result), result, $signed(expected), expected);
+            errors++;
+        end
         if (errors == 0)
             $display("TESTS PASSED");
         else
