@@ -36,8 +36,8 @@ module mult_tb ();
                     errors++;
                 end
                 if (result_u !== expected_u) begin
-                    $display("FAIL_UNSIGNED: a=%d (%b) b=%d (%b) -> result=%d (%b) expected=%d (%b)", $signed(a_u), a_u,
-                              $signed(b_u), b_u, $signed(result_u), result_u, $signed(expected_u), expected_u);
+                    $display("FAIL_UNSIGNED: a=%d (%b) b=%d (%b) -> result=%d (%b) expected=%d (%b)", $unsigned(a_u), a_u,
+                              $unsigned(b_u), b_u, $unsigned(result_u), result_u, $unsigned(expected_u), expected_u);
                     errors++;
                     #1;
                 end
@@ -45,19 +45,21 @@ module mult_tb ();
         end
         @(posedge clk);
         expected_s <= $signed(a_s) * $signed(b_s);
+        expected_u <= a_u * b_u;
+        @(posedge clk);
         if (result_s !== expected_s) begin
             $display("FAIL_SIGNED: a=%d (%b) b=%d (%b) -> result=%d (%b) expected=%d (%b)", $signed(a_s), a_s,
                       $signed(b_s), b_s, $signed(result_s), result_s, $signed(expected_s), expected_s);
             errors++;
         end
         if (result_u !== expected_u) begin
-            $display("FAIL_UNSIGNED: a=%d (%b) b=%d (%b) -> result=%d (%b) expected=%d (%b)", $signed(a_u), a_u,
-                      $signed(b_u), b_u, $signed(result_u), result_u, $signed(expected_u), expected_u);
+            $display("FAIL_UNSIGNED: a=%d (%b) b=%d (%b) -> result=%d (%b) expected=%d (%b)", $unsigned(a_u), a_u,
+                      $unsigned(b_u), b_u, $unsigned(result_u), result_u, $unsigned(expected_u), expected_u);
             errors++;
-            #1;
         end
-        if (errors == 0)
+        if (errors == 0) begin
             $display("TEST PASSED");
+        end
         else
             $display("TEST FAILED: %d errors", errors);
         #7;

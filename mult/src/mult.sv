@@ -24,7 +24,7 @@ module mult #(
         end
         else begin
             (* use_dsp = USE_DSP_VALUE *)
-            logic signed [A_WIDTH+B_WIDTH-1:0] result_next;
+            logic [A_WIDTH+B_WIDTH-1:0] result_next;
             assign result_next = a * b;
             always_ff @(posedge clk) begin
                 result <= result_next;
