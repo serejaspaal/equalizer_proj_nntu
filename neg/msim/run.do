@@ -13,4 +13,4 @@ view wave
 view structure
 view signals
 
-run 130ns
+run 150ns

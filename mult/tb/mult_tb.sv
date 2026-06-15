@@ -1,33 +1,66 @@
 `timescale 1ns / 1ps
 
-
-
 module mult_tb ();
     parameter A_WIDTH = 4;
     parameter B_WIDTH = 4;
     logic clk;
-    logic [A_WIDTH-1:0] a;
-    logic [B_WIDTH-1:0] b;
-    logic [A_WIDTH+B_WIDTH-1:0] result;
+    logic [A_WIDTH-1:0] a_s, a_u;
+    logic [B_WIDTH-1:0] b_s, b_u;
+    logic signed [A_WIDTH+B_WIDTH-1:0] result_s, expected_s;
+    logic [A_WIDTH+B_WIDTH-1:0] result_u, expected_u;
 
-    mult #(.A_WIDTH(A_WIDTH), .B_WIDTH(B_WIDTH)) dut (.*);
+    integer ai, bi, errors;
+
+    mult #(.A_WIDTH(A_WIDTH), .B_WIDTH(B_WIDTH), .SIGNED_OPERANDS("yes")) dut_s (.clk, .a(a_s), .b(b_s), .result(result_s));
+    
+    mult #(.A_WIDTH(A_WIDTH), .B_WIDTH(B_WIDTH), .SIGNED_OPERANDS("no")) dut_u (.clk, .a(a_u), .b(b_u), .result(result_u));
+
 
     initial clk = 0;
     always #2 clk = ~clk;
 
     initial begin
-        integer ai, bi;
+        errors = 0;
         for (ai = 0; ai < 2**A_WIDTH; ai++) begin
             for (bi = 0; bi < 2**B_WIDTH; bi++) begin
                 @(posedge clk);
-                a <= ai;
-                b <= bi;
-                #1;
+                a_s <= ai;
+                b_s <= bi;
+                a_u <= ai;
+                b_u <= bi;
+                expected_s <= $signed(a_s) * $signed(b_s);
+                expected_u <= a_u * b_u;
+                if (result_s !== expected_s) begin
+                    $display("FAIL_SIGNED: a=%d (%b) b=%d (%b) -> result=%d (%b) expected=%d (%b)", $signed(a_s), a_s,
+                              $signed(b_s), b_s, $signed(result_s), result_s, $signed(expected_s), expected_s);
+                    errors++;
+                end
+                if (result_u !== expected_u) begin
+                    $display("FAIL_UNSIGNED: a=%d (%b) b=%d (%b) -> result=%d (%b) expected=%d (%b)", $signed(a_u), a_u,
+                              $signed(b_u), b_u, $signed(result_u), result_u, $signed(expected_u), expected_u);
+                    errors++;
+                    #1;
+                end
             end
         end
+        @(posedge clk);
+        expected_s <= $signed(a_s) * $signed(b_s);
+        if (result_s !== expected_s) begin
+            $display("FAIL_SIGNED: a=%d (%b) b=%d (%b) -> result=%d (%b) expected=%d (%b)", $signed(a_s), a_s,
+                      $signed(b_s), b_s, $signed(result_s), result_s, $signed(expected_s), expected_s);
+            errors++;
+        end
+        if (result_u !== expected_u) begin
+            $display("FAIL_UNSIGNED: a=%d (%b) b=%d (%b) -> result=%d (%b) expected=%d (%b)", $signed(a_u), a_u,
+                      $signed(b_u), b_u, $signed(result_u), result_u, $signed(expected_u), expected_u);
+            errors++;
+            #1;
+        end
+        if (errors == 0)
+            $display("TEST PASSED");
+        else
+            $display("TEST FAILED: %d errors", errors);
         #7;
-        $finish;
     end
-
 endmodule
 
