@@ -1,10 +1,14 @@
 onerror {resume}
 quietly WaveActivateNextPane {} 0
 add wave -noupdate /mult_tb/clk
-add wave -noupdate -radix decimal /mult_tb/a
-add wave -noupdate -radix decimal /mult_tb/b
-add wave -noupdate -radix decimal /mult_tb/result
-add wave -noupdate -radix decimal /mult_tb/expected
+add wave -noupdate -radix decimal /mult_tb/a_s
+add wave -noupdate -radix unsigned /mult_tb/a_u
+add wave -noupdate -radix decimal /mult_tb/b_s
+add wave -noupdate -radix unsigned /mult_tb/b_u
+add wave -noupdate -radix decimal /mult_tb/result_s
+add wave -noupdate -radix decimal /mult_tb/expected_s
+add wave -noupdate -radix unsigned /mult_tb/result_u
+add wave -noupdate -radix unsigned /mult_tb/expected_u
 TreeUpdate [SetDefaultTree]
 WaveRestoreCursors {{Cursor 1} {778 ns} 0}
 quietly wave cursor active 1
