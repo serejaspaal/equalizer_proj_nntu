@@ -1,14 +1,10 @@
 onerror {resume}
 quietly WaveActivateNextPane {} 0
-add wave -noupdate /sum_tb/A_WIDTH
-add wave -noupdate /sum_tb/B_WIDTH
-add wave -noupdate /sum_tb/MAX_W
-add wave -noupdate /sum_tb/clk
-add wave -noupdate /sum_tb/rst
-add wave -noupdate /sum_tb/sub
-add wave -noupdate /sum_tb/A
-add wave -noupdate /sum_tb/B
-add wave -noupdate /sum_tb/S
+add wave -noupdate /sum_tb/dut_1/clk
+add wave -noupdate -radix decimal /sum_tb/dut_1/A
+add wave -noupdate -radix decimal /sum_tb/dut_1/B
+add wave -noupdate /sum_tb/dut_1/sub
+add wave -noupdate -radix decimal /sum_tb/dut_1/S
 TreeUpdate [SetDefaultTree]
 WaveRestoreCursors {{Cursor 1} {75 ns} 0}
 quietly wave cursor active 1
@@ -26,4 +22,4 @@ configure wave -griddelta 40
 configure wave -timeline 0
 configure wave -timelineunits ns
 update
-WaveRestoreZoom {78 ns} {170 ns}
+WaveRestoreZoom {58 ns} {150 ns}
