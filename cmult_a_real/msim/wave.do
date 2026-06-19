@@ -1,6 +1,8 @@
 onerror {resume}
 quietly WaveActivateNextPane {} 0
-add wave -noupdate -radix unsigned /cmult_a_real_tb/a
+add wave -noupdate /cmult_a_real_tb/clk
+add wave -noupdate -radix decimal /cmult_a_real_tb/a_s
+add wave -noupdate -radix unsigned /cmult_a_real_tb/a_u
 add wave -noupdate -radix decimal /cmult_a_real_tb/x1
 add wave -noupdate -radix decimal /cmult_a_real_tb/y1
 add wave -noupdate -radix decimal /cmult_a_real_tb/out_re_s
@@ -24,4 +26,4 @@ configure wave -griddelta 40
 configure wave -timeline 0
 configure wave -timelineunits ns
 update
-WaveRestoreZoom {0 ns} {1 us}
+WaveRestoreZoom {15 ns} {141 ns}
