@@ -1,0 +1,11 @@
+mklink cmodule.sv ..\..\..\cmodule\src\cmodule.sv
+mklink cmult.sv ..\..\..\cmult\src\cmult.sv
+mklink cmult_a_real.sv ..\..\..\cmult_a_real\src\cmult_a_real.sv
+mklink cmult_b_coupl.sv ..\..\..\cmult_b_coupl\src\cmult_b_coupl.sv
+mklink cmult_both_coupl.sv ..\..\..\cmult_both_coupl\src\cmult_both_coupl.sv
+mklink cmult_a_real_b_coupl.sv ..\..\..\cmult_a_real_b_coupl\src\cmult_a_real_b_coupl.sv
+mklink dline.sv ..\..\..\dline\src\dline.sv
+mklink mult.sv ..\..\..\mult\src\mult.sv
+mklink neg.sv ..\..\..\neg\src\neg.sv
+mklink round.sv ..\..\..\round\src\round.sv
+mklink sum.sv ..\..\..\sum\src\sum.sv
