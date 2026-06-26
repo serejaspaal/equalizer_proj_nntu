@@ -2,16 +2,17 @@
 module round #(
     parameter int    IN_WIDTH  = 8,
     parameter int    OUT_WIDTH = 4,
-    parameter string IN_SIGNED = "yes", 
-    localparam signed [OUT_WIDTH:0] MAXP =  (1 <<< (OUT_WIDTH-1)) - 1, 
-    localparam signed [OUT_WIDTH:0] MINN = -(1 <<< (OUT_WIDTH-1)),
-    localparam int DROP = IN_WIDTH - OUT_WIDTH       
+    parameter string IN_SIGNED = "yes"      
 ) (
     input  logic clk,
     input  logic [IN_WIDTH-1:0]  i_data,
     output logic [OUT_WIDTH-1:0] o_data,
     output logic                 o_sat
 );
+    localparam signed [OUT_WIDTH:0] MAXP =  (1 <<< (OUT_WIDTH-1)) - 1;
+    localparam signed [OUT_WIDTH:0] MINN = -(1 <<< (OUT_WIDTH-1));
+    localparam int DROP = IN_WIDTH - OUT_WIDTH;
+     
     generate
         if (IN_SIGNED == "yes") begin
             logic signed [OUT_WIDTH:0] sum; 
