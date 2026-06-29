@@ -19,10 +19,10 @@ module cmult_a_real_b_coupl #(
     generate
         if (A_SIGNED == "yes") begin : gen_s
             assign p1 = $signed(a)*x1;
-            assign p2 = -$signed(a)*y1;
+            assign p2 = $signed(a)*(-y1);
         end else begin : gen_u
             assign p1 = $signed({1'b0, a})*x1;
-            assign p2 = -$signed({1'b0, a})*y1;
+            assign p2 = $signed({1'b0, a})*(-y1);
         end
     endgenerate
     always_ff @(posedge clk) begin
