@@ -195,10 +195,8 @@ module m_matrix #(
         .out_re ( cmult2_m22_re ),
         .out_im ( cmult2_m22_im )
     );
-    
-    // ============ –≈√»—“–€ Ã≈∆ƒ” 1-Ï » 2-Ï  ¿— ¿ƒ¿Ã» ============
-//    always_ff @(posedge clk or posedge rst) begin
-    always @(cmult2_m11_re or negedge rst) begin
+    //    always_ff @(posedge clk or posedge rst) begin
+    always @(cmult2_m11_re or posedge rst) begin
         if (rst) begin
             cmult1_reg_m11_re <= '0;      
             cmult1_reg_m11_im <= '0;      
@@ -242,7 +240,7 @@ module m_matrix #(
         end
     end
     
-    // ============ 2-È  ¿— ¿ƒ: —ÛÏÏ‡ÚÓ˚ ============
+//**************************************************************** 
     
     sum #(
         .A_WIDTH ( A_WIDTH+H_WIDTH ),
@@ -376,8 +374,7 @@ module m_matrix #(
         .underflow (  )
     );
     
-   // ============ –≈√»—“–€ Ã≈∆ƒ” 2-Ï » 3-Ï  ¿— ¿ƒ¿Ã» ============
-    always @(sum_m11_re or negedge rst) begin
+    always @(sum_m11_re or posedge rst) begin
         if (rst) begin
             sum_reg_m11_re <= '0;
             sum_reg_m11_im <= '0;
@@ -399,7 +396,7 @@ module m_matrix #(
         end
     end
     
-    // ============ 3-È  ¿— ¿ƒ: ŒÍÛ„ÎÂÌËÂ ============
+    //****************************************************************
     
     round #(
         .IN_WIDTH ( M_WIDTH ),
@@ -496,7 +493,7 @@ module m_matrix #(
         .o_sat ( o_sat_m22_im )
     );
     
-    always @(round_m11_im or sum_reg_m11_re or negedge rst) begin
+    always @(round_m11_im or sum_reg_m11_re or posedge rst) begin
         if (rst) begin
             m11_re <= '0;
             m11_im <= '0;

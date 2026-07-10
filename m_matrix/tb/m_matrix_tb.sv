@@ -177,7 +177,7 @@ module m_matrix_tb;
             
             $display("Running Test %0d...", test_idx);
             
-            repeat (40) @(posedge clk);
+            repeat (15) @(posedge clk);
             
             check_outputs(tests[test_idx]);
         end
