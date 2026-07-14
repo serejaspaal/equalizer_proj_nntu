@@ -3,6 +3,7 @@
 module mult_tb ();
     parameter A_WIDTH = 4;
     parameter B_WIDTH = 4;
+    parameter string USE_DSP_VALUE = 1'b1;
     logic clk;
     logic [A_WIDTH-1:0] a_s, a_u;
     logic [B_WIDTH-1:0] b_s, b_u;
@@ -11,9 +12,9 @@ module mult_tb ();
 
     integer ai, bi, errors;
 
-    mult #(.A_WIDTH(A_WIDTH), .B_WIDTH(B_WIDTH), .SIGNED_OPERANDS("yes")) dut_s (.clk, .a(a_s), .b(b_s), .result(result_s));
+    mult #(.A_WIDTH(A_WIDTH), .B_WIDTH(B_WIDTH), .USE_DSP_VALUE(USE_DSP_VALUE), .SIGNED_OPERANDS(1'b1)) dut_s (.clk, .a(a_s), .b(b_s), .result(result_s));
     
-    mult #(.A_WIDTH(A_WIDTH), .B_WIDTH(B_WIDTH), .SIGNED_OPERANDS("no")) dut_u (.clk, .a(a_u), .b(b_u), .result(result_u));
+    mult #(.A_WIDTH(A_WIDTH), .B_WIDTH(B_WIDTH), .USE_DSP_VALUE(USE_DSP_VALUE), .SIGNED_OPERANDS(1'b0)) dut_u (.clk, .a(a_u), .b(b_u), .result(result_u));
 
 
     initial clk = 0;
