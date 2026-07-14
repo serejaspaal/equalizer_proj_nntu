@@ -25,10 +25,10 @@ module m_matrix_tb;
 //    logic [ROUNDED_WIDTH-1:0] m12_re, m12_im;
 //    logic [ROUNDED_WIDTH-1:0] m21_re, m21_im;
 //    logic [ROUNDED_WIDTH-1:0] m22_re, m22_im;
-    logic [A_WIDTH+H_WIDTH+1:0] m11_re, m11_im;
-    logic [A_WIDTH+H_WIDTH+1:0] m12_re, m12_im;
-    logic [A_WIDTH+H_WIDTH+1:0] m21_re, m21_im;
-    logic [A_WIDTH+H_WIDTH+1:0] m22_re, m22_im;
+    logic signed [A_WIDTH+H_WIDTH+1:0] m11_re, m11_im;
+    logic signed [A_WIDTH+H_WIDTH+1:0] m12_re, m12_im;
+    logic signed [A_WIDTH+H_WIDTH+1:0] m21_re, m21_im;
+    logic signed [A_WIDTH+H_WIDTH+1:0] m22_re, m22_im;
 
     logic o_sat_m11_re, o_sat_m11_im;
     logic o_sat_m12_re, o_sat_m12_im;
@@ -74,11 +74,10 @@ module m_matrix_tb;
         tests[0].h22_re  = 16'b1000_0000_0000_0000; tests[0].h22_im  = 16'b1000_0000_0000_0000;
         tests[0].a11     = 16'b1111_1111_1111_1111; tests[0].a22     = 16'b1111_1111_1111_1111;
         tests[0].a12_re  = 16'b1000_0000_0000_0000; tests[0].a12_im  = 16'b1000_0000_0000_0000;
-
-        tests[0].exp_m11_re = -4294934528; tests[0].exp_m11_im = 2147450880;
-        tests[0].exp_m12_re = -4294934528; tests[0].exp_m12_im = 2147450880;
-        tests[0].exp_m21_re = -2147450880; tests[0].exp_m21_im = 4294934528;
-        tests[0].exp_m22_re = -2147450880; tests[0].exp_m22_im = 4294934528;
+        tests[0].exp_m11_re = -34'd4294934528; tests[0].exp_m11_im = 34'd2147450880;
+        tests[0].exp_m12_re = -34'd4294934528; tests[0].exp_m12_im = 34'd2147450880;
+        tests[0].exp_m21_re = -34'd2147450880; tests[0].exp_m21_im = 34'd4294934528;
+        tests[0].exp_m22_re = -34'd2147450880; tests[0].exp_m22_im = 34'd4294934528;
 
 
         tests[1].h11_re  = 16'b0111_1111_1111_1111; tests[1].h11_im  = 16'b0111_1111_1111_1111;
