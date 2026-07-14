@@ -9,7 +9,13 @@ vlog -sv ../../lib/cmult_both_coupl/src/cmult_both_coupl.sv
 
 vlog -sv ../../lib/sum/src/sum.sv
 
+vlog -sv ../../lib/dline/src/dline.sv
+
 vlog -sv ../../lib/round/src/round.sv
+
+vlog -sv ../src/bot_block_m_matrix.sv
+
+vlog -sv ../src/top_block_m_matrix.sv
 
 vlog -sv ../src/m_matrix.sv
 
@@ -23,4 +29,4 @@ view wave
 view structure
 view signals
 
-run 1500ns
+run  700ns

@@ -22,14 +22,6 @@ add wave -noupdate -color Blue -itemcolor Blue -radix decimal /m_matrix_tb/m21_r
 add wave -noupdate -color Blue -itemcolor Blue -radix decimal /m_matrix_tb/m21_im
 add wave -noupdate -color Blue -itemcolor Blue -radix decimal /m_matrix_tb/m22_re
 add wave -noupdate -color Blue -itemcolor Blue -radix decimal /m_matrix_tb/m22_im
-add wave -noupdate -radix decimal /m_matrix_tb/sum_reg_m11_re
-add wave -noupdate -radix decimal /m_matrix_tb/sum_reg_m11_im
-add wave -noupdate -radix decimal /m_matrix_tb/sum_reg_m12_re
-add wave -noupdate -radix decimal /m_matrix_tb/sum_reg_m12_im
-add wave -noupdate -radix decimal /m_matrix_tb/sum_reg_m21_re
-add wave -noupdate -radix decimal /m_matrix_tb/sum_reg_m21_im
-add wave -noupdate -radix decimal /m_matrix_tb/sum_reg_m22_re
-add wave -noupdate -radix decimal /m_matrix_tb/sum_reg_m22_im
 TreeUpdate [SetDefaultTree]
 WaveRestoreCursors {{Cursor 1} {210 ns} 0}
 quietly wave cursor active 1
