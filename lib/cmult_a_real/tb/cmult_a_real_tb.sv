@@ -14,7 +14,7 @@ module cmult_a_real_tb;
 
     cmult_a_real #(
         .A_WIDTH(A_WIDTH), .B_WIDTH(B_WIDTH),
-        .A_SIGNED("yes"), .USE_DSP_VALUE("yes")
+        .A_SIGNED(1), .USE_DSP_VALUE(1)
     ) dut_signed (
         .clk(clk), .a(a_s), .x1(x1), .y1(y1),
         .out_re(out_re_s), .out_im(out_im_s)
@@ -22,7 +22,7 @@ module cmult_a_real_tb;
 
     cmult_a_real #(
         .A_WIDTH(A_WIDTH), .B_WIDTH(B_WIDTH),
-        .A_SIGNED("no"), .USE_DSP_VALUE("yes")
+        .A_SIGNED(0), .USE_DSP_VALUE(1)
     ) dut_unsigned (
         .clk(clk), .a(a_u), .x1(x1), .y1(y1),
         .out_re(out_re_u), .out_im(out_im_u)

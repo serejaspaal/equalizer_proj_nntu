@@ -1,8 +1,8 @@
 module cmult_a_real #(
     parameter int A_WIDTH = 8,
     parameter int B_WIDTH = 8,
-    parameter string A_SIGNED = "yes",
-    parameter string USE_DSP_VALUE = "yes"
+    parameter int A_SIGNED = 1,
+    parameter int USE_DSP_VALUE = 0
 )(
     input logic clk,
     input logic [A_WIDTH-1:0] a,
@@ -12,12 +12,12 @@ module cmult_a_real #(
     output logic signed [A_WIDTH+B_WIDTH-1:0] out_im
     );
     
-    (* use_dsp = USE_DSP_VALUE *)
+    (* use_dsp = USE_DSP_VALUE ? "yes" : "no"*)
     logic signed [A_WIDTH+B_WIDTH-1:0] p1;
-    (* use_dsp = USE_DSP_VALUE *)
+    (* use_dsp = USE_DSP_VALUE ? "yes" : "no"*)
     logic signed [A_WIDTH+B_WIDTH-1:0] p2;
     generate
-        if (A_SIGNED == "yes") begin : gen_s
+        if (A_SIGNED) begin : gen_s
             assign p1 = $signed(a)*x1;
             assign p2 = $signed(a)*y1;
         end else begin : gen_u

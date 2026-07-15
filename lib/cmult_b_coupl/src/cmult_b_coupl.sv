@@ -3,7 +3,7 @@
 module cmult_b_coupl #(
     parameter int A_WIDTH = 4,
     parameter int B_WIDTH = 6,
-    parameter string USE_DSP_VALUE = "yes"
+    parameter int USE_DSP_VALUE = 0
 )(
     input logic clk,
     input logic signed [A_WIDTH-1:0] x0,
@@ -13,16 +13,16 @@ module cmult_b_coupl #(
     output logic signed [A_WIDTH+B_WIDTH:0] out_re,
     output logic signed [A_WIDTH+B_WIDTH:0] out_im
     );
-    (* use_dsp = USE_DSP_VALUE *)
+    (* use_dsp = USE_DSP_VALUE ? "yes" : "no"*)
     logic signed [A_WIDTH:0] sum_a;
-    (* use_dsp = USE_DSP_VALUE *)
+    (* use_dsp = USE_DSP_VALUE ? "yes" : "no"*)
     logic signed [B_WIDTH:0] dif_b;
         
-    (* use_dsp = USE_DSP_VALUE *)
+    (* use_dsp = USE_DSP_VALUE ? "yes" : "no"*)
     logic signed [A_WIDTH+B_WIDTH-1:0] p1;
-    (* use_dsp = USE_DSP_VALUE *)
+    (* use_dsp = USE_DSP_VALUE ? "yes" : "no"*)
     logic signed [A_WIDTH+B_WIDTH-1:0] p2;
-    (* use_dsp = USE_DSP_VALUE *)
+    (* use_dsp = USE_DSP_VALUE ? "yes" : "no"*)
     logic signed [A_WIDTH+B_WIDTH+1:0] p3;
     
     logic signed [A_WIDTH+B_WIDTH-1:0] p1_reg;
