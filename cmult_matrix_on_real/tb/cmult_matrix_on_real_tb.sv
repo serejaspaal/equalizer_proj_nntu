@@ -3,11 +3,11 @@ module cmult_matrix_on_real_tb;
     parameter int DET_WIDTH = 16;
     parameter int M_WIDTH = 16;
     localparam int CMULT_WIDTH = DET_WIDTH+M_WIDTH;
-    parameter int ROUND_WIDTH = 8;
+    parameter int W_WIDTH = 16;
     
-    localparam int DROP = DET_WIDTH + M_WIDTH - ROUND_WIDTH;
-    localparam signed [ROUND_WIDTH:0] MAXP = (1 <<< (ROUND_WIDTH-1)) - 1;
-    localparam signed [ROUND_WIDTH:0] MINN = -(1 <<< (ROUND_WIDTH-1));
+    localparam int DROP = DET_WIDTH + M_WIDTH - W_WIDTH;
+    localparam signed [W_WIDTH:0] MAXP = (1 <<< (W_WIDTH-1)) - 1;
+    localparam signed [W_WIDTH:0] MINN = -(1 <<< (W_WIDTH-1));
     
     logic clk;
     logic [DET_WIDTH-1:0] det_inv;
@@ -17,10 +17,10 @@ module cmult_matrix_on_real_tb;
     logic signed [M_WIDTH-1:0] i_m21_re, i_m21_im;
     logic signed [M_WIDTH-1:0] i_m22_re, i_m22_im;
     
-    logic signed [ROUND_WIDTH-1:0] o_w11_re, o_w11_im;
-    logic signed [ROUND_WIDTH-1:0] o_w12_re, o_w12_im;
-    logic signed [ROUND_WIDTH-1:0] o_w21_re, o_w21_im;
-    logic signed [ROUND_WIDTH-1:0] o_w22_re, o_w22_im;
+    logic signed [W_WIDTH-1:0] o_w11_re, o_w11_im;
+    logic signed [W_WIDTH-1:0] o_w12_re, o_w12_im;
+    logic signed [W_WIDTH-1:0] o_w21_re, o_w21_im;
+    logic signed [W_WIDTH-1:0] o_w22_re, o_w22_im;
     
     logic o_sat_w11_re, o_sat_w11_im;
     logic o_sat_w12_re, o_sat_w12_im;
@@ -30,7 +30,7 @@ module cmult_matrix_on_real_tb;
     cmult_matrix_on_real #(
         .DET_WIDTH(DET_WIDTH),
         .M_WIDTH(M_WIDTH),
-        .ROUND_WIDTH(ROUND_WIDTH)
+        .W_WIDTH(W_WIDTH)
     ) dut (.*);
     
         
@@ -38,9 +38,9 @@ module cmult_matrix_on_real_tb;
     always #5 clk = ~clk;
     
     logic signed [DET_WIDTH+M_WIDTH-1:0] ref_cmult[7:0];
-    logic signed [ROUND_WIDTH:0] ref_sum[7:0];
-    logic signed [ROUND_WIDTH-1:0] ref_data[7:0];
-    logic signed [ROUND_WIDTH-1:0] ref_data_reg[7:0];
+    logic signed [W_WIDTH:0] ref_sum[7:0];
+    logic signed [W_WIDTH-1:0] ref_data[7:0];
+    logic signed [W_WIDTH-1:0] ref_data_reg[7:0];
     logic ref_sat[7:0];
     logic ref_sat_reg[7:0];
     
@@ -64,13 +64,13 @@ module cmult_matrix_on_real_tb;
     always_ff @(posedge clk) begin
         for (int i = 0; i < 8; i++) begin
             if (ref_sum[i] > MAXP) begin
-                ref_data[i] <= MAXP[ROUND_WIDTH-1:0];
+                ref_data[i] <= MAXP[W_WIDTH-1:0];
                 ref_sat[i]  <= 1'b1;
             end else if (ref_sum[i] < MINN) begin
-                ref_data[i] <= MINN[ROUND_WIDTH-1:0];
+                ref_data[i] <= MINN[W_WIDTH-1:0];
                 ref_sat[i]  <= 1'b1;
             end else begin
-                ref_data[i] <= ref_sum[i][ROUND_WIDTH-1:0];
+                ref_data[i] <= ref_sum[i][W_WIDTH-1:0];
                 ref_sat[i]  <= 1'b0;
             end
         end
