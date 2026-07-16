@@ -13,7 +13,7 @@ module cmult_b_coupl_tb;
     cmult_b_coupl #(
         .A_WIDTH(A_WIDTH),
         .B_WIDTH(B_WIDTH),
-        .USE_DSP_VALUE("yes")
+        .USE_DSP_VALUE(1)
     ) dut (.*);
 
     initial clk = 0;
