@@ -2,7 +2,7 @@
 module round #(
     parameter int    IN_WIDTH  = 8,
     parameter int    OUT_WIDTH = 4,
-    parameter string IN_SIGNED = "yes"      
+    parameter int IN_SIGNED = 1      
 ) (
     input  logic clk,
     input  logic [IN_WIDTH-1:0]  i_data,
@@ -14,7 +14,12 @@ module round #(
     localparam int DROP = IN_WIDTH - OUT_WIDTH;
      
     generate
-        if (IN_SIGNED == "yes") begin
+        if (DROP == 0) begin 
+            always_ff @(posedge clk) begin
+                o_data <= i_data[OUT_WIDTH-1:0];
+                o_sat  <= 1'b0;
+            end
+        end else if (IN_SIGNED) begin
             logic signed [OUT_WIDTH:0] sum; 
                 
             always_comb begin
