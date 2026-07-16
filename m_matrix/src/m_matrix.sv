@@ -95,7 +95,6 @@ module m_matrix #(
                 .o_sat_m_im (sat_bot_im[i])
             );
         end
-
     endgenerate
 
     assign m11_re = m_top_re[0];

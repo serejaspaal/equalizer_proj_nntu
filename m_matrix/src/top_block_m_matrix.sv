@@ -27,11 +27,6 @@ module top_block_m_matrix #(
 
     logic sub = 1;
 
-    logic [A_WIDTH+H_WIDTH-1:0] cmult1_reg_m_re, cmult1_reg_m_im;
-    logic [A_WIDTH+H_WIDTH:0] cmult2_reg_m_re, cmult2_reg_m_im;
-
-    logic [M_WIDTH-1:0] sum_reg_m_re, sum_reg_m_im;
-
     logic [ROUNDED_WIDTH-1:0] round_m_re, round_m_im;
 
 
@@ -40,7 +35,6 @@ module top_block_m_matrix #(
 
     logic [A_WIDTH+H_WIDTH:0] cmult2_m_re, cmult2_m_im;
 
-    logic sub_reg;
 
     logic [M_WIDTH-1:0] sum_m_re, sum_m_im;
 
@@ -90,27 +84,6 @@ module top_block_m_matrix #(
         .out_re ( cmult2_m_re ),
         .out_im ( cmult2_m_im )
     );
-
-    always_ff @(posedge clk or posedge rst) begin
-        if (rst) begin
-            cmult1_reg_m_re <= '0;
-            cmult1_reg_m_im <= '0;
-
-            cmult2_reg_m_re <= '0;
-            cmult2_reg_m_im <= '0;
-
-            sub_reg <= '0;
-        end else begin
-            cmult1_reg_m_re <= dline_m_re;
-            cmult1_reg_m_im <= dline_m_im;
-
-            cmult2_reg_m_re <= cmult2_m_re;
-            cmult2_reg_m_im <= cmult2_m_im;
-
-            sub_reg <= sub;
-        end
-    end
-
 //****************************************************************
 
     sum #(
@@ -122,9 +95,9 @@ module top_block_m_matrix #(
         .clk ( clk ),
         .rst ( rst ),
         .valid_in ( 1'b1 ),
-        .A ( cmult1_reg_m_re ),
-        .B ( cmult2_reg_m_re ),
-        .sub ( sub_reg ),
+        .A ( dline_m_re ),
+        .B ( cmult2_m_re ),
+        .sub ( sub ),
         .valid_out (  ),
         .S ( sum_m_re ),
         .underflow (  )
@@ -138,23 +111,13 @@ module top_block_m_matrix #(
         .clk ( clk ),
         .rst ( rst ),
         .valid_in ( 1'b1 ),
-        .A ( cmult1_reg_m_im ),
-        .B ( cmult2_reg_m_im ),
-        .sub ( sub_reg ),
+        .A ( dline_m_im ),
+        .B ( cmult2_m_im ),
+        .sub ( sub ),
         .valid_out (  ),
         .S ( sum_m_im ),
         .underflow (  )
     );
-
-    always_ff @(posedge clk or posedge rst) begin
-        if (rst) begin
-            sum_reg_m_re <= '0;
-            sum_reg_m_im <= '0;
-        end else begin
-            sum_reg_m_re <= sum_m_re;
-            sum_reg_m_im <= sum_m_im;
-        end
-    end
 
     //****************************************************************
 
@@ -164,7 +127,7 @@ module top_block_m_matrix #(
 //       .IN_SIGNED ( SIGNED_RES )
 //   ) inst_round_m_re (
 //       .clk ( clk ),
-//       .i_data ( sum_reg_m_re ),
+//       .i_data ( sum_m_re ),
 //       .o_data ( round_m_re ),
 //       .o_sat ( o_sat_m_re )
 //   );
@@ -175,24 +138,26 @@ module top_block_m_matrix #(
 //       .IN_SIGNED ( SIGNED_RES )
 //   ) inst_round_m_im (
 //       .clk ( clk ),
-//       .i_data ( sum_reg_m_im ),
+//       .i_data ( sum_m_im ),
 //       .o_data ( round_m_im ),
 //       .o_sat ( o_sat_m_im )
 //   );
 
 
+    assign m_re = sum_m_re;
+    assign m_im = sum_m_im;
 
-    always_ff @(posedge clk or posedge rst) begin
-        if (rst) begin
-            m_re <= '0;
-            m_im <= '0;
-        end else begin
-//            m_re <= round_m_re;
-//            m_im <= round_m_im;
-            m_re <= sum_reg_m_re;
-            m_im <= sum_reg_m_im;
-
-        end
-    end
+//    always_ff @(posedge clk or posedge rst) begin
+//        if (rst) begin
+//            m_re <= '0;
+//            m_im <= '0;
+//        end else begin
+////            m_re <= round_m_re;
+////            m_im <= round_m_im;
+//            m_re <= sum_m_re;
+//            m_im <= sum_m_im;
+//
+//        end
+//    end
 
 endmodule
