@@ -10,7 +10,7 @@ module cmodule_tb;
     logic unsigned [2*WIDTH-1:0] MagSq;
     cmodule #(
         .WIDTH         (WIDTH),
-        .USE_DSP_VALUE ("yes")
+        .USE_DSP_VALUE (1)
     ) dut (
         .clk,
         .rst,
