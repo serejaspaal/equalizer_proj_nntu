@@ -3,13 +3,10 @@
 module m_matrix_tb;
     parameter int    A_WIDTH       = 16;
     parameter int    H_WIDTH       = 16;
-    parameter int    ROUNDED_WIDTH = 16;
- //   parameter int A_SIGNED         = 0;
- //   parameter int SIGNED_RES       = 1;
- //   parameter int USE_DSP_VALUE    = 1;
-    parameter string A_SIGNED         = "no";
-    parameter string SIGNED_RES       = "yes";
-    parameter string USE_DSP_VALUE    = "yes";
+    parameter int    ROUNDED_WIDTH = 34;
+    parameter int A_SIGNED         = 0;
+    parameter int SIGNED_RES       = 1;
+    parameter int USE_DSP_VALUE    = 1;
 
     logic clk = 0;
     logic rst = 0;
@@ -21,14 +18,10 @@ module m_matrix_tb;
     logic [A_WIDTH-1:0] i_a11, i_a22;
     logic [A_WIDTH-1:0] i_a12_re, i_a12_im;
 
-//    logic [ROUNDED_WIDTH-1:0] m11_re, m11_im;
-//    logic [ROUNDED_WIDTH-1:0] m12_re, m12_im;
-//    logic [ROUNDED_WIDTH-1:0] m21_re, m21_im;
-//    logic [ROUNDED_WIDTH-1:0] m22_re, m22_im;
-    logic signed [A_WIDTH+H_WIDTH+1:0] m11_re, m11_im;
-    logic signed [A_WIDTH+H_WIDTH+1:0] m12_re, m12_im;
-    logic signed [A_WIDTH+H_WIDTH+1:0] m21_re, m21_im;
-    logic signed [A_WIDTH+H_WIDTH+1:0] m22_re, m22_im;
+    logic signed [ROUNDED_WIDTH-1:0] m11_re, m11_im;
+    logic signed [ROUNDED_WIDTH-1:0] m12_re, m12_im;
+    logic signed [ROUNDED_WIDTH-1:0] m21_re, m21_im;
+    logic signed [ROUNDED_WIDTH-1:0] m22_re, m22_im;
 
     logic o_sat_m11_re, o_sat_m11_im;
     logic o_sat_m12_re, o_sat_m12_im;
@@ -52,14 +45,10 @@ module m_matrix_tb;
     typedef struct {
         logic [H_WIDTH-1:0] h11_re, h11_im, h12_re, h12_im, h21_re, h21_im, h22_re, h22_im;
         logic [A_WIDTH-1:0] a11, a22, a12_re, a12_im;
-//        logic [ROUNDED_WIDTH-1:0] exp_m11_re, exp_m11_im;
-//        logic [ROUNDED_WIDTH-1:0] exp_m12_re, exp_m12_im;
-//        logic [ROUNDED_WIDTH-1:0] exp_m21_re, exp_m21_im;
-//        logic [ROUNDED_WIDTH-1:0] exp_m22_re, exp_m22_im;
-        logic signed [A_WIDTH + H_WIDTH + 1:0] exp_m11_re, exp_m11_im;
-        logic signed [A_WIDTH + H_WIDTH + 1:0] exp_m12_re, exp_m12_im;
-        logic signed [A_WIDTH + H_WIDTH + 1:0] exp_m21_re, exp_m21_im;
-        logic signed [A_WIDTH + H_WIDTH + 1:0] exp_m22_re, exp_m22_im;
+        logic signed [ROUNDED_WIDTH-1:0] exp_m11_re, exp_m11_im;
+        logic signed [ROUNDED_WIDTH-1:0] exp_m12_re, exp_m12_im;
+        logic signed [ROUNDED_WIDTH-1:0] exp_m21_re, exp_m21_im;
+        logic signed [ROUNDED_WIDTH-1:0] exp_m22_re, exp_m22_im;
     } test_t;
 
     localparam NUM_TESTS = 4;

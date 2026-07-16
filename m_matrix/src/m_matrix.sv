@@ -1,13 +1,10 @@
 module m_matrix #(
     parameter int    A_WIDTH       = 16,
     parameter int    H_WIDTH       = 16,
-    parameter int    ROUNDED_WIDTH = 16,
- //   parameter int A_SIGNED         = 0,
- //   parameter int SIGNED_RES       = 1,
- //   parameter int USE_DSP_VALUE    = 1,
-    parameter string A_SIGNED         = "no",
-    parameter string SIGNED_RES       = "yes",
-    parameter string USE_DSP_VALUE    = "yes",
+    parameter int    ROUNDED_WIDTH = 34,
+    parameter int A_SIGNED         = 0,
+    parameter int SIGNED_RES       = 1,
+    parameter int USE_DSP_VALUE    = 1,
     localparam int   M_WIDTH       = A_WIDTH + H_WIDTH + 2
 )(
     input  logic clk,
@@ -20,14 +17,10 @@ module m_matrix #(
     input  logic [A_WIDTH-1:0] i_a11, i_a22,
     input  logic [A_WIDTH-1:0] i_a12_re, i_a12_im,
 
-//    output logic [ROUNDED_WIDTH-1:0] m11_re, m11_im,
-//    output logic [ROUNDED_WIDTH-1:0] m12_re, m12_im,
-//    output logic [ROUNDED_WIDTH-1:0] m21_re, m21_im,
-//    output logic [ROUNDED_WIDTH-1:0] m22_re, m22_im,
-    output logic signed [A_WIDTH+H_WIDTH+1:0] m11_re, m11_im,
-    output logic signed [A_WIDTH+H_WIDTH+1:0] m12_re, m12_im,
-    output logic signed [A_WIDTH+H_WIDTH+1:0] m21_re, m21_im,
-    output logic signed [A_WIDTH+H_WIDTH+1:0] m22_re, m22_im,
+    output logic signed [ROUNDED_WIDTH-1:0] m11_re, m11_im,
+    output logic signed [ROUNDED_WIDTH-1:0] m12_re, m12_im,
+    output logic signed [ROUNDED_WIDTH-1:0] m21_re, m21_im,
+    output logic signed [ROUNDED_WIDTH-1:0] m22_re, m22_im,
 
     output logic o_sat_m11_re, o_sat_m11_im,
     output logic o_sat_m12_re, o_sat_m12_im,
