@@ -23,8 +23,8 @@ module sum_tb;
     sum #(
         .A_WIDTH        (A_WIDTH),
         .B_WIDTH        (B_WIDTH),
-        .USE_DSP_VALUE  ("yes"),
-        .SIGNED_OPERANDS("yes")
+        .USE_DSP_VALUE  (1),
+        .SIGNED_OPERANDS(1)
     ) dut_1 (
         .clk, .rst,
         .valid_in (valid_in1), .A (A1), .B (B1), .sub (sub1),
@@ -35,8 +35,8 @@ module sum_tb;
     sum #(
         .A_WIDTH        (A_WIDTH),
         .B_WIDTH        (B_WIDTH),
-        .USE_DSP_VALUE  ("yes"),
-        .SIGNED_OPERANDS("no")
+        .USE_DSP_VALUE  (1),
+        .SIGNED_OPERANDS(0)
     ) dut_2 (
         .clk, .rst,
         .valid_in (valid_in2), .A (A2), .B (B2), .sub (sub2),
