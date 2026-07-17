@@ -3,7 +3,7 @@ module cmult_matrix_on_real#(
     parameter int M_WIDTH = 8,
     localparam int CMULT_WIDTH = DET_WIDTH+M_WIDTH,
     parameter int W_WIDTH = 8,
-    parameter string USE_DSP_VALUE = "yes"
+    parameter int USE_DSP_VALUE = 1
 )(
     input logic clk,
     input logic [DET_WIDTH-1:0] det_inv,
@@ -39,7 +39,7 @@ module cmult_matrix_on_real#(
             cmult_a_real #(
                 .A_WIDTH(DET_WIDTH),
                 .B_WIDTH(M_WIDTH),
-                .A_SIGNED("no"),
+                .A_SIGNED(0),
                 .USE_DSP_VALUE(USE_DSP_VALUE)
             ) inst_cmult_a_real (
                 .clk(clk),
@@ -52,7 +52,7 @@ module cmult_matrix_on_real#(
             round #(
                 .IN_WIDTH(CMULT_WIDTH),
                 .OUT_WIDTH(W_WIDTH),
-                .IN_SIGNED("yes")
+                .IN_SIGNED(1)
             ) inst_round_re (
                 .clk(clk),
                 .i_data(cmult_out[i*2]),
@@ -62,7 +62,7 @@ module cmult_matrix_on_real#(
             round #(
                 .IN_WIDTH(CMULT_WIDTH),
                 .OUT_WIDTH(W_WIDTH),
-                .IN_SIGNED("yes")
+                .IN_SIGNED(1)
             ) inst_round_im (
                 .clk(clk),
                 .i_data(cmult_out[i*2+1]),

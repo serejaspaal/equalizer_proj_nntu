@@ -3,7 +3,7 @@ module cmult_matrix_on_real_tb;
     parameter int DET_WIDTH = 16;
     parameter int M_WIDTH = 16;
     localparam int CMULT_WIDTH = DET_WIDTH+M_WIDTH;
-    parameter int W_WIDTH = 16;
+    parameter int W_WIDTH = CMULT_WIDTH;
     
     localparam int DROP = DET_WIDTH + M_WIDTH - W_WIDTH;
     localparam signed [W_WIDTH:0] MAXP = (1 <<< (W_WIDTH-1)) - 1;
@@ -56,8 +56,11 @@ module cmult_matrix_on_real_tb;
     end
     always_comb begin
         for (int i = 0; i < 8; i++) begin
-            ref_sum[i] = $signed(ref_cmult[i][DET_WIDTH+M_WIDTH-1 : DROP]) +
-                           $signed({1'b0, ref_cmult[i][DROP-1]});
+            if (DROP == 0)
+                ref_sum[i] = $signed(ref_cmult[i][DET_WIDTH+M_WIDTH-1:0]);
+            else
+                ref_sum[i] = $signed(ref_cmult[i][DET_WIDTH+M_WIDTH-1:DROP]) +
+                               $signed({1'b0, ref_cmult[i][DROP-1]});
         end
     end
 
