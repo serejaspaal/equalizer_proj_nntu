@@ -15,10 +15,17 @@ module func_reverse #(
     localparam LUT_DW    = 18;
     localparam MAX_SHIFT = FRAC_WIDTH - 1;
 
-    (* ram_style = "block" *) logic [LUT_DW-1:0] lut_mem [0:(1<<LUT_AW)-1];
-    initial $readmemh("func_reverse_lut.hex", lut_mem);
-
     logic [LUT_AW-1:0] r_addr;
+    logic [LUT_DW-1:0] r_data;
+
+    block_ram #(
+        .AW (LUT_AW),
+        .DW (LUT_DW)
+    ) u_lut (
+        .clk  (i_clk),
+        .addr (r_addr),
+        .data (r_data)
+    );
 
     logic [4:0] s1_k;
     logic       s1_shift_right;
@@ -61,7 +68,7 @@ module func_reverse #(
 
     // Stage 2: LUT read
     always_ff @(posedge i_clk) begin
-        s2_lut         <= lut_mem[r_addr];
+        s2_lut         <= r_data;
         s2_k           <= s1_k;
         s2_shift_right <= s1_shift_right;
         s2_is_zero     <= s1_is_zero;
