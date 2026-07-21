@@ -27,7 +27,7 @@ module bot_block_m_matrix #(
 
     logic signed [A_WIDTH+H_WIDTH:0] cmult2_m_re, cmult2_m_im;
 
-    logic signed [M_WIDTH-1:0] sum_m_re, sum_m_im;
+    logic signed [A_WIDTH+H_WIDTH+1:0] sum_m_re, sum_m_im;
 
 
     cmult_a_real_b_coupl #(
@@ -115,7 +115,7 @@ module bot_block_m_matrix #(
     //****************************************************************
 
    round #(
-       .IN_WIDTH ( M_WIDTH ),
+       .IN_WIDTH ( A_WIDTH+H_WIDTH+2 ),
        .OUT_WIDTH ( M_WIDTH ),
        .IN_SIGNED ( 1 )
    ) inst_round_m_re (
@@ -126,7 +126,7 @@ module bot_block_m_matrix #(
    );
 
    round #(
-       .IN_WIDTH ( M_WIDTH ),
+       .IN_WIDTH ( A_WIDTH+H_WIDTH+2 ),
        .OUT_WIDTH ( M_WIDTH ),
        .IN_SIGNED ( 1 )
    ) inst_round_m_im (
