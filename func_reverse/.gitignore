@@ -1,12 +1,12 @@
+func_reverse*/*
 func_reverse.xpr
-*.vstf
-*.log
 *.wlf
-*.jou
-*.str
+*.vsif
 transcript
 msim/*
 !msim/wave.do
 !msim/run.do
-!msim/func_reverse_lut.hex
+*.jou
+*.log
+*.str
 venv/

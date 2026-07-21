@@ -31,6 +31,10 @@ module func_reverse #(
     logic       s1_shift_right;
     logic       s1_is_zero;
 
+    logic [4:0] s1b_k;
+    logic       s1b_shift_right;
+    logic       s1b_is_zero;
+
     logic [LUT_DW-1:0] s2_lut;
     logic [4:0]         s2_k;
     logic               s2_shift_right;
@@ -66,12 +70,19 @@ module func_reverse #(
         s1_is_zero     <= (i_x == 0);
     end
 
+    // Shift parameters with block_ram read
+    always_ff @(posedge i_clk) begin
+        s1b_k           <= s1_k;
+        s1b_shift_right <= s1_shift_right;
+        s1b_is_zero     <= s1_is_zero;
+    end
+
     // Stage 2: LUT read
     always_ff @(posedge i_clk) begin
         s2_lut         <= r_data;
-        s2_k           <= s1_k;
-        s2_shift_right <= s1_shift_right;
-        s2_is_zero     <= s1_is_zero;
+        s2_k           <= s1b_k;
+        s2_shift_right <= s1b_shift_right;
+        s2_is_zero     <= s1b_is_zero;
     end
 
     // Stage 3: reverse shift + output

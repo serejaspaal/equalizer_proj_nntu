@@ -82,7 +82,7 @@ module func_reverse_tb;
         @(negedge clk);
         start = 1;
 
-        repeat (3) @(posedge clk);
+        repeat (4) @(posedge clk);
 
         for (check_idx = 0; check_idx < NTESTS; check_idx = check_idx + 1) begin
             @(posedge clk);

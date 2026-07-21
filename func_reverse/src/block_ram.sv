@@ -10,8 +10,9 @@ module block_ram #(
 );
 
     (* ram_style = "block" *) logic [DW-1:0] mem [0:(1<<AW)-1];
-    initial $readmemh("./func_reverse_lut.hex", mem);
-
-    assign data = mem[addr];
+    initial $readmemh("../gen/func_reverse_lut.hex", mem);
+    
+    always_ff @(posedge clk)
+        data <= mem[addr];
 
 endmodule
