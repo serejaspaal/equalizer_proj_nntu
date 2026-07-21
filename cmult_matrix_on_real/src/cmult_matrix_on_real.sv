@@ -1,8 +1,7 @@
 module cmult_matrix_on_real#(
     parameter int DET_WIDTH = 8,
     parameter int M_WIDTH = 8,
-    localparam int CMULT_WIDTH = DET_WIDTH+M_WIDTH,
-    parameter int W_WIDTH = 8,
+    parameter int W_WIDTH = DET_WIDTH+M_WIDTH,
     parameter int USE_DSP_VALUE = 1
 )(
     input logic clk,
@@ -22,6 +21,8 @@ module cmult_matrix_on_real#(
     output logic o_sat_w21_re, o_sat_w21_im,
     output logic o_sat_w22_re, o_sat_w22_im
     );
+    
+    localparam int CMULT_WIDTH = DET_WIDTH+M_WIDTH;
     
     logic signed [CMULT_WIDTH-1:0] cmult_out[7:0];
     logic signed [W_WIDTH-1:0] round_out_data[7:0];
@@ -72,15 +73,15 @@ module cmult_matrix_on_real#(
         end
     endgenerate
     
-    always_ff @(posedge clk) begin
-        o_w11_re <= round_out_data[0]; o_w11_im <= round_out_data[1];
-        o_w12_re <= round_out_data[2]; o_w12_im <= round_out_data[3];
-        o_w21_re <= round_out_data[4]; o_w21_im <= round_out_data[5];
-        o_w22_re <= round_out_data[6]; o_w22_im <= round_out_data[7];
+    always_comb begin
+        o_w11_re = round_out_data[0]; o_w11_im = round_out_data[1];
+        o_w12_re = round_out_data[2]; o_w12_im = round_out_data[3];
+        o_w21_re = round_out_data[4]; o_w21_im = round_out_data[5];
+        o_w22_re = round_out_data[6]; o_w22_im = round_out_data[7];
 
-        o_sat_w11_re <= round_out_sat[0]; o_sat_w11_im <= round_out_sat[1];
-        o_sat_w12_re <= round_out_sat[2]; o_sat_w12_im <= round_out_sat[3];
-        o_sat_w21_re <= round_out_sat[4]; o_sat_w21_im <= round_out_sat[5];
-        o_sat_w22_re <= round_out_sat[6]; o_sat_w22_im <= round_out_sat[7];
+        o_sat_w11_re = round_out_sat[0]; o_sat_w11_im = round_out_sat[1];
+        o_sat_w12_re = round_out_sat[2]; o_sat_w12_im = round_out_sat[3];
+        o_sat_w21_re = round_out_sat[4]; o_sat_w21_im = round_out_sat[5];
+        o_sat_w22_re = round_out_sat[6]; o_sat_w22_im = round_out_sat[7];
     end
 endmodule

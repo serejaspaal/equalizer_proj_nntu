@@ -5,7 +5,7 @@ module cmult_matrix_on_real_tb;
     localparam int CMULT_WIDTH = DET_WIDTH+M_WIDTH;
     parameter int W_WIDTH = CMULT_WIDTH;
     
-    localparam int DROP = DET_WIDTH + M_WIDTH - W_WIDTH;
+    localparam int DROP = CMULT_WIDTH - W_WIDTH;
     localparam signed [W_WIDTH:0] MAXP = (1 <<< (W_WIDTH-1)) - 1;
     localparam signed [W_WIDTH:0] MINN = -(1 <<< (W_WIDTH-1));
     
@@ -37,7 +37,7 @@ module cmult_matrix_on_real_tb;
     initial clk = 0;
     always #5 clk = ~clk;
     
-    logic signed [DET_WIDTH+M_WIDTH-1:0] ref_cmult[7:0];
+    logic signed [CMULT_WIDTH-1:0] ref_cmult[7:0];
     logic signed [W_WIDTH:0] ref_sum[7:0];
     logic signed [W_WIDTH-1:0] ref_data[7:0];
     logic signed [W_WIDTH-1:0] ref_data_reg[7:0];
@@ -57,9 +57,9 @@ module cmult_matrix_on_real_tb;
     always_comb begin
         for (int i = 0; i < 8; i++) begin
             if (DROP == 0)
-                ref_sum[i] = $signed(ref_cmult[i][DET_WIDTH+M_WIDTH-1:0]);
+                ref_sum[i] = $signed(ref_cmult[i][CMULT_WIDTH-1:0]);
             else
-                ref_sum[i] = $signed(ref_cmult[i][DET_WIDTH+M_WIDTH-1:DROP]) +
+                ref_sum[i] = $signed(ref_cmult[i][CMULT_WIDTH-1:DROP]) +
                                $signed({1'b0, ref_cmult[i][DROP-1]});
         end
     end
@@ -79,9 +79,9 @@ module cmult_matrix_on_real_tb;
         end
     end
     
-    always_ff @(posedge clk) begin
-        ref_data_reg <= ref_data;
-        ref_sat_reg  <= ref_sat;
+    always_comb begin
+        ref_data_reg = ref_data;
+        ref_sat_reg  = ref_sat;
     end
     
     int errors = 0;    
@@ -164,7 +164,7 @@ module cmult_matrix_on_real_tb;
     i_m21_re = 32767; i_m21_im = 32767;
     i_m22_re = 32767; i_m22_im = 32767;
     @(posedge clk);
-    check_all("T1 zeros");
+    check_all("T1");
     
 
     det_inv = 32768;
@@ -173,7 +173,7 @@ module cmult_matrix_on_real_tb;
     i_m21_re = 256; i_m21_im = 256;
     i_m22_re = 256; i_m22_im = 256;
     @(posedge clk);
-    check_all("T2 min prod");
+    check_all("T2");
     
 
     det_inv = 65535;
@@ -182,7 +182,7 @@ module cmult_matrix_on_real_tb;
     i_m21_re = 32767; i_m21_im = 32767;
     i_m22_re = 32767; i_m22_im = 32767;
     @(posedge clk);
-    check_all("T3 neg prod");
+    check_all("T3");
     
 
     det_inv = 65535;
@@ -191,7 +191,7 @@ module cmult_matrix_on_real_tb;
     i_m21_re = -32768; i_m21_im = -32768;
     i_m22_re = -32768; i_m22_im = -32768;
     @(posedge clk);
-    check_all("T4 round bit = 0");
+    check_all("T4");
     
 
     det_inv = 128;
@@ -200,7 +200,7 @@ module cmult_matrix_on_real_tb;
     i_m21_re = 1; i_m21_im = -1;
     i_m22_re = 1; i_m22_im = -1;
     @(posedge clk);
-    check_all("T5 round bit = 1");
+    check_all("T5");
     
 
     det_inv = 32768;
@@ -209,7 +209,7 @@ module cmult_matrix_on_real_tb;
     i_m21_re = 1; i_m21_im = -1;
     i_m22_re = 1; i_m22_im = -1;
     @(posedge clk);
-    check_all("T6 sat+");
+    check_all("T6");
     
 
     det_inv = 65535;
@@ -218,13 +218,13 @@ module cmult_matrix_on_real_tb;
     i_m21_re = 0; i_m21_im = 0;
     i_m22_re = 0; i_m22_im = 0;
     @(posedge clk);
-    check_all("T7 MINN");
+    check_all("T7");
     @(posedge clk);
-    check_all("T8 det=128, m=+-1");
+    check_all("T8");
     @(posedge clk);
-    check_all("T9 det=32768, m=+-1");
+    check_all("T9");
     @(posedge clk);
-    check_all("T10 mixed");
+    check_all("T10");
 
     repeat (4) @(posedge clk);
     if (errors == 0) $display("ALL TESTS PASSED");
