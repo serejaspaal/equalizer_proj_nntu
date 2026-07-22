@@ -14,14 +14,23 @@ add wave -noupdate -radix unsigned /m_matrix_tb/i_a11
 add wave -noupdate -radix unsigned /m_matrix_tb/i_a22
 add wave -noupdate -radix decimal /m_matrix_tb/i_a12_re
 add wave -noupdate -radix decimal /m_matrix_tb/i_a12_im
-add wave -noupdate -color Blue -itemcolor Blue -radix decimal /m_matrix_tb/m11_re
-add wave -noupdate -color Blue -itemcolor Blue -radix decimal /m_matrix_tb/m11_im
-add wave -noupdate -color Blue -itemcolor Blue -radix decimal /m_matrix_tb/m12_re
-add wave -noupdate -color Blue -itemcolor Blue -radix decimal /m_matrix_tb/m12_im
-add wave -noupdate -color Blue -itemcolor Blue -radix decimal /m_matrix_tb/m21_re
-add wave -noupdate -color Blue -itemcolor Blue -radix decimal /m_matrix_tb/m21_im
-add wave -noupdate -color Blue -itemcolor Blue -radix decimal /m_matrix_tb/m22_re
-add wave -noupdate -color Blue -itemcolor Blue -radix decimal /m_matrix_tb/m22_im
+add wave -noupdate -color Cyan -radix decimal /m_matrix_tb/m11_re
+add wave -noupdate -color Cyan -radix decimal /m_matrix_tb/m11_im
+add wave -noupdate -color Cyan -radix decimal /m_matrix_tb/m12_re
+add wave -noupdate -color Cyan -radix decimal /m_matrix_tb/m12_im
+add wave -noupdate -color Cyan -radix decimal /m_matrix_tb/m21_re
+add wave -noupdate -color Cyan -radix decimal /m_matrix_tb/m21_im
+add wave -noupdate -color Cyan -radix decimal /m_matrix_tb/m22_re
+add wave -noupdate -color Cyan -radix decimal /m_matrix_tb/m22_im
+add wave -noupdate -color Cyan /m_matrix_tb/o_sat_m11_re
+add wave -noupdate -color Cyan /m_matrix_tb/o_sat_m11_im
+add wave -noupdate -color Cyan /m_matrix_tb/o_sat_m12_re
+add wave -noupdate -color Cyan /m_matrix_tb/o_sat_m12_im
+add wave -noupdate -color Cyan /m_matrix_tb/o_sat_m21_re
+add wave -noupdate -color Cyan /m_matrix_tb/o_sat_m21_im
+add wave -noupdate -color Cyan /m_matrix_tb/o_sat_m22_re
+add wave -noupdate -color Cyan /m_matrix_tb/o_sat_m22_im
+add wave -noupdate -color Red /m_matrix_tb/errors
 TreeUpdate [SetDefaultTree]
 WaveRestoreCursors {{Cursor 1} {210 ns} 0}
 quietly wave cursor active 1
