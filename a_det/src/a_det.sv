@@ -11,7 +11,8 @@ module a_det #(
 
     output logic [DET_WIDTH-1:0] o_det_a,
 
-    output logic o_sat_det
+    output logic o_sat_det,
+    output logic sum_underflow
 );
     logic [2*A_WIDTH-1:0] mult_result;
     logic [2*A_WIDTH-1:0] dline_result;
@@ -67,11 +68,10 @@ module a_det #(
         .sub (1),
         .valid_out (),
         .S (sum_result),
-        .underflow ()
+        .underflow ( sum_underflow )
     );
 
     assign sum_result_drop = sum_result[2*A_WIDTH-1:0];
-    //assign sum_result_drop = sum_result;
 
     round #(
         .IN_WIDTH (2*A_WIDTH),

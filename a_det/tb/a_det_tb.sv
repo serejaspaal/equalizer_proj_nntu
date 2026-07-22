@@ -14,6 +14,7 @@ module a_det_tb;
     logic [DET_WIDTH-1:0] o_det_a;
 
     logic o_sat_det;
+    logic sum_underflow;
 
 
     a_det #(
