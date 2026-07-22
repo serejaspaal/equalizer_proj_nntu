@@ -2,7 +2,7 @@
 
 module a_det_tb;
     parameter int A_WIDTH       = 16;
-    parameter int ROUNDED_WIDTH = 32;
+    parameter int DET_WIDTH     = 2*A_WIDTH;
     parameter int USE_DSP_VALUE = 1;
 
     logic clk = 0;
@@ -11,14 +11,14 @@ module a_det_tb;
     logic [A_WIDTH-1:0] i_a11, i_a22;
     logic [A_WIDTH-1:0] i_a12_re, i_a12_im;
 
-    logic [ROUNDED_WIDTH-1:0] o_det_a;
+    logic [DET_WIDTH-1:0] o_det_a;
 
     logic o_sat_det;
 
 
     a_det #(
         .A_WIDTH       ( A_WIDTH ),
-        .ROUNDED_WIDTH ( ROUNDED_WIDTH ),
+        .DET_WIDTH     ( DET_WIDTH ),
         .USE_DSP_VALUE ( USE_DSP_VALUE )
     ) dut (
         .*
@@ -28,7 +28,7 @@ module a_det_tb;
 
     typedef struct {
         logic [A_WIDTH-1:0] a11, a22, a12_re, a12_im;
-        logic [ROUNDED_WIDTH-1:0] exp_det_a;
+        logic [DET_WIDTH-1:0] exp_det_a;
     } test_t;
 
     localparam NUM_TESTS = 4;
