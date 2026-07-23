@@ -30,7 +30,6 @@ add wave -noupdate -color Cyan /w_matrix_tb/o_sat_w21_re
 add wave -noupdate -color Cyan /w_matrix_tb/o_sat_w21_im
 add wave -noupdate -color Cyan /w_matrix_tb/o_sat_w22_re
 add wave -noupdate -color Cyan /w_matrix_tb/o_sat_w22_im
-add wave -noupdate /w_matrix_tb/test_idx
 add wave -noupdate -radix unsigned /w_matrix_tb/det_a
 add wave -noupdate /w_matrix_tb/sat_det
 add wave -noupdate /w_matrix_tb/underflow_det
@@ -45,7 +44,7 @@ add wave -noupdate -radix decimal /w_matrix_tb/m22_im
 add wave -noupdate /w_matrix_tb/det_inv
 add wave -noupdate /w_matrix_tb/inf_func_reverse
 TreeUpdate [SetDefaultTree]
-WaveRestoreCursors {{Cursor 1} {133 ns} 0}
+WaveRestoreCursors {{Cursor 1} {918 ns} 0}
 quietly wave cursor active 1
 configure wave -namecolwidth 150
 configure wave -valuecolwidth 100
@@ -61,4 +60,4 @@ configure wave -griddelta 40
 configure wave -timeline 0
 configure wave -timelineunits ns
 update
-WaveRestoreZoom {19 ns} {147 ns}
+WaveRestoreZoom {0 ns} {1050 ns}

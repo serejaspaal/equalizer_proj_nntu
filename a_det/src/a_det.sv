@@ -65,7 +65,7 @@ module a_det #(
         .valid_in (1'b1),
         .A (dline_result),
         .B (cmodule_result),
-        .sub (1),
+        .sub (1'b1),
         .valid_out (),
         .S (sum_result),
         .underflow ( sum_underflow )
