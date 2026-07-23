@@ -20,30 +20,31 @@ module cmult_b_coupl_tb;
     always #5 clk = ~clk;
 
     int errors;
-    logic signed [A_WIDTH:0] exp_sum_a;
-    logic signed [B_WIDTH:0] exp_dif_b;
-    logic signed [A_WIDTH+B_WIDTH-1:0] exp_p1, exp_p2;
-    logic signed [A_WIDTH+B_WIDTH-1:0] exp_p1_reg, exp_p2_reg;
-    logic signed [A_WIDTH+B_WIDTH+1:0] exp_p3;
+    logic signed [A_WIDTH-1:0] x0_d, y0_d;
+    logic signed [B_WIDTH-1:0] x1_d, y1_d;
+    logic signed [A_WIDTH+B_WIDTH:0] exp_common, exp_multr, exp_multi;
     logic signed [A_WIDTH+B_WIDTH:0] exp_re, exp_im;
-
+    
     always_ff @(posedge clk) begin
-        exp_sum_a <= x0 + y0;
-        exp_dif_b <= x1 - y1;
-        exp_p1 <= x0 * x1;
-        exp_p2 <= y0 * y1;
+        x0_d <= x0;
+        y0_d <= y0;
+        x1_d <= x1;
+        y1_d <= y1;
     end
+    
     always_ff @(posedge clk) begin
-        exp_p1_reg <= exp_p1;
-        exp_p2_reg <= exp_p2;
-        exp_p3 <= exp_sum_a * exp_dif_b;
+        exp_common <= (y0_d - x0_d) * y1_d;
+        exp_multr <= (x1_d + y1_d) * x0_d;
+        exp_multi <= (x1_d - y1_d) * y0_d;
     end
+    
     always_ff @(posedge clk) begin
-        exp_re <= exp_p1_reg + exp_p2_reg;
-        exp_im <= exp_p3 - exp_p1_reg + exp_p2_reg;
+        exp_re <= exp_multr + exp_common;
+        exp_im <= exp_multi + exp_common;
     end
     initial begin
         errors = 0;
+        @(posedge clk);
         x0 = -128; y0 = -128; x1 = -128; y1 = -128; @(posedge clk);
         x0 = -128; y0 = -128; x1 = -128; y1 = 127;  @(posedge clk);
         x0 = -128; y0 = -128; x1 = 127;  y1 = -128; @(posedge clk);
