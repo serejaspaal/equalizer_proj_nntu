@@ -21,10 +21,10 @@ module w_matrix_tb;
     //real i_a12_re, i_a12_im;
     logic signed [A_WIDTH-1:0] i_a12_re, i_a12_im;
 
-    logic signed [W_WIDTH-1:0] w11_re, w11_im;
-    logic signed [W_WIDTH-1:0] w12_re, w12_im;
-    logic signed [W_WIDTH-1:0] w21_re, w21_im;
-    logic signed [W_WIDTH-1:0] w22_re, w22_im;
+    logic signed [W_WIDTH-1:0] o_w11_re, o_w11_im;
+    logic signed [W_WIDTH-1:0] o_w12_re, o_w12_im;
+    logic signed [W_WIDTH-1:0] o_w21_re, o_w21_im;
+    logic signed [W_WIDTH-1:0] o_w22_re, o_w22_im;
 
     logic o_sat_w11_re, o_sat_w11_im;
     logic o_sat_w12_re, o_sat_w12_im;
@@ -33,8 +33,8 @@ module w_matrix_tb;
 
     /////////////////////////////////////////////////////
     logic [DET_WIDTH-1:0] det_a;
-    logic sat_det;
-    logic underflow_det;
+    logic o_sat_det;
+    logic o_det_udf;
 
     logic signed [M_WIDTH-1:0] m11_re, m11_im;
     logic signed [M_WIDTH-1:0] m12_re, m12_im;
@@ -47,6 +47,11 @@ module w_matrix_tb;
 
     logic [DET_WIDTH-1:0] det_inv;
     logic inf_func_reverse;
+
+    real i_a11_fxp, i_a22_fxp;
+    real i_a12_re_fxp, i_a12_im_fxp;
+    real det_a_fxp, det_inv_fxp;
+
     /////////////////////////////////////////////////////
 
     w_matrix #(
@@ -73,54 +78,64 @@ module w_matrix_tb;
 //        logic signed [M_WIDTH-1:0] exp_m22_re, exp_m22_im;
     } test_t;
 
-    localparam NUM_TESTS = 4;
+    localparam NUM_TESTS = 16;
 
     test_t tests[NUM_TESTS];
 
     initial begin
 
-        tests[0].h11_re  = 16'b1000_0000_0000_0000; tests[0].h11_im  = 16'b1000_0000_0000_0000;
-        tests[0].h12_re  = 16'b1000_0000_0000_0000; tests[0].h12_im  = 16'b1000_0000_0000_0000;
-        tests[0].h21_re  = 16'b1000_0000_0000_0000; tests[0].h21_im  = 16'b1000_0000_0000_0000;
-        tests[0].h22_re  = 16'b1000_0000_0000_0000; tests[0].h22_im  = 16'b1000_0000_0000_0000;
-        tests[0].a11     = 16'b0000_0100_1001_1010; tests[0].a22     = 16'b0011_0010_0110_0110;
-        tests[0].a12_re  = 16'b0001_1011_0011_0011; tests[0].a12_im  = 16'b0000_0010_0110_0110;
+        //tests[0].h11_re  = 16'b1000_0000_0000_0000; tests[0].h11_im  = 16'b1000_0000_0000_0000;
+        //tests[0].h12_re  = 16'b1000_0000_0000_0000; tests[0].h12_im  = 16'b1000_0000_0000_0000;
+        //tests[0].h21_re  = 16'b1000_0000_0000_0000; tests[0].h21_im  = 16'b1000_0000_0000_0000;
+        //tests[0].h22_re  = 16'b1000_0000_0000_0000; tests[0].h22_im  = 16'b1000_0000_0000_0000;
+        //tests[0].a11     = 16'b0000_0100_1001_1010; tests[0].a22     = 16'b0011_0010_0110_0110;
+        //tests[0].a12_re  = 16'b0001_1011_0011_0011; tests[0].a12_im  = 16'b0000_0010_0110_0110;
    //     tests[0].exp_m11_re = -34'd4294934528; tests[0].exp_m11_im = 34'd2147450880;
    //     tests[0].exp_m12_re = -34'd4294934528; tests[0].exp_m12_im = 34'd2147450880;
    //     tests[0].exp_m21_re = -34'd2147450880; tests[0].exp_m21_im = 34'd4294934528;
    //     tests[0].exp_m22_re = -34'd2147450880; tests[0].exp_m22_im = 34'd4294934528;
+        for (int i = 0; i < 16; i++) begin
+            tests[i].h11_re  = 16'b1000_0000_0000_0000; tests[i].h11_im  = 16'b1000_0000_0000_0000;
+            tests[i].h12_re  = 16'b1000_0000_0000_0000; tests[i].h12_im  = 16'b1000_0000_0000_0000;
+            tests[i].h21_re  = 16'b1000_0000_0000_0000; tests[i].h21_im  = 16'b1000_0000_0000_0000;
+            tests[i].h22_re  = 16'b1000_0000_0000_0000; tests[i].h22_im  = 16'b1000_0000_0000_0000;
+            tests[i].a11     = $urandom(6164817 + i * 1 + 1) & 16'hFFFF;
+            tests[i].a22     = $urandom(6164817 + i * 2 + 2) & 16'hFFFF;
+            tests[i].a12_re  = $urandom(6164817 + i * 3 + 3) & 16'hFFFF;
+            tests[i].a12_im  = $urandom(6164817 + i * 4 + 4) & 16'hFFFF;
 
+        end
 
-        tests[1].h11_re  = 16'b0111_1111_1111_1111; tests[1].h11_im  = 16'b0111_1111_1111_1111;
-        tests[1].h12_re  = 16'b0111_1111_1111_1111; tests[1].h12_im  = 16'b0111_1111_1111_1111;
-        tests[1].h21_re  = 16'b0111_1111_1111_1111; tests[1].h21_im  = 16'b0111_1111_1111_1111;
-        tests[1].h22_re  = 16'b0111_1111_1111_1111; tests[1].h22_im  = 16'b0111_1111_1111_1111;
-        tests[1].a11     = 16'b1111_1111_1111_1111; tests[1].a22     = 16'b1111_1111_1111_1111;
-        tests[1].a12_re  = 16'b0111_1111_1111_1111; tests[1].a12_im  = 16'b0111_1111_1111_1111;
+        //tests[1].h11_re  = 16'b0111_1111_1111_1111; tests[1].h11_im  = 16'b0111_1111_1111_1111;
+        //tests[1].h12_re  = 16'b0111_1111_1111_1111; tests[1].h12_im  = 16'b0111_1111_1111_1111;
+        //tests[1].h21_re  = 16'b0111_1111_1111_1111; tests[1].h21_im  = 16'b0111_1111_1111_1111;
+        //tests[1].h22_re  = 16'b0111_1111_1111_1111; tests[1].h22_im  = 16'b0111_1111_1111_1111;
+        //tests[1].a11     = 16'b1111_1111_1111_1111; tests[1].a22     = 16'b1111_1111_1111_1111;
+        //tests[1].a12_re  = 16'b0111_1111_1111_1111; tests[1].a12_im  = 16'b0111_1111_1111_1111;
   //      tests[1].exp_m11_re = 32767;      tests[1].exp_m11_im = -2147385345;
   //      tests[1].exp_m12_re = 32767;      tests[1].exp_m12_im = -2147385345;
   //      tests[1].exp_m21_re = 2147385345; tests[1].exp_m21_im = -32767;
   //      tests[1].exp_m22_re = 2147385345; tests[1].exp_m22_im = -32767;
 
 
-        tests[2].h11_re  = 16'h01; tests[2].h11_im  = 16'h01;
-        tests[2].h12_re  = 16'h01; tests[2].h12_im  = 16'h01;
-        tests[2].h21_re  = 16'h01; tests[2].h21_im  = 16'h01;
-        tests[2].h22_re  = 16'h01; tests[2].h22_im  = 16'h01;
-        tests[2].a11     = 16'h01; tests[2].a22     = 16'h01;
-        tests[2].a12_re  = 16'h01; tests[2].a12_im  = 16'h01;
+        //tests[2].h11_re  = 16'h01; tests[2].h11_im  = 16'h01;
+        //tests[2].h12_re  = 16'h01; tests[2].h12_im  = 16'h01;
+        //tests[2].h21_re  = 16'h01; tests[2].h21_im  = 16'h01;
+        //tests[2].h22_re  = 16'h01; tests[2].h22_im  = 16'h01;
+        //tests[2].a11     = 16'h01; tests[2].a22     = 16'h01;
+        //tests[2].a12_re  = 16'h01; tests[2].a12_im  = 16'h01;
  //       tests[2].exp_m11_re = -1; tests[2].exp_m11_im = -1;
  //       tests[2].exp_m12_re = -1; tests[2].exp_m12_im = -1;
  //       tests[2].exp_m21_re = 1;  tests[2].exp_m21_im = 1;
  //       tests[2].exp_m22_re = 1;  tests[2].exp_m22_im = 1;
 
 
-        tests[3].h11_re  = 16'h00; tests[3].h11_im  = 16'h00;
-        tests[3].h12_re  = 16'h00; tests[3].h12_im  = 16'h00;
-        tests[3].h21_re  = 16'h00; tests[3].h21_im  = 16'h00;
-        tests[3].h22_re  = 16'h00; tests[3].h22_im  = 16'h00;
-        tests[3].a11     = 16'h00; tests[3].a22     = 16'h00;
-        tests[3].a12_re  = 16'h00; tests[3].a12_im  = 16'h00;
+        //tests[3].h11_re  = 16'h00; tests[3].h11_im  = 16'h00;
+        //tests[3].h12_re  = 16'h00; tests[3].h12_im  = 16'h00;
+        //tests[3].h21_re  = 16'h00; tests[3].h21_im  = 16'h00;
+        //tests[3].h22_re  = 16'h00; tests[3].h22_im  = 16'h00;
+        //tests[3].a11     = 16'h00; tests[3].a22     = 16'h00;
+        //tests[3].a12_re  = 16'h00; tests[3].a12_im  = 16'h00;
 //        tests[3].exp_m11_re = 0; tests[3].exp_m11_im = 0;
 //        tests[3].exp_m12_re = 0; tests[3].exp_m12_im = 0;
 //        tests[3].exp_m21_re = 0; tests[3].exp_m21_im = 0;
@@ -165,7 +180,7 @@ module w_matrix_tb;
 
             $display("Running Test %0d...", test_idx);
 
-            repeat (15) @(posedge clk);
+            @(posedge clk);
 
  //           check_outputs(tests[test_idx]);
         end

@@ -12,8 +12,9 @@ module a_det #(
     output logic [DET_WIDTH-1:0] o_det_a,
 
     output logic o_sat_det,
-    output logic sum_underflow
+    output logic o_sum_udf
 );
+    logic sum_underflow;
     logic [2*A_WIDTH-1:0] mult_result;
     logic [2*A_WIDTH-1:0] dline_result;
     logic [2*A_WIDTH-1:0] cmodule_result;
@@ -35,7 +36,7 @@ module a_det #(
     dline #(
         .DATA_WIDTH (2*A_WIDTH),
         .DELAY (1)
-    ) inst_dline (
+    ) inst_dline_mult (
         .i_clk (clk),
         .i_data (mult_result),
         .o_data (dline_result)
@@ -69,6 +70,15 @@ module a_det #(
         .valid_out (),
         .S (sum_result),
         .underflow ( sum_underflow )
+    );
+
+    dline #(
+        .DATA_WIDTH (1),
+        .DELAY (1)
+    ) inst_dline_sum_udf (
+        .i_clk (clk),
+        .i_data (sum_underflow),
+        .o_data (o_sum_udf)
     );
 
     assign sum_result_drop = sum_result[2*A_WIDTH-1:0];
