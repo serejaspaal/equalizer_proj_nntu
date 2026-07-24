@@ -5,7 +5,7 @@ module w_matrix_tb;
     parameter int H_WIDTH       = 16;
     parameter int M_WIDTH       = A_WIDTH + H_WIDTH + 2;
     parameter int DET_WIDTH     = 2*A_WIDTH;
-    parameter int FRAC_WIDTH    = 16;
+    parameter int FRAC_WIDTH    = 8;
     parameter int W_WIDTH       = DET_WIDTH + M_WIDTH;
     parameter int USE_DSP_VALUE = 1;
 
@@ -110,10 +110,30 @@ module w_matrix_tb;
             tests[i].h12_re  = 16'b1000_0000_0000_0000; tests[i].h12_im  = 16'b1000_0000_0000_0000;
             tests[i].h21_re  = 16'b1000_0000_0000_0000; tests[i].h21_im  = 16'b1000_0000_0000_0000;
             tests[i].h22_re  = 16'b1000_0000_0000_0000; tests[i].h22_im  = 16'b1000_0000_0000_0000;
-            tests[i].a11     = $urandom(6164817 + i * 1 + 1) & 16'hFFFF;
-            tests[i].a22     = $urandom(6164817 + i * 2 + 2) & 16'hFFFF;
-            tests[i].a12_re  = $urandom(6164817 + i * 3 + 3) & 16'hFFFF;
-            tests[i].a12_im  = $urandom(6164817 + i * 4 + 4) & 16'hFFFF;
+            if (i < 4) begin
+                tests[i].a11     = $urandom_range(1, 16);
+                tests[i].a22     = $urandom_range(1, 16);
+                tests[i].a12_re  = $urandom_range(1, 4);
+                tests[i].a12_im  = $urandom_range(1, 4);
+            end
+            else if (i < 8) begin
+                tests[i].a11     = $urandom_range(16, 256)*4;
+                tests[i].a22     = $urandom_range(16, 256)*4;
+                tests[i].a12_re  = $urandom_range(16, 256)/4;
+                tests[i].a12_im  = $urandom_range(16, 256)/4;
+            end
+            else if (i < 12) begin
+                tests[i].a11     = $urandom_range(256, 4096)*4;
+                tests[i].a22     = $urandom_range(256, 4096)*4;
+                tests[i].a12_re  = $urandom_range(256, 4096)/4;
+                tests[i].a12_im  = $urandom_range(256, 4096)/4;
+            end
+            else begin
+                tests[i].a11     = $urandom_range(4096, 65535);
+                tests[i].a22     = $urandom_range(4096, 65535);
+                tests[i].a12_re  = $urandom_range(4096, 16393);
+                tests[i].a12_im  = $urandom_range(4096, 16393);
+            end
 
         end
 
@@ -154,8 +174,16 @@ module w_matrix_tb;
     end
 
     int test_idx;
-//    bit test_failed = 0;
-//    int errors = 0;
+    bit test_failed = 0;
+    int errors = 0;
+
+    int cycle_cnt = 0;
+    typedef struct{
+        int test_idx;
+        real det_a;
+        real det_inv;
+    } test_data_t;
+    test_data_t test_storage[16];
 
     initial begin
         i_h11_re  = 0; i_h11_im  = 0;
@@ -171,92 +199,77 @@ module w_matrix_tb;
 
         repeat (2) @(posedge clk);
 
+        fork
+            begin
+                for (test_idx = 0; test_idx < NUM_TESTS; test_idx++) begin
+                    test_storage[test_idx].test_idx = test_idx;
+                    i_h11_re  = tests[test_idx].h11_re;
+                    i_h11_im  = tests[test_idx].h11_im;
+                    i_h12_re  = tests[test_idx].h12_re;
+                    i_h12_im  = tests[test_idx].h12_im;
+                    i_h21_re  = tests[test_idx].h21_re;
+                    i_h21_im  = tests[test_idx].h21_im;
+                    i_h22_re  = tests[test_idx].h22_re;
+                    i_h22_im  = tests[test_idx].h22_im;
+                    i_a11     = tests[test_idx].a11;
+                    i_a22     = tests[test_idx].a22;
+                    i_a12_re  = tests[test_idx].a12_re;
+                    i_a12_im  = tests[test_idx].a12_im;
+
+                    $display("Running Test %0d...", test_idx);
+
+
+                    @(posedge clk);
+                    //check_outputs(tests[test_idx]);
+                end
+            end
+
+            begin
+                for (int i = 0; i < 25; i++) begin
+                    if (cycle_cnt - 5 >= 0) begin
+                        test_storage[cycle_cnt - 5].det_a = det_a_fxp;
+                    end
+
+                    if (cycle_cnt - 9 >= 0) begin
+                        test_storage[cycle_cnt - 9].det_inv = det_inv_fxp;
+                    end
+                    @(posedge clk);
+                    cycle_cnt++;
+                end
+            end
+        join
+
         for (test_idx = 0; test_idx < NUM_TESTS; test_idx++) begin
-            i_h11_re  = tests[test_idx].h11_re;
-            i_h11_im  = tests[test_idx].h11_im;
-            i_h12_re  = tests[test_idx].h12_re;
-            i_h12_im  = tests[test_idx].h12_im;
-            i_h21_re  = tests[test_idx].h21_re;
-            i_h21_im  = tests[test_idx].h21_im;
-            i_h22_re  = tests[test_idx].h22_re;
-            i_h22_im  = tests[test_idx].h22_im;
-            i_a11     = tests[test_idx].a11;
-            i_a22     = tests[test_idx].a22;
-            i_a12_re  = tests[test_idx].a12_re;
-            i_a12_im  = tests[test_idx].a12_im;
-           // i_a11     = $unsigned(tests[test_idx].a11 * (2.0 ** (-FRAC_WIDTH)));
-           // i_a22     = $unsigned(tests[test_idx].a22 * (2.0 ** (-FRAC_WIDTH)));
-           // i_a12_re  = $signed(tests[test_idx].a12_re * (2.0 ** (-FRAC_WIDTH)));
-           // i_a12_im  = $signed(tests[test_idx].a12_im * (2.0 ** (-FRAC_WIDTH)));
-
-            $display("Running Test %0d...", test_idx);
-
-            @(posedge clk);
-
- //           check_outputs(tests[test_idx]);
+            check_outputs(test_storage[test_idx]);
         end
 
-//        $display("\n==========================================");
-//        if (errors == 0) begin
-//            $display("TEST PASSED: All %0d tests passed successfully!", NUM_TESTS);
-//        end else begin
-//            $display("TEST FAILED: %0d errors detected in %0d tests!", errors, NUM_TESTS);
-//        end
-//        $display("==========================================\n");
+
+        $display("\n==========================================");
+        if (errors == 0) begin
+            $display("TEST PASSED: All %0d tests passed successfully!", NUM_TESTS);
+        end else begin
+            $display("TEST FAILED: %0d errors detected in %0d tests!", errors, NUM_TESTS);
+        end
+        $display("==========================================\n");
 
     end
+    task automatic check_outputs(test_data_t test);
+        int local_errors = 0;
 
-//    task automatic check_outputs(test_t expected);
-//        int local_errors = 0;
-//
-//        if (m11_re !== expected.exp_m11_re) begin
-//            $display("  ERROR: Test %0d, m11_re = %d, expected %d",
-//                     test_idx, m11_re, expected.exp_m11_re);
-//            local_errors++;
-//        end
-//        if (m11_im !== expected.exp_m11_im) begin
-//            $display("  ERROR: Test %0d, m11_im = %d, expected %d",
-//                     test_idx, m11_im, expected.exp_m11_im);
-//            local_errors++;
-//        end
-//        if (m12_re !== expected.exp_m12_re) begin
-//            $display("  ERROR: Test %0d, m12_re = %d, expected %d",
-//                     test_idx, m12_re, expected.exp_m12_re);
-//            local_errors++;
-//        end
-//        if (m12_im !== expected.exp_m12_im) begin
-//            $display("  ERROR: Test %0d, m12_im = %d, expected %d",
-//                     test_idx, m12_im, expected.exp_m12_im);
-//            local_errors++;
-//        end
-//        if (m21_re !== expected.exp_m21_re) begin
-//            $display("  ERROR: Test %0d, m21_re = %d, expected %d",
-//                     test_idx, m21_re, expected.exp_m21_re);
-//            local_errors++;
-//        end
-//        if (m21_im !== expected.exp_m21_im) begin
-//            $display("  ERROR: Test %0d, m21_im = %d, expected %d",
-//                     test_idx, m21_im, expected.exp_m21_im);
-//            local_errors++;
-//        end
-//        if (m22_re !== expected.exp_m22_re) begin
-//            $display("  ERROR: Test %0d, m22_re = %d, expected %d",
-//                     test_idx, m22_re, expected.exp_m22_re);
-//            local_errors++;
-//        end
-//        if (m22_im !== expected.exp_m22_im) begin
-//            $display("  ERROR: Test %0d, m22_im = %d, expected %d",
-//                     test_idx, m22_im, expected.exp_m22_im);
-//            local_errors++;
-//        end
-//
-//        if (local_errors == 0) begin
-//            $display("  Test %0d PASSED", test_idx);
-//        end else begin
-//            errors += local_errors;
-//            test_failed = 1;
-//        end
-//    endtask
+        if (test.det_a * test.det_inv > 1.05 || test.det_inv * test.det_a < 0.95) begin
+            $display(" ERROR: Test %0d, det_inv = %f, det_a = %f, det_inv * det_a = %f, expected %f",
+                     test.test_idx, test.det_inv, test.det_a, test.det_inv * test.det_a, 1.0);
+            local_errors++;
+        end
+
+        if (local_errors == 0) begin
+            $display("     PASSED Test %0d, det_inv = %f, det_a = %f, det_inv * det_a = %f",
+                    test.test_idx, test.det_inv, test.det_a, test.det_inv * test.det_a);
+        end else begin
+            errors += local_errors;
+            test_failed = 1;
+        end
+    endtask
 
 
 endmodule
