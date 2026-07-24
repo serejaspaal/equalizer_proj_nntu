@@ -18,19 +18,11 @@ add wave -noupdate /w_matrix_tb/i_a11_fxp
 add wave -noupdate /w_matrix_tb/i_a22_fxp
 add wave -noupdate /w_matrix_tb/i_a12_re_fxp
 add wave -noupdate /w_matrix_tb/i_a12_im_fxp
-add wave -noupdate /w_matrix_tb/det_a_fxp
-add wave -noupdate /w_matrix_tb/o_sat_det
-add wave -noupdate /w_matrix_tb/o_det_udf
-add wave -noupdate /w_matrix_tb/det_inv_fxp
-add wave -noupdate /w_matrix_tb/inf_func_reverse
-add wave -noupdate -radix decimal /w_matrix_tb/m11_re
-add wave -noupdate -radix decimal /w_matrix_tb/m11_im
-add wave -noupdate -radix decimal /w_matrix_tb/m12_re
-add wave -noupdate -radix decimal /w_matrix_tb/m12_im
-add wave -noupdate -radix decimal /w_matrix_tb/m21_re
-add wave -noupdate -radix decimal /w_matrix_tb/m21_im
-add wave -noupdate -radix decimal /w_matrix_tb/m22_re
-add wave -noupdate -radix decimal /w_matrix_tb/m22_im
+add wave -noupdate -color {Olive Drab} /w_matrix_tb/det_a_fxp
+add wave -noupdate -color {Olive Drab} /w_matrix_tb/o_det_sat
+add wave -noupdate -color {Olive Drab} /w_matrix_tb/o_det_udf
+add wave -noupdate -color {Olive Drab} /w_matrix_tb/det_inv_fxp
+add wave -noupdate -color {Olive Drab} /w_matrix_tb/o_det_inv_inf
 add wave -noupdate -color Cyan /w_matrix_tb/o_w11_re
 add wave -noupdate -color Cyan /w_matrix_tb/o_w11_im
 add wave -noupdate -color Cyan /w_matrix_tb/o_w12_re
@@ -47,8 +39,24 @@ add wave -noupdate -color Cyan /w_matrix_tb/o_sat_w21_re
 add wave -noupdate -color Cyan /w_matrix_tb/o_sat_w21_im
 add wave -noupdate -color Cyan /w_matrix_tb/o_sat_w22_re
 add wave -noupdate -color Cyan /w_matrix_tb/o_sat_w22_im
+add wave -noupdate -color {Olive Drab} /w_matrix_tb/o_m11_re
+add wave -noupdate -color {Olive Drab} /w_matrix_tb/o_m11_im
+add wave -noupdate -color {Olive Drab} /w_matrix_tb/o_m12_re
+add wave -noupdate -color {Olive Drab} /w_matrix_tb/o_m12_im
+add wave -noupdate -color {Olive Drab} /w_matrix_tb/o_m21_re
+add wave -noupdate -color {Olive Drab} /w_matrix_tb/o_m21_im
+add wave -noupdate -color {Olive Drab} /w_matrix_tb/o_m22_re
+add wave -noupdate -color {Olive Drab} /w_matrix_tb/o_m22_im
+add wave -noupdate -color {Olive Drab} /w_matrix_tb/o_sat_m11_re
+add wave -noupdate -color {Olive Drab} /w_matrix_tb/o_sat_m11_im
+add wave -noupdate -color {Olive Drab} /w_matrix_tb/o_sat_m12_re
+add wave -noupdate -color {Olive Drab} /w_matrix_tb/o_sat_m12_im
+add wave -noupdate -color {Olive Drab} /w_matrix_tb/o_sat_m21_re
+add wave -noupdate -color {Olive Drab} /w_matrix_tb/o_sat_m21_im
+add wave -noupdate -color {Olive Drab} /w_matrix_tb/o_sat_m22_re
+add wave -noupdate -color {Olive Drab} /w_matrix_tb/o_sat_m22_im
 TreeUpdate [SetDefaultTree]
-WaveRestoreCursors {{Cursor 1} {60 ns} 0}
+WaveRestoreCursors {{Cursor 1} {174 ns} 0}
 quietly wave cursor active 1
 configure wave -namecolwidth 208
 configure wave -valuecolwidth 100
@@ -64,4 +72,4 @@ configure wave -griddelta 40
 configure wave -timeline 0
 configure wave -timelineunits ns
 update
-WaveRestoreZoom {42 ns} {159 ns}
+WaveRestoreZoom {0 ns} {231 ns}

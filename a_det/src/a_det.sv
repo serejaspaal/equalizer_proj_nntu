@@ -11,7 +11,7 @@ module a_det #(
 
     output logic [DET_WIDTH-1:0] o_det_a,
 
-    output logic o_sat_det,
+    output logic o_det_sat,
     output logic o_sum_udf
 );
     logic sum_underflow;
@@ -91,7 +91,7 @@ module a_det #(
         .clk (clk),
         .i_data (sum_result_drop),
         .o_data (o_det_a),
-        .o_sat (o_sat_det)
+        .o_sat (o_det_sat)
     );
 
 

@@ -32,21 +32,21 @@ module w_matrix_tb;
     logic o_sat_w22_re, o_sat_w22_im;
 
     /////////////////////////////////////////////////////
-    logic [DET_WIDTH-1:0] det_a;
-    logic o_sat_det;
+    logic [DET_WIDTH-1:0] o_det_a;
+    logic o_det_sat;
     logic o_det_udf;
 
-    logic signed [M_WIDTH-1:0] m11_re, m11_im;
-    logic signed [M_WIDTH-1:0] m12_re, m12_im;
-    logic signed [M_WIDTH-1:0] m21_re, m21_im;
-    logic signed [M_WIDTH-1:0] m22_re, m22_im;
+    logic signed [M_WIDTH-1:0] o_m11_re, o_m11_im;
+    logic signed [M_WIDTH-1:0] o_m12_re, o_m12_im;
+    logic signed [M_WIDTH-1:0] o_m21_re, o_m21_im;
+    logic signed [M_WIDTH-1:0] o_m22_re, o_m22_im;
     logic o_sat_m11_re, o_sat_m11_im;
     logic o_sat_m12_re, o_sat_m12_im;
     logic o_sat_m21_re, o_sat_m21_im;
     logic o_sat_m22_re, o_sat_m22_im;
 
-    logic [DET_WIDTH-1:0] det_inv;
-    logic inf_func_reverse;
+    logic [DET_WIDTH-1:0] o_det_inv;
+    logic o_det_inv_inf;
 
     real i_a11_fxp, i_a22_fxp;
     real i_a12_re_fxp, i_a12_im_fxp;
@@ -67,6 +67,17 @@ module w_matrix_tb;
     );
 
     always #5 clk = ~clk;
+
+    always @* begin
+        i_a11_fxp    = $unsigned(i_a11) * (2.0 ** (-FRAC_WIDTH));
+        i_a22_fxp    = $unsigned(i_a22) * (2.0 ** (-FRAC_WIDTH));
+
+        i_a12_re_fxp = $signed(i_a12_re) * (2.0 ** (-FRAC_WIDTH));
+        i_a12_im_fxp = $signed(i_a12_im) * (2.0 ** (-FRAC_WIDTH));
+
+        det_a_fxp    = $unsigned(o_det_a) * (2.0 ** (-2*FRAC_WIDTH));
+        det_inv_fxp  = $unsigned(o_det_inv) * (2.0 ** (-2*FRAC_WIDTH));
+    end
 
     typedef struct {
         logic signed [H_WIDTH-1:0] h11_re, h11_im, h12_re, h12_im, h21_re, h21_im, h22_re, h22_im;

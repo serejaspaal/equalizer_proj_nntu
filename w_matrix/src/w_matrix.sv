@@ -28,53 +28,41 @@ module w_matrix #(
     output logic o_sat_w21_re, o_sat_w21_im,
     output logic o_sat_w22_re, o_sat_w22_im,
 
-    output logic [DET_WIDTH-1:0] det_a,
-    output logic o_sat_det,
+    output logic [DET_WIDTH-1:0] o_det_a,
+    output logic o_det_sat,
     output logic o_det_udf,
+    output logic [DET_WIDTH-1:0] o_det_inv,
+    output logic o_det_inv_inf,
 
-    output logic signed [M_WIDTH-1:0] m11_re, m11_im,
-    output logic signed [M_WIDTH-1:0] m12_re, m12_im,
-    output logic signed [M_WIDTH-1:0] m21_re, m21_im,
-    output logic signed [M_WIDTH-1:0] m22_re, m22_im,
+    output logic signed [M_WIDTH-1:0] o_m11_re, o_m11_im,
+    output logic signed [M_WIDTH-1:0] o_m12_re, o_m12_im,
+    output logic signed [M_WIDTH-1:0] o_m21_re, o_m21_im,
+    output logic signed [M_WIDTH-1:0] o_m22_re, o_m22_im,
     output logic o_sat_m11_re, o_sat_m11_im,
     output logic o_sat_m12_re, o_sat_m12_im,
     output logic o_sat_m21_re, o_sat_m21_im,
-    output logic o_sat_m22_re, o_sat_m22_im,
+    output logic o_sat_m22_re, o_sat_m22_im
 
-    output logic [DET_WIDTH-1:0] det_inv,
-    //output logic [18-1:0] det_inv,
-    output logic inf_func_reverse,
-    output real i_a11_fxp, i_a22_fxp,
-    output real i_a12_re_fxp, i_a12_im_fxp,
-    output real det_a_fxp, det_inv_fxp
-
+//    output real i_a11_fxp, i_a22_fxp,
+//    output real i_a12_re_fxp, i_a12_im_fxp,
+//    output real det_a_fxp, det_inv_fxp
 );
 
-    always @* begin
-        i_a11_fxp    = $unsigned(i_a11) * (2.0 ** (-FRAC_WIDTH));
-        i_a22_fxp    = $unsigned(i_a22) * (2.0 ** (-FRAC_WIDTH));
-
-        i_a12_re_fxp = $signed(i_a12_re) * (2.0 ** (-FRAC_WIDTH));
-        i_a12_im_fxp = $signed(i_a12_im) * (2.0 ** (-FRAC_WIDTH));
-
-        det_a_fxp    = $unsigned(det_a) * (2.0 ** (-2*FRAC_WIDTH));
-        det_inv_fxp  = $unsigned(det_inv) * (2.0 ** (-2*FRAC_WIDTH));
-    end
-//    logic [DET_WIDTH-1:0] det_a;
+//    logic [DET_WIDTH-1:0] o_det_a;
 //    logic sat_det;
 //    logic o_sum_udf;
 //
-//    logic signed [M_WIDTH-1:0] m11_re, m11_im;
-//    logic signed [M_WIDTH-1:0] m12_re, m12_im;
-//    logic signed [M_WIDTH-1:0] m21_re, m21_im;
-//    logic signed [M_WIDTH-1:0] m22_re, m22_im;
+//    logic signed [M_WIDTH-1:0] o_m11_re, o_m11_im;
+//    logic signed [M_WIDTH-1:0] o_m12_re, o_m12_im;
+//    logic signed [M_WIDTH-1:0] o_m21_re, o_m21_im;
+//    logic signed [M_WIDTH-1:0] o_m22_re, o_m22_im;
 //    logic o_sat_m11_re, o_sat_m11_im;
 //    logic o_sat_m12_re, o_sat_m12_im;
 //    logic o_sat_m21_re, o_sat_m21_im;
 //    logic o_sat_m22_re, o_sat_m22_im;
 //
-//    logic [DET_WIDTH-1:0] det_inv;
-//    logic inf_func_reverse;
+//    logic [DET_WIDTH-1:0] o_det_inv;
+//    logic o_det_inv_inf;
 
 
     a_det #(//4 takt
@@ -88,8 +76,8 @@ module w_matrix #(
         .i_a22 (i_a22),
         .i_a12_re (i_a12_re),
         .i_a12_im (i_a12_im),
-        .o_det_a (det_a),
-        .o_sat_det (o_sat_det),
+        .o_det_a (o_det_a),
+        .o_det_sat (o_det_sat),
         .o_sum_udf (o_det_udf)
     );
 
@@ -100,9 +88,9 @@ module w_matrix #(
         //.OUT_WIDTH (18)
     ) inst_func_reverse (
         .i_clk (clk),
-        .i_x (det_a),
-        .o_result (det_inv),
-        .o_inf (inf_func_reverse)
+        .i_x (o_det_a),
+        .o_result (o_det_inv),
+        .o_inf (o_det_inv_inf)
     );
 
     m_matrix #(//5 takt
@@ -125,14 +113,14 @@ module w_matrix #(
         .i_a22    (i_a22),
         .i_a12_re (i_a12_re),
         .i_a12_im (i_a12_im),
-        .m11_re (m11_re),
-        .m11_im (m11_im),
-        .m12_re (m12_re),
-        .m12_im (m12_im),
-        .m21_re (m21_re),
-        .m21_im (m21_im),
-        .m22_re (m22_re),
-        .m22_im (m22_im),
+        .m11_re (o_m11_re),
+        .m11_im (o_m11_im),
+        .m12_re (o_m12_re),
+        .m12_im (o_m12_im),
+        .m21_re (o_m21_re),
+        .m21_im (o_m21_im),
+        .m22_re (o_m22_re),
+        .m22_im (o_m22_im),
         .o_sat_m11_re (o_sat_m11_re),
         .o_sat_m11_im (o_sat_m11_im),
         .o_sat_m12_re (o_sat_m12_re),
@@ -145,7 +133,7 @@ module w_matrix #(
 
     logic [8:0][M_WIDTH-1:0] dline_m;
     logic [8:0][M_WIDTH-1:0] o_dline_m;
-    assign dline_m = {m11_re, m11_im, m12_re, m12_im, m21_re, m21_im, m22_re, m22_im};
+    assign dline_m = {o_m11_re, o_m11_im, o_m12_re, o_m12_im, o_m21_re, o_m21_im, o_m22_re, o_m22_im};
     logic [M_WIDTH-1:0] dline_m11_re, dline_m11_im;
     logic [M_WIDTH-1:0] dline_m12_re, dline_m12_im;
     logic [M_WIDTH-1:0] dline_m21_re, dline_m21_im;
@@ -174,7 +162,7 @@ module w_matrix #(
         .USE_DSP_VALUE (USE_DSP_VALUE)
     ) inst_cmult_matrix_on_real (
         .clk (clk),
-        .det_inv (det_inv),
+        .det_inv (o_det_inv),
         .i_m11_re (dline_m11_re),
         .i_m11_im (dline_m11_im),
         .i_m12_re (dline_m12_re),
