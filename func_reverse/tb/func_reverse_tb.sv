@@ -6,7 +6,7 @@ module func_reverse_tb;
     parameter FRAC_WIDTH = 16;
     parameter OUT_WIDTH  = 24;
     parameter CLK_PERIOD = 10;
-    parameter NTESTS     = 18;
+    parameter NTESTS     = 26;
 
     logic                clk;
     logic [IN_WIDTH-1:0] x;
@@ -73,6 +73,17 @@ module func_reverse_tb;
         test_val[15] = 24'h00640000; test_exp[15] = 0.01;
         test_val[16] = 24'h00C80000; test_exp[16] = 0.005;
         test_val[17] = 24'hFFFFFF;   test_exp[17] = 0.00390625;
+        test_val[18] = 24'h00001AAB; test_exp[18] = 65536.0 / 6827;    
+        test_val[19] = 24'h0000ABCD; test_exp[19] = 65536.0 / 43981;   
+        test_val[20] = 24'h0000B54C; test_exp[20] = 65536.0 / 46412; 
+        test_val[21] = 24'h0000FAAB; test_exp[21] = 65536.0 / 64171;   
+        test_val[22] = 24'h00008FA0; test_exp[22] = 65536.0 / 36768;   
+        test_val[23] = 24'h00010101; test_exp[23] = 65536.0 / 65793;  
+        test_val[24] = 24'h0001FFFF; test_exp[24] = 65536.0 / 131071;  
+        test_val[25] = 24'h0002AAAA; test_exp[25] = 65536.0 / 174762;
+        test_val[26] = 24'h00000134; test_exp[26] = 65536.0 / 308;   
+        test_val[27] = 24'h000001E5; test_exp[27] = 65536.0 / 485;   
+        test_val[28] = 24'h000002F1; test_exp[28] = 65536.0 / 753;   
 
         pass_count = 0;
         fail_count = 0;
