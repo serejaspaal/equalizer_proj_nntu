@@ -14,27 +14,27 @@ module cmult_both_coupl #(
     output logic signed [A_WIDTH+B_WIDTH:0] out_im
     );
     logic signed [A_WIDTH-1:0] x0_d;
-    logic signed [A_WIDTH-1:0] y0_d;
+    logic signed [A_WIDTH:0] y0_d;
     logic signed [B_WIDTH-1:0] x1_d;
-    logic signed [B_WIDTH-1:0] y1_d;
+    logic signed [B_WIDTH:0] y1_d;
     (* use_dsp = USE_DSP_VALUE ? "yes" : "no"*)
     logic signed [A_WIDTH+B_WIDTH:0] common, multr, multi;
     
     always_ff @(posedge clk) begin
         x0_d <= x0;
-        y0_d <= y0;
+        y0_d <= -y0;
         x1_d <= x1;
-        y1_d <= y1;
+        y1_d <= -y1;
     end
        
     always_ff @(posedge clk) begin
-        common <= (x0+y0)*y1;
-        multr <= (x1+y1)*x0;
-        multi <= (y1-x1)*y0;
+        common <= (x0_d-y0_d)*y1_d;
+        multr <= (x1_d-y1_d)*x0_d;
+        multi <= (x1_d+y1_d)*y0_d;
     end
     
     always_ff @(posedge clk) begin
-        out_re <= multr - common;
-        out_im <= multi - common;
+        out_re <= multr + common;
+        out_im <= multi + common;
     end
 endmodule
