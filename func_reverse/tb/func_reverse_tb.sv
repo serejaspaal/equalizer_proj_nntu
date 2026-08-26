@@ -4,27 +4,23 @@ module func_reverse_tb;
 
     parameter IN_WIDTH   = 32;
     parameter FRAC_WIDTH = 16;
-    parameter OUT_WIDTH  = 33;
     parameter N_LUT      = 11;
     parameter NINTRP     = FRAC_WIDTH - N_LUT - 1;
     parameter CLK_PERIOD = 10;
     parameter NTESTS     = 160;
 
-    localparam ACTUAL_OUT_ON = OUT_WIDTH + NINTRP;
-
     logic                 clk;
     logic [IN_WIDTH-1:0]  x;
 
     logic                      o_inf_off;
-    logic [OUT_WIDTH-1:0]      o_result_off;
+    logic [IN_WIDTH-1:0]       o_result_off;
 
     logic                          o_inf_on;
-    logic [ACTUAL_OUT_ON-1:0]      o_result_on;
+    logic [IN_WIDTH+NINTRP-1:0]    o_result_on;
 
     func_reverse #(
         .IN_WIDTH   (IN_WIDTH),
         .FRAC_WIDTH (FRAC_WIDTH),
-        .OUT_WIDTH  (OUT_WIDTH),
         .USE_INTRP  (0)
     ) dut_off (
         .i_clk    (clk),
@@ -36,7 +32,6 @@ module func_reverse_tb;
     func_reverse #(
         .IN_WIDTH   (IN_WIDTH),
         .FRAC_WIDTH (FRAC_WIDTH),
-        .OUT_WIDTH  (OUT_WIDTH),
         .USE_INTRP  (1)
     ) dut_on (
         .i_clk    (clk),
