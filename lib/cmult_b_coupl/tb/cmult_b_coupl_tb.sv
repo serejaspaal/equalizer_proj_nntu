@@ -20,130 +20,82 @@ module cmult_b_coupl_tb;
     always #5 clk = ~clk;
 
     int errors;
-    logic signed [A_WIDTH:0] exp_sum_a;
-    logic signed [B_WIDTH:0] exp_dif_b;
-    logic signed [A_WIDTH+B_WIDTH-1:0] exp_p1, exp_p2;
-    logic signed [A_WIDTH+B_WIDTH-1:0] exp_p1_reg, exp_p2_reg;
-    logic signed [A_WIDTH+B_WIDTH+1:0] exp_p3;
+    
     logic signed [A_WIDTH+B_WIDTH:0] exp_re, exp_im;
-
+    
+    assign exp_re = x0 * x1 + y0 * y1;
+    assign exp_im = x1 * y0 - x0 * y1;
+    
+    typedef struct {
+      logic [A_WIDTH+B_WIDTH:0] re;
+      logic [A_WIDTH+B_WIDTH:0] im;
+    } exp_t;
+    exp_t exp_pipe [3];
     always_ff @(posedge clk) begin
-        exp_sum_a <= x0 + y0;
-        exp_dif_b <= x1 - y1;
-        exp_p1 <= x0 * x1;
-        exp_p2 <= y0 * y1;
-    end
-    always_ff @(posedge clk) begin
-        exp_p1_reg <= exp_p1;
-        exp_p2_reg <= exp_p2;
-        exp_p3 <= exp_sum_a * exp_dif_b;
-    end
-    always_ff @(posedge clk) begin
-        exp_re <= exp_p1_reg + exp_p2_reg;
-        exp_im <= exp_p3 - exp_p1_reg + exp_p2_reg;
-    end
+        exp_pipe[0] <= '{re: exp_re, im: exp_im};
+        for (int i = 1; i < 3; i++)
+            exp_pipe[i] <= exp_pipe[i-1];
+    end 
+    
+    task automatic check(string name, int ix0, int iy0, int ix1, int iy1);
+        if (out_re !== exp_pipe[2].re || out_im !== exp_pipe[2].im) begin
+            $error("%s FAIL: got (%0d,%0d), expected (%0d,%0d)",
+                   name, out_re, out_im, exp_pipe[2].re, exp_pipe[2].im);
+            errors++;
+        end else
+            $display("%s PASS: (%0d+%0di)*conj(%0d+%0di) = (%0d,%0d)",
+                     name, ix0, iy0, ix1, iy1, out_re, out_im);
+    endtask
+    
     initial begin
         errors = 0;
+        @(posedge clk);
         x0 = -128; y0 = -128; x1 = -128; y1 = -128; @(posedge clk);
         x0 = -128; y0 = -128; x1 = -128; y1 = 127;  @(posedge clk);
         x0 = -128; y0 = -128; x1 = 127;  y1 = -128; @(posedge clk);
+        
 
         x0 = -128; y0 = -128; x1 = 127; y1 = 127; @(posedge clk);
-        if (out_re !== exp_re || out_im !== exp_im) begin
-            $error("T1 FAIL: got (%0d,%0d), expected (%0d,%0d)", out_re, out_im, exp_re, exp_im);
-            errors++;
-        end else $display("T1 PASS: (-128-128i)*conj(-128-128i) = (%0d,%0d)", out_re, out_im);
+        check("T1", -128, -128, -128, -128);
 
         x0 = -128; y0 = 127; x1 = -128; y1 = -128; @(posedge clk);
-        if (out_re !== exp_re || out_im !== exp_im) begin
-            $error("T2 FAIL: got (%0d,%0d), expected (%0d,%0d)", out_re, out_im, exp_re, exp_im);
-            errors++;
-        end else $display("T2 PASS: (-128-128i)*conj(-128+127i) = (%0d,%0d)", out_re, out_im);
+        check("T2", -128, -128, -128, 127);
+
 
         x0 = -128; y0 = 127; x1 = -128; y1 = 127; @(posedge clk);
-        if (out_re !== exp_re || out_im !== exp_im) begin
-            $error("T3 FAIL: got (%0d,%0d), expected (%0d,%0d)", out_re, out_im, exp_re, exp_im);
-            errors++;
-        end else $display("T3 PASS: (-128-128i)*conj(127-128i) = (%0d,%0d)", out_re, out_im);
+        check("T3", -128, -128, 127, -128);
+
 
         x0 = -128; y0 = 127; x1 = 127; y1 = -128; @(posedge clk);
-        if (out_re !== exp_re || out_im !== exp_im) begin
-            $error("T4 FAIL: got (%0d,%0d), expected (%0d,%0d)", out_re, out_im, exp_re, exp_im);
-            errors++;
-        end else $display("T4 PASS: (-128-128i)*conj(127+127i) = (%0d,%0d)", out_re, out_im);
+        check("T4", -128, -128, 127, 127);
 
         x0 = -128; y0 = 127; x1 = 127; y1 = 127; @(posedge clk);
-        if (out_re !== exp_re || out_im !== exp_im) begin
-            $error("T5 FAIL: got (%0d,%0d), expected (%0d,%0d)", out_re, out_im, exp_re, exp_im);
-            errors++;
-        end else $display("T5 PASS: (-128+127i)*conj(-128-128i) = (%0d,%0d)", out_re, out_im);
+        check("T5", -128, 127, -128, -128);
 
         x0 = 127; y0 = -128; x1 = -128; y1 = -128; @(posedge clk);
-        if (out_re !== exp_re || out_im !== exp_im) begin
-            $error("T6 FAIL: got (%0d,%0d), expected (%0d,%0d)", out_re, out_im, exp_re, exp_im);
-            errors++;
-        end else $display("T6 PASS: (-128+127i)*conj(-128+127i) = (%0d,%0d)", out_re, out_im);
+        check("T6", -128, 127, -128, 127);
 
         x0 = 127; y0 = -128; x1 = -128; y1 = 127; @(posedge clk);
-        if (out_re !== exp_re || out_im !== exp_im) begin
-            $error("T7 FAIL: got (%0d,%0d), expected (%0d,%0d)", out_re, out_im, exp_re, exp_im);
-            errors++;
-        end else $display("T7 PASS: (-128+127i)*conj(127-128i) = (%0d,%0d)", out_re, out_im);
+        check("T7", -128, 127, 127, -128);
 
         x0 = 127; y0 = -128; x1 = 127; y1 = -128; @(posedge clk);
-        if (out_re !== exp_re || out_im !== exp_im) begin
-            $error("T8 FAIL: got (%0d,%0d), expected (%0d,%0d)", out_re, out_im, exp_re, exp_im);
-            errors++;
-        end else $display("T8 PASS: (-128+127i)*conj(127+127i) = (%0d,%0d)", out_re, out_im);
+        check("T8", -128, 127, 127, 127);
 
         x0 = 127; y0 = -128; x1 = 127; y1 = 127; @(posedge clk);
-        if (out_re !== exp_re || out_im !== exp_im) begin
-            $error("T9 FAIL: got (%0d,%0d), expected (%0d,%0d)", out_re, out_im, exp_re, exp_im);
-            errors++;
-        end else $display("T9 PASS: (127-128i)*conj(-128-128i) = (%0d,%0d)", out_re, out_im);
-
-        x0 = 127; y0 = 127; x1 = -128; y1 = -128; @(posedge clk);
-        if (out_re !== exp_re || out_im !== exp_im) begin
-            $error("T10 FAIL: got (%0d,%0d), expected (%0d,%0d)", out_re, out_im, exp_re, exp_im);
-            errors++;
-        end else $display("T10 PASS: (127-128i)*conj(-128+127i) = (%0d,%0d)", out_re, out_im);
+        check("T9", 127, -128, -128, -128);
 
         x0 = 127; y0 = 127; x1 = -128; y1 = 127; @(posedge clk);
-        if (out_re !== exp_re || out_im !== exp_im) begin
-            $error("T11 FAIL: got (%0d,%0d), expected (%0d,%0d)", out_re, out_im, exp_re, exp_im);
-            errors++;
-        end else $display("T11 PASS: (127-128i)*conj(127-128i) = (%0d,%0d)", out_re, out_im);
+        check("T10", 127, -128, -128, 127);
 
         x0 = 127; y0 = 127; x1 = 127; y1 = -128; @(posedge clk);
-        if (out_re !== exp_re || out_im !== exp_im) begin
-            $error("T12 FAIL: got (%0d,%0d), expected (%0d,%0d)", out_re, out_im, exp_re, exp_im);
-            errors++;
-        end else $display("T12 PASS: (127-128i)*conj(127+127i) = (%0d,%0d)", out_re, out_im);
+        check("T11", 127, -128, 127, -128);
 
         x0 = 127; y0 = 127; x1 = 127; y1 = 127; @(posedge clk);
-        if (out_re !== exp_re || out_im !== exp_im) begin
-            $error("T13 FAIL: got (%0d,%0d), expected (%0d,%0d)", out_re, out_im, exp_re, exp_im);
-            errors++;
-        end else $display("T13 PASS: (127+127i)*conj(-128-128i) = (%0d,%0d)", out_re, out_im);
-
-        @(posedge clk);
-        if (out_re !== exp_re || out_im !== exp_im) begin
-            $error("T14 FAIL: got (%0d,%0d), expected (%0d,%0d)", out_re, out_im, exp_re, exp_im);
-            errors++;
-        end else $display("T14 PASS: (127+127i)*conj(-128+127i) = (%0d,%0d)", out_re, out_im);
-
-        @(posedge clk);
-        if (out_re !== exp_re || out_im !== exp_im) begin
-            $error("T15 FAIL: got (%0d,%0d), expected (%0d,%0d)", out_re, out_im, exp_re, exp_im);
-            errors++;
-        end else $display("T15 PASS: (127+127i)*conj(127-128i) = (%0d,%0d)", out_re, out_im);
-
-        @(posedge clk);
-        if (out_re !== exp_re || out_im !== exp_im) begin
-            $error("T16 FAIL: got (%0d,%0d), expected (%0d,%0d)", out_re, out_im, exp_re, exp_im);
-            errors++;
-        end else $display("T16 PASS: (127+127i)*conj(127+127i) = (%0d,%0d)", out_re, out_im);
-
+        check("T12", 127, -128, 127, 127);@(posedge clk)
+        check("T13", 127, 127, -128, 127);@(posedge clk)
+        check("T14", 127, 127, 127, -128);@(posedge clk)
+        check("T15", 127, 127, 127, 127);
+        
         #20;
         if (errors == 0) $display("ALL TESTS PASSED");
         else             $display("%0d TESTS FAILED", errors);
