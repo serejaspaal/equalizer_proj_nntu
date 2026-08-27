@@ -364,16 +364,16 @@ module w_matrix_tb;
             || test.e22_re_fxp >= 1.05 || test.e22_re_fxp <= 0.95) begin
             $display(" ERROR: Test %0d, det_inv = %f, det_a = %f, det_inv * det_a = %f, expected %f",
                      test.test_idx, test.det_inv, test.det_a, test.det_inv * test.det_a, 1.0);
-            $display(" a11 = %f, w11 = %f, e11 = %f, e22 = %f",
-                     test.in_a11, test.o_w11_re_fxp, test.e11_re_fxp, test.e22_re_fxp);
+            $display(" e11 = %f, e22 = %f",
+                     test.e11_re_fxp, test.e22_re_fxp);
             local_errors++;
         end
 
         if (local_errors == 0) begin
             $display("     PASSED Test %0d, det_inv = %f, det_a = %f, det_inv * det_a = %f",
                     test.test_idx, test.det_inv, test.det_a, test.det_inv * test.det_a);
-            $display("     a11 = %f, w11 = %f, e11 = %f, e22 = %f",
-                     test.in_a11, test.o_w11_re_fxp, test.e11_re_fxp, test.e22_re_fxp);
+            $display("     e11 = %f, e22 = %f",
+                     test.e11_re_fxp, test.e22_re_fxp);
         end else begin
             errors += local_errors;
             test_failed = 1;
