@@ -2,14 +2,14 @@ onerror {resume}
 quietly WaveActivateNextPane {} 0
 add wave -noupdate /w_matrix_tb/clk
 add wave -noupdate /w_matrix_tb/rst
-add wave -noupdate /w_matrix_tb/i_h11_re
-add wave -noupdate /w_matrix_tb/i_h11_im
-add wave -noupdate /w_matrix_tb/i_h12_re
-add wave -noupdate /w_matrix_tb/i_h12_im
-add wave -noupdate /w_matrix_tb/i_h21_re
-add wave -noupdate /w_matrix_tb/i_h21_im
-add wave -noupdate /w_matrix_tb/i_h22_re
-add wave -noupdate /w_matrix_tb/i_h22_im
+add wave -noupdate /w_matrix_tb/h11_re_fxp
+add wave -noupdate /w_matrix_tb/h11_im_fxp
+add wave -noupdate /w_matrix_tb/h12_re_fxp
+add wave -noupdate /w_matrix_tb/h12_im_fxp
+add wave -noupdate /w_matrix_tb/h21_re_fxp
+add wave -noupdate /w_matrix_tb/h21_im_fxp
+add wave -noupdate /w_matrix_tb/h22_re_fxp
+add wave -noupdate /w_matrix_tb/h22_im_fxp
 add wave -noupdate -radix unsigned /w_matrix_tb/i_a11
 add wave -noupdate -radix unsigned /w_matrix_tb/i_a22
 add wave -noupdate /w_matrix_tb/i_a12_re
@@ -47,6 +47,22 @@ add wave -noupdate -color {Olive Drab} /w_matrix_tb/o_m21_re
 add wave -noupdate -color {Olive Drab} /w_matrix_tb/o_m21_im
 add wave -noupdate -color {Olive Drab} /w_matrix_tb/o_m22_re
 add wave -noupdate -color {Olive Drab} /w_matrix_tb/o_m22_im
+add wave -noupdate -color Coral /w_matrix_tb/m11_re_fxp
+add wave -noupdate -color Coral /w_matrix_tb/m11_im_fxp
+add wave -noupdate -color Coral /w_matrix_tb/m12_re_fxp
+add wave -noupdate -color Coral /w_matrix_tb/m12_im_fxp
+add wave -noupdate -color Coral /w_matrix_tb/m21_re_fxp
+add wave -noupdate -color Coral /w_matrix_tb/m21_im_fxp
+add wave -noupdate -color Coral /w_matrix_tb/m22_re_fxp
+add wave -noupdate -color Coral /w_matrix_tb/m22_im_fxp
+add wave -noupdate -color Coral /w_matrix_tb/w11_re_fxp
+add wave -noupdate -color Coral /w_matrix_tb/w11_im_fxp
+add wave -noupdate -color Coral /w_matrix_tb/w12_re_fxp
+add wave -noupdate -color Coral /w_matrix_tb/w12_im_fxp
+add wave -noupdate -color Coral /w_matrix_tb/w21_re_fxp
+add wave -noupdate -color Coral /w_matrix_tb/w21_im_fxp
+add wave -noupdate -color Coral /w_matrix_tb/w22_re_fxp
+add wave -noupdate -color Coral /w_matrix_tb/w22_im_fxp
 add wave -noupdate -color {Olive Drab} /w_matrix_tb/o_sat_m11_re
 add wave -noupdate -color {Olive Drab} /w_matrix_tb/o_sat_m11_im
 add wave -noupdate -color {Olive Drab} /w_matrix_tb/o_sat_m12_re
@@ -55,8 +71,16 @@ add wave -noupdate -color {Olive Drab} /w_matrix_tb/o_sat_m21_re
 add wave -noupdate -color {Olive Drab} /w_matrix_tb/o_sat_m21_im
 add wave -noupdate -color {Olive Drab} /w_matrix_tb/o_sat_m22_re
 add wave -noupdate -color {Olive Drab} /w_matrix_tb/o_sat_m22_im
+add wave -noupdate -color Magenta /w_matrix_tb/e11_re_fxp
+add wave -noupdate -color Magenta /w_matrix_tb/e11_im_fxp
+add wave -noupdate -color Magenta /w_matrix_tb/e12_re_fxp
+add wave -noupdate -color Magenta /w_matrix_tb/e12_im_fxp
+add wave -noupdate -color Magenta /w_matrix_tb/e21_re_fxp
+add wave -noupdate -color Magenta /w_matrix_tb/e21_im_fxp
+add wave -noupdate -color Magenta /w_matrix_tb/e22_re_fxp
+add wave -noupdate -color Magenta /w_matrix_tb/e22_im_fxp
 TreeUpdate [SetDefaultTree]
-WaveRestoreCursors {{Cursor 1} {174 ns} 0}
+WaveRestoreCursors {{Cursor 1} {111 ns} 0}
 quietly wave cursor active 1
 configure wave -namecolwidth 208
 configure wave -valuecolwidth 100
@@ -72,4 +96,4 @@ configure wave -griddelta 40
 configure wave -timeline 0
 configure wave -timelineunits ns
 update
-WaveRestoreZoom {0 ns} {231 ns}
+WaveRestoreZoom {0 ns} {336 ns}

@@ -27,6 +27,12 @@ vlog -sv ../../m_matrix/src/m_matrix.sv
 
 vlog -sv ../src/w_matrix.sv
 
+vlog -sv ../src/matrix_mult.sv
+
+vlog -sv ../src/bot_block_mult_matrix.sv
+
+vlog -sv ../src/top_block_mult_matrix.sv
+
 vlog -sv ../tb/w_matrix_tb.sv
 
 vsim -t 1ns -voptargs="+acc" w_matrix_tb
@@ -37,4 +43,4 @@ view wave
 view structure
 view signals
 
-run  320ns
+run  420ns

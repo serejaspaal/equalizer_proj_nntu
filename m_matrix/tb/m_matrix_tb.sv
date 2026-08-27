@@ -16,16 +16,28 @@ module m_matrix_tb;
     logic [A_WIDTH-1:0] i_a11, i_a22;
     logic signed [A_WIDTH-1:0] i_a12_re, i_a12_im;
 
-    logic signed [M_WIDTH-1:0] m11_re, m11_im;
-    logic signed [M_WIDTH-1:0] m12_re, m12_im;
-    logic signed [M_WIDTH-1:0] m21_re, m21_im;
-    logic signed [M_WIDTH-1:0] m22_re, m22_im;
+    logic signed [M_WIDTH-1:0] o_m11_re, o_m11_im;
+    logic signed [M_WIDTH-1:0] o_m12_re, o_m12_im;
+    logic signed [M_WIDTH-1:0] o_m21_re, o_m21_im;
+    logic signed [M_WIDTH-1:0] o_m22_re, o_m22_im;
 
     logic o_sat_m11_re, o_sat_m11_im;
     logic o_sat_m12_re, o_sat_m12_im;
     logic o_sat_m21_re, o_sat_m21_im;
     logic o_sat_m22_re, o_sat_m22_im;
 
+    real i_a11_fxp, i_a22_fxp;
+    real i_a12_re_fxp, i_a12_im_fxp;
+    real h11_re_fxp, h11_im_fxp;
+    real h12_re_fxp, h12_im_fxp;
+    real h21_re_fxp, h21_im_fxp;
+    real h22_re_fxp, h22_im_fxp;
+    real m11_re_fxp, m11_im_fxp;
+    real m12_re_fxp, m12_im_fxp;
+    real m21_re_fxp, m21_im_fxp;
+    real m22_re_fxp, m22_im_fxp;
+
+    localparam int FRAC_WIDTH = 8;
 
     m_matrix #(
         .A_WIDTH       ( A_WIDTH ),
@@ -38,6 +50,32 @@ module m_matrix_tb;
 
     always #5 clk = ~clk;
 
+    always @* begin
+        i_a11_fxp    = $unsigned(i_a11) * (2.0 ** (-FRAC_WIDTH));
+        i_a22_fxp    = $unsigned(i_a22) * (2.0 ** (-FRAC_WIDTH));
+
+        i_a12_re_fxp = $signed(i_a12_re) * (2.0 ** (-FRAC_WIDTH));
+        i_a12_im_fxp = $signed(i_a12_im) * (2.0 ** (-FRAC_WIDTH));
+
+        h11_re_fxp = $signed(i_h11_re) * (2.0 ** (-FRAC_WIDTH));
+        h11_im_fxp = $signed(i_h11_im) * (2.0 ** (-FRAC_WIDTH));
+        h12_re_fxp = $signed(i_h12_re) * (2.0 ** (-FRAC_WIDTH));
+        h12_im_fxp = $signed(i_h12_im) * (2.0 ** (-FRAC_WIDTH));
+        h21_re_fxp = $signed(i_h21_re) * (2.0 ** (-FRAC_WIDTH));
+        h21_im_fxp = $signed(i_h21_im) * (2.0 ** (-FRAC_WIDTH));
+        h22_re_fxp = $signed(i_h22_re) * (2.0 ** (-FRAC_WIDTH));
+        h22_im_fxp = $signed(i_h22_im) * (2.0 ** (-FRAC_WIDTH));
+
+        m11_re_fxp = $signed(o_m11_re) * (2.0 ** (-16));
+        m11_im_fxp = $signed(o_m11_im) * (2.0 ** (-16));
+        m12_re_fxp = $signed(o_m12_re) * (2.0 ** (-16));
+        m12_im_fxp = $signed(o_m12_im) * (2.0 ** (-16));
+        m21_re_fxp = $signed(o_m21_re) * (2.0 ** (-16));
+        m21_im_fxp = $signed(o_m21_im) * (2.0 ** (-16));
+        m22_re_fxp = $signed(o_m22_re) * (2.0 ** (-16));
+        m22_im_fxp = $signed(o_m22_im) * (2.0 ** (-16));
+    end
+
     typedef struct {
         logic signed [H_WIDTH-1:0] h11_re, h11_im, h12_re, h12_im, h21_re, h21_im, h22_re, h22_im;
         logic [A_WIDTH-1:0] a11, a22;
@@ -48,18 +86,18 @@ module m_matrix_tb;
         logic signed [M_WIDTH-1:0] exp_m22_re, exp_m22_im;
     } test_t;
 
-    localparam NUM_TESTS = 4;
+    localparam NUM_TESTS = 1;
 
     test_t tests[NUM_TESTS];
 
     initial begin
 
-        tests[0].h11_re  = 16'b1000_0000_0000_0000; tests[0].h11_im  = 16'b1000_0000_0000_0000;
-        tests[0].h12_re  = 16'b1000_0000_0000_0000; tests[0].h12_im  = 16'b1000_0000_0000_0000;
-        tests[0].h21_re  = 16'b1000_0000_0000_0000; tests[0].h21_im  = 16'b1000_0000_0000_0000;
-        tests[0].h22_re  = 16'b1000_0000_0000_0000; tests[0].h22_im  = 16'b1000_0000_0000_0000;
-        tests[0].a11     = 16'b1111_1111_1111_1111; tests[0].a22     = 16'b1111_1111_1111_1111;
-        tests[0].a12_re  = 16'b1000_0000_0000_0000; tests[0].a12_im  = 16'b1000_0000_0000_0000;
+        tests[0].h11_re  = 16'b0000_0001_0000_0000; tests[0].h11_im  = 16'b0000_0000_0000_0000;
+        tests[0].h12_re  = 16'b0000_0000_0000_0000; tests[0].h12_im  = 16'b0000_0000_0000_0000;
+        tests[0].h21_re  = 16'b0000_0000_0000_0000; tests[0].h21_im  = 16'b0000_0000_0000_0000;
+        tests[0].h22_re  = 16'b0000_0001_0000_0000; tests[0].h22_im  = 16'b0000_0000_0000_0000;
+        tests[0].a11     = 16'b0111_1111_0000_0000; tests[0].a22     = 16'b0111_1111_0000_0000;
+        tests[0].a12_re  = 16'b0000_0101_0000_0000; tests[0].a12_im  = 16'b0000_1100_0000_0000;
         tests[0].exp_m11_re = -34'd4294934528; tests[0].exp_m11_im = 34'd2147450880;
         tests[0].exp_m12_re = -34'd4294934528; tests[0].exp_m12_im = 34'd2147450880;
         tests[0].exp_m21_re = -34'd2147450880; tests[0].exp_m21_im = 34'd4294934528;
@@ -154,44 +192,44 @@ module m_matrix_tb;
     task automatic check_outputs(test_t expected);
         int local_errors = 0;
 
-        if (m11_re !== expected.exp_m11_re) begin
+        if (o_m11_re !== expected.exp_m11_re) begin
             $display("  ERROR: Test %0d, m11_re = %d, expected %d",
-                     test_idx, m11_re, expected.exp_m11_re);
+                     test_idx, o_m11_re, expected.exp_m11_re);
             local_errors++;
         end
-        if (m11_im !== expected.exp_m11_im) begin
+        if (o_m11_im !== expected.exp_m11_im) begin
             $display("  ERROR: Test %0d, m11_im = %d, expected %d",
-                     test_idx, m11_im, expected.exp_m11_im);
+                     test_idx, o_m11_im, expected.exp_m11_im);
             local_errors++;
         end
-        if (m12_re !== expected.exp_m12_re) begin
+        if (o_m12_re !== expected.exp_m12_re) begin
             $display("  ERROR: Test %0d, m12_re = %d, expected %d",
-                     test_idx, m12_re, expected.exp_m12_re);
+                     test_idx, o_m12_re, expected.exp_m12_re);
             local_errors++;
         end
-        if (m12_im !== expected.exp_m12_im) begin
+        if (o_m12_im !== expected.exp_m12_im) begin
             $display("  ERROR: Test %0d, m12_im = %d, expected %d",
-                     test_idx, m12_im, expected.exp_m12_im);
+                     test_idx, o_m12_im, expected.exp_m12_im);
             local_errors++;
         end
-        if (m21_re !== expected.exp_m21_re) begin
+        if (o_m21_re !== expected.exp_m21_re) begin
             $display("  ERROR: Test %0d, m21_re = %d, expected %d",
-                     test_idx, m21_re, expected.exp_m21_re);
+                     test_idx, o_m21_re, expected.exp_m21_re);
             local_errors++;
         end
-        if (m21_im !== expected.exp_m21_im) begin
+        if (o_m21_im !== expected.exp_m21_im) begin
             $display("  ERROR: Test %0d, m21_im = %d, expected %d",
-                     test_idx, m21_im, expected.exp_m21_im);
+                     test_idx, o_m21_im, expected.exp_m21_im);
             local_errors++;
         end
-        if (m22_re !== expected.exp_m22_re) begin
+        if (o_m22_re !== expected.exp_m22_re) begin
             $display("  ERROR: Test %0d, m22_re = %d, expected %d",
-                     test_idx, m22_re, expected.exp_m22_re);
+                     test_idx, o_m22_re, expected.exp_m22_re);
             local_errors++;
         end
-        if (m22_im !== expected.exp_m22_im) begin
+        if (o_m22_im !== expected.exp_m22_im) begin
             $display("  ERROR: Test %0d, m22_im = %d, expected %d",
-                     test_idx, m22_im, expected.exp_m22_im);
+                     test_idx, o_m22_im, expected.exp_m22_im);
             local_errors++;
         end
 

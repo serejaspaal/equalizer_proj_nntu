@@ -14,10 +14,10 @@ module m_matrix #(
     input  logic [A_WIDTH-1:0] i_a11, i_a22,
     input  logic signed [A_WIDTH-1:0] i_a12_re, i_a12_im,
 
-    output logic signed [M_WIDTH-1:0] m11_re, m11_im,
-    output logic signed [M_WIDTH-1:0] m12_re, m12_im,
-    output logic signed [M_WIDTH-1:0] m21_re, m21_im,
-    output logic signed [M_WIDTH-1:0] m22_re, m22_im,
+    output logic signed [M_WIDTH-1:0] o_m11_re, o_m11_im,
+    output logic signed [M_WIDTH-1:0] o_m12_re, o_m12_im,
+    output logic signed [M_WIDTH-1:0] o_m21_re, o_m21_im,
+    output logic signed [M_WIDTH-1:0] o_m22_re, o_m22_im,
 
     output logic o_sat_m11_re, o_sat_m11_im,
     output logic o_sat_m12_re, o_sat_m12_im,
@@ -86,22 +86,22 @@ module m_matrix #(
         end
     endgenerate
 
-    assign m11_re = m_top_re[0];
-    assign m11_im = m_top_im[0];
-    assign m12_re = m_top_re[1];
-    assign m12_im = m_top_im[1];
-    assign m21_re = m_bot_re[0];
-    assign m21_im = m_bot_im[0];
-    assign m22_re = m_bot_re[1];
-    assign m22_im = m_bot_im[1];
+    assign o_m11_re = m_top_re[1];
+    assign o_m11_im = m_top_im[1];
+    assign o_m12_re = m_top_re[0];
+    assign o_m12_im = m_top_im[0];
+    assign o_m21_re = m_bot_re[1];
+    assign o_m21_im = m_bot_im[1];
+    assign o_m22_re = m_bot_re[0];
+    assign o_m22_im = m_bot_im[0];
 
-    assign o_sat_m11_re = sat_top_re[0];
-    assign o_sat_m11_im = sat_top_im[0];
-    assign o_sat_m12_re = sat_top_re[1];
-    assign o_sat_m12_im = sat_top_im[1];
-    assign o_sat_m21_re = sat_bot_re[0];
-    assign o_sat_m21_im = sat_bot_im[0];
-    assign o_sat_m22_re = sat_bot_re[1];
-    assign o_sat_m22_im = sat_bot_im[1];
+    assign o_sat_m11_re = sat_top_re[1];
+    assign o_sat_m11_im = sat_top_im[1];
+    assign o_sat_m12_re = sat_top_re[0];
+    assign o_sat_m12_im = sat_top_im[0];
+    assign o_sat_m21_re = sat_bot_re[1];
+    assign o_sat_m21_im = sat_bot_im[1];
+    assign o_sat_m22_re = sat_bot_re[0];
+    assign o_sat_m22_im = sat_bot_im[0];
 
 endmodule
