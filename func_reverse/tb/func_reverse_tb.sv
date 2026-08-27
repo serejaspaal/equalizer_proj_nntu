@@ -4,6 +4,7 @@ module func_reverse_tb;
 
     parameter IN_WIDTH   = 32;
     parameter FRAC_WIDTH = 16;
+    parameter OUT_WIDTH  = 33;
     parameter N_LUT      = 11;
     parameter NINTRP     = FRAC_WIDTH - N_LUT - 1;
     parameter CLK_PERIOD = 10;
@@ -13,14 +14,15 @@ module func_reverse_tb;
     logic [IN_WIDTH-1:0]  x;
 
     logic                      o_inf_off;
-    logic [IN_WIDTH-1:0]       o_result_off;
+    logic [OUT_WIDTH-1:0]      o_result_off;
 
     logic                          o_inf_on;
-    logic [IN_WIDTH+NINTRP-1:0]    o_result_on;
+    logic [OUT_WIDTH+NINTRP-1:0]   o_result_on;
 
     func_reverse #(
         .IN_WIDTH   (IN_WIDTH),
         .FRAC_WIDTH (FRAC_WIDTH),
+        .OUT_WIDTH  (OUT_WIDTH),
         .USE_INTRP  (0)
     ) dut_off (
         .i_clk    (clk),
@@ -32,6 +34,7 @@ module func_reverse_tb;
     func_reverse #(
         .IN_WIDTH   (IN_WIDTH),
         .FRAC_WIDTH (FRAC_WIDTH),
+        .OUT_WIDTH  (OUT_WIDTH + NINTRP),
         .USE_INTRP  (1)
     ) dut_on (
         .i_clk    (clk),
@@ -75,41 +78,6 @@ module func_reverse_tb;
     real    err_off, err_on;
 
     initial begin
-        // test_val[0]  = 24'h00000000; test_exp[0]  = 0.0;
-        // test_val[1]  = 24'h00008000; test_exp[1]  = 2.0;
-        // test_val[2]  = 24'h00010000; test_exp[2]  = 1.0;
-        // test_val[3]  = 24'h00001000; test_exp[3]  = 16.0;
-        // test_val[4]  = 24'h00002000; test_exp[4]  = 8.0;
-        // test_val[5]  = 24'h00004000; test_exp[5]  = 4.0;
-        // test_val[6]  = 24'h0000C000; test_exp[6]  = 1.33333333;
-        // test_val[7]  = 24'h00005555; test_exp[7]  = 3.00004578;
-        // test_val[8]  = 24'h00020000; test_exp[8]  = 0.5;
-        // test_val[9]  = 24'h00030000; test_exp[9]  = 0.33333333;
-        // test_val[10] = 24'h00040000; test_exp[10] = 0.25;
-        // test_val[11] = 24'h00050000; test_exp[11] = 0.2;
-        // test_val[12] = 24'h00080000; test_exp[12] = 0.125;
-        // test_val[13] = 24'h000A0000; test_exp[13] = 0.1;
-        // test_val[14] = 24'h00100000; test_exp[14] = 0.0625;
-        // test_val[15] = 24'h00640000; test_exp[15] = 0.01;
-        // test_val[16] = 24'h00C80000; test_exp[16] = 0.005;
-        // test_val[17] = 24'h00FFFFFF; test_exp[17] = 0.00390625;
-        // test_val[18] = 24'h00001AAB; test_exp[18] = 65536.0 / 6827;
-        // test_val[19] = 24'h0000ABCD; test_exp[19] = 65536.0 / 43981;
-        // test_val[20] = 24'h0000B54C; test_exp[20] = 65536.0 / 46412;
-        // test_val[21] = 24'h0000FAAB; test_exp[21] = 65536.0 / 64171;
-        // test_val[22] = 24'h00008FA0; test_exp[22] = 65536.0 / 36768;
-        // test_val[23] = 24'h00010101; test_exp[23] = 65536.0 / 65793;
-        // test_val[24] = 24'h0001FFFF; test_exp[24] = 65536.0 / 131071;
-        // test_val[25] = 24'h0002AAAA; test_exp[25] = 65536.0 / 174762;
-        // test_val[26] = 24'h00000134; test_exp[26] = 65536.0 / 308;
-        // test_val[27] = 24'h000001E5; test_exp[27] = 65536.0 / 485;
-        // test_val[28] = 24'h000002F1; test_exp[28] = 65536.0 / 753;
-
-        // for (int i = 0; i < 65; i++) begin
-        //     test_val[29 + i] = 24'(1000 * (i + 1));
-        //     test_exp[29 + i] = 65536.0 / (1000 * (i + 1));
-        // end
-
         for (int i = 0; i < 10; i++) begin
             test_val[i] = i+1;
             test_exp[i] = real'(1<<FRAC_WIDTH) / (i+1);
