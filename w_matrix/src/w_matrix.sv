@@ -10,6 +10,7 @@ module w_matrix #(
 )(
     input  logic clk,
     input  logic rst,
+    input  logic i_stb,
     input  logic signed [H_WIDTH-1:0] i_h11_re, i_h11_im,
     input  logic signed [H_WIDTH-1:0] i_h12_re, i_h12_im,
     input  logic signed [H_WIDTH-1:0] i_h21_re, i_h21_im,
@@ -17,6 +18,8 @@ module w_matrix #(
 
     input  logic [A_WIDTH-1:0] i_a11, i_a22,
     input  logic signed [A_WIDTH-1:0] i_a12_re, i_a12_im,
+
+    output logic o_stb,
 
     output logic signed [W_WIDTH-1:0] o_w11_re, o_w11_im,
     output logic signed [W_WIDTH-1:0] o_w12_re, o_w12_im,
@@ -64,6 +67,15 @@ module w_matrix #(
 //    logic [DET_WIDTH-1:0] o_det_inv;
 //    logic o_det_inv_inf;
 
+
+    dline #(
+        .DATA_WIDTH (1),
+        .DELAY (10)
+    ) inst_dline (
+        .i_clk (clk),
+        .i_data (i_stb),
+        .o_data (o_stb)
+    );
 
     a_det #(//4 takt
         .A_WIDTH (A_WIDTH),

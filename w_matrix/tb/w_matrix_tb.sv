@@ -11,6 +11,8 @@ module w_matrix_tb;
 
     logic clk = 0;
     logic rst = 0;
+    logic i_stb = 0;
+    logic o_stb = 0;
 
     logic signed [H_WIDTH-1:0] i_h11_re, i_h11_im;
     logic signed [H_WIDTH-1:0] i_h12_re, i_h12_im;
@@ -279,6 +281,7 @@ module w_matrix_tb;
 
         fork
             begin
+                i_stb = 1;
                 for (test_idx = 0; test_idx < NUM_TESTS; test_idx++) begin
                     test_storage[test_idx].test_idx = test_idx;
                     i_h11_re  = tests[test_idx].h11_re;
@@ -302,6 +305,7 @@ module w_matrix_tb;
 
                     @(posedge clk);
                 end
+                i_stb = 0;
             end
 
             begin

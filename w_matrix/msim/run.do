@@ -27,11 +27,11 @@ vlog -sv ../../m_matrix/src/m_matrix.sv
 
 vlog -sv ../src/w_matrix.sv
 
-vlog -sv ../src/matrix_mult.sv
+vlog -sv ../tb/matrix_mult.sv
 
-vlog -sv ../src/bot_block_mult_matrix.sv
+vlog -sv ../tb/bot_block_mult_matrix.sv
 
-vlog -sv ../src/top_block_mult_matrix.sv
+vlog -sv ../tb/top_block_mult_matrix.sv
 
 vlog -sv ../tb/w_matrix_tb.sv
 

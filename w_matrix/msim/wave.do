@@ -2,6 +2,8 @@ onerror {resume}
 quietly WaveActivateNextPane {} 0
 add wave -noupdate /w_matrix_tb/clk
 add wave -noupdate /w_matrix_tb/rst
+add wave -noupdate /w_matrix_tb/i_stb
+add wave -noupdate /w_matrix_tb/o_stb
 add wave -noupdate /w_matrix_tb/h11_re_fxp
 add wave -noupdate /w_matrix_tb/h11_im_fxp
 add wave -noupdate /w_matrix_tb/h12_re_fxp
@@ -96,4 +98,4 @@ configure wave -griddelta 40
 configure wave -timeline 0
 configure wave -timelineunits ns
 update
-WaveRestoreZoom {0 ns} {336 ns}
+WaveRestoreZoom {101 ns} {437 ns}
