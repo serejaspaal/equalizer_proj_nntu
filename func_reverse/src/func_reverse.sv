@@ -1,22 +1,22 @@
 `timescale 1ns / 1ps
 
 module func_reverse #(
-    parameter IN_WIDTH   = 24,
-    parameter FRAC_WIDTH = 16,
-    parameter USE_INTRP  = 0,
-    parameter OUT_WIDTH  = IN_WIDTH + USE_INTRP * (FRAC_WIDTH - 12)
+    parameter IN_WIDTH    = 24,
+    parameter FRAC_WIDTH  = 16,
+    parameter USE_INTRP   = 0,
+    parameter INTRP_WIDTH = 4,
+    localparam OUT_WIDTH  = IN_WIDTH + USE_INTRP * INTRP_WIDTH + 1
 )(
-    input  logic                          i_clk,
-    input  logic [IN_WIDTH-1:0]          i_x,
-    output logic [OUT_WIDTH-1:0]         o_result,
-    output logic                         o_inf
+    input  logic                         i_clk,
+    input  logic [IN_WIDTH-1:0]         i_x,
+    output logic [OUT_WIDTH-1:0]        o_result,
+    output logic                        o_inf
 );
 
     localparam LUT_AW    = 11;
     localparam LUT_DW    = 18;
-    localparam N         = FRAC_WIDTH - LUT_AW - 1;
     localparam MAX_SHIFT = FRAC_WIDTH - 1;
-    localparam SHIFT_W   = MAX_SHIFT + N;
+    localparam SHIFT_W   = MAX_SHIFT + INTRP_WIDTH;
 
     logic [4:0] msb_pos;
 
@@ -44,16 +44,18 @@ module func_reverse #(
                 addr_comb[LUT_AW-1-i] = i_x[msb_pos-1-i];
     end
 
-    logic [N-1:0] xfrac_comb;
+    logic [INTRP_WIDTH-1:0] xfrac_comb;
     always_comb begin
         xfrac_comb = '0;
-        for (int i = 0; i < N; i = i + 1)
+        for (int i = 0; i < INTRP_WIDTH; i = i + 1)
             if (msb_pos >= LUT_AW + 1 + i)
-                xfrac_comb[N-1-i] = i_x[msb_pos - 1 - LUT_AW - i];
+                xfrac_comb[INTRP_WIDTH-1-i] = i_x[msb_pos - 1 - LUT_AW - i];
+            else
+                xfrac_comb[INTRP_WIDTH-1-i] = 1'b0;
     end
 
     logic [LUT_AW-1:0] r_addr, r_addr1;
-    logic [N-1:0]      r_xfrac;
+    logic [INTRP_WIDTH-1:0] r_xfrac;
     logic [4:0]        s1_k;
     logic              s1_shift_right;
     logic              s1_is_zero;
@@ -78,8 +80,8 @@ module func_reverse #(
         s1b_is_zero     <= s1_is_zero;
     end
 
-    logic [LUT_DW-1:0]     r_a0, r_a1;
-    logic [LUT_DW+N-1:0]   interp;
+    logic [LUT_DW-1:0]              r_a0, r_a1;
+    logic [LUT_DW+INTRP_WIDTH-1:0]  interp;
 
     block_ram #(
         .AW (LUT_AW),
@@ -96,7 +98,7 @@ module func_reverse #(
         if (USE_INTRP) begin : gen_linear_intrp
             linear_intrp #(
                 .LUT_DW (LUT_DW),
-                .N      (N)
+                .N      (INTRP_WIDTH)
             ) dut2 (
                 .i_a0  (r_a0),
                 .i_a1  (r_a1),
@@ -106,11 +108,11 @@ module func_reverse #(
         end
     endgenerate
 
-    logic [LUT_DW-1:0]     s2_a0;
-    logic [LUT_DW+N-1:0]   s2_interp;
-    logic [4:0]            s2_k;
-    logic                  s2_shift_right;
-    logic                  s2_is_zero;
+    logic [LUT_DW-1:0]              s2_a0;
+    logic [LUT_DW+INTRP_WIDTH-1:0]  s2_interp;
+    logic [4:0]                     s2_k;
+    logic                           s2_shift_right;
+    logic                           s2_is_zero;
 
     always_ff @(posedge i_clk) begin
         s2_a0          <= r_a0;
@@ -120,7 +122,7 @@ module func_reverse #(
         s2_is_zero     <= s1b_is_zero;
     end
 
-    logic [LUT_DW + N + SHIFT_W - 1:0] wide_result;
+    logic [LUT_DW + INTRP_WIDTH + SHIFT_W - 1:0] wide_result;
 
     generate
         if (USE_INTRP) begin : gen_shift_intrp

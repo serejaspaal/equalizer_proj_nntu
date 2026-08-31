@@ -2,28 +2,32 @@
 
 module func_reverse_tb;
 
+    parameter N_LUT      = 11;
+
     parameter IN_WIDTH   = 32;
     parameter FRAC_WIDTH = 16;
-    parameter OUT_WIDTH  = 33;
-    parameter N_LUT      = 11;
-    parameter NINTRP     = FRAC_WIDTH - N_LUT - 1;
+    parameter INTRP_WIDTH = 10;
+
     parameter CLK_PERIOD = 10;
     parameter NTESTS     = 160;
+
+    parameter RES_OFF_W  = (IN_WIDTH + 0 * INTRP_WIDTH) + 1;
+    parameter RES_ON_W   = (IN_WIDTH + 1 * INTRP_WIDTH) + 1;
 
     logic                 clk;
     logic [IN_WIDTH-1:0]  x;
 
-    logic                      o_inf_off;
-    logic [OUT_WIDTH-1:0]      o_result_off;
+    logic                    o_inf_off;
+    logic [RES_OFF_W-1:0]   o_result_off;
 
-    logic                          o_inf_on;
-    logic [OUT_WIDTH+NINTRP-1:0]   o_result_on;
+    logic                    o_inf_on;
+    logic [RES_ON_W-1:0]    o_result_on;
 
     func_reverse #(
-        .IN_WIDTH   (IN_WIDTH),
-        .FRAC_WIDTH (FRAC_WIDTH),
-        .OUT_WIDTH  (OUT_WIDTH),
-        .USE_INTRP  (0)
+        .IN_WIDTH    (IN_WIDTH),
+        .FRAC_WIDTH  (FRAC_WIDTH),
+        .USE_INTRP   (0),
+        .INTRP_WIDTH (INTRP_WIDTH)
     ) dut_off (
         .i_clk    (clk),
         .i_x      (x),
@@ -32,10 +36,10 @@ module func_reverse_tb;
     );
 
     func_reverse #(
-        .IN_WIDTH   (IN_WIDTH),
-        .FRAC_WIDTH (FRAC_WIDTH),
-        .OUT_WIDTH  (OUT_WIDTH + NINTRP),
-        .USE_INTRP  (1)
+        .IN_WIDTH    (IN_WIDTH),
+        .FRAC_WIDTH  (FRAC_WIDTH),
+        .USE_INTRP   (1),
+        .INTRP_WIDTH (INTRP_WIDTH)
     ) dut_on (
         .i_clk    (clk),
         .i_x      (x),
@@ -53,7 +57,7 @@ module func_reverse_tb;
     always @* begin
         x_fxp          = $unsigned(x) * (2.0 ** (-FRAC_WIDTH));
         result_fxp_off = $unsigned(o_result_off) * (2.0 ** (-FRAC_WIDTH));
-        result_fxp_on  = $unsigned(o_result_on)  * (2.0 ** (-FRAC_WIDTH - NINTRP));
+        result_fxp_on  = $unsigned(o_result_on)  * (2.0 ** (-FRAC_WIDTH - INTRP_WIDTH));
     end
 
     logic [IN_WIDTH-1:0] test_val [0:NTESTS-1];
