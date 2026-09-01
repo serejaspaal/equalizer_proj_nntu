@@ -13,36 +13,28 @@ module cmult #(
     output logic signed [A_WIDTH+B_WIDTH:0] out_re,
     output logic signed [A_WIDTH+B_WIDTH:0] out_im
     );
-    (* use_dsp = USE_DSP_VALUE ? "yes" : "no" *)
-    logic signed [A_WIDTH:0] sum_a;
-    (* use_dsp = USE_DSP_VALUE ? "yes" : "no" *)
-    logic signed [B_WIDTH:0] sum_b;
+    
+    logic signed [A_WIDTH-1:0] x0_d, y0_d;
+    logic signed [B_WIDTH-1:0] x1_d, y1_d;
     
     (* use_dsp = USE_DSP_VALUE ? "yes" : "no" *)
-    logic signed [A_WIDTH+B_WIDTH-1:0] p1;
-    (* use_dsp = USE_DSP_VALUE ? "yes" : "no" *)
-    logic signed [A_WIDTH+B_WIDTH-1:0] p2;
-    (* use_dsp = USE_DSP_VALUE ? "yes" : "no" *)
-    logic signed [A_WIDTH+B_WIDTH+1:0] p3;
-    
-    logic signed [A_WIDTH+B_WIDTH-1:0] p1_reg;
-    logic signed [A_WIDTH+B_WIDTH-1:0] p2_reg;
+    logic signed [A_WIDTH+B_WIDTH:0] common, multr, multi;
     
     always_ff @(posedge clk) begin
-        sum_a <= x0 + y0;
-        sum_b <= x1 + y1;
-        p1 <= x0*x1;
-        p2 <= y0*y1;
+        x0_d <= x0;
+        y0_d <= y0;
+        x1_d <= x1;
+        y1_d <= y1;
     end
     
     always_ff @(posedge clk) begin
-        p1_reg <= p1;
-        p2_reg <= p2;
-        p3 <= sum_a*sum_b;
+        common <= (x0_d-y0_d) * y1_d;
+        multr <= (x1_d-y1_d) * x0_d;
+        multi <= (x1_d+y1_d) * y0_d;
     end
 
     always_ff @(posedge clk) begin
-        out_re <= p1_reg - p2_reg;
-        out_im <= p3 - p1_reg - p2_reg;
+        out_re <= multr + common;
+        out_im <= multi + common;
     end
 endmodule
