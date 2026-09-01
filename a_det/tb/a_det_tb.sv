@@ -13,8 +13,8 @@ module a_det_tb;
 
     logic [DET_WIDTH-1:0] o_det_a;
 
-    logic o_sat_det;
-    logic sum_underflow;
+    logic o_det_sat;
+    logic o_sum_udf;
 
 
     a_det #(

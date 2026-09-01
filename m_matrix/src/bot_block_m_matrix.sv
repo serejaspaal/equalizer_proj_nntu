@@ -137,6 +137,8 @@ module bot_block_m_matrix #(
    );
 
 
+   // assign m_re = cmult2_m_re;
+   // assign m_im = cmult2_m_im;
     assign m_re = round_m_re;
     assign m_im = round_m_im;
 
