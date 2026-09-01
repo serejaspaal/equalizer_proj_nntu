@@ -2,87 +2,89 @@ onerror {resume}
 quietly WaveActivateNextPane {} 0
 add wave -noupdate /w_matrix_tb/clk
 add wave -noupdate /w_matrix_tb/rst
-add wave -noupdate /w_matrix_tb/i_stb
-add wave -noupdate /w_matrix_tb/o_stb
-add wave -noupdate /w_matrix_tb/h11_re_fxp
-add wave -noupdate /w_matrix_tb/h11_im_fxp
-add wave -noupdate /w_matrix_tb/h12_re_fxp
-add wave -noupdate /w_matrix_tb/h12_im_fxp
-add wave -noupdate /w_matrix_tb/h21_re_fxp
-add wave -noupdate /w_matrix_tb/h21_im_fxp
-add wave -noupdate /w_matrix_tb/h22_re_fxp
-add wave -noupdate /w_matrix_tb/h22_im_fxp
-add wave -noupdate -radix unsigned /w_matrix_tb/i_a11
-add wave -noupdate -radix unsigned /w_matrix_tb/i_a22
-add wave -noupdate /w_matrix_tb/i_a12_re
-add wave -noupdate /w_matrix_tb/i_a12_im
-add wave -noupdate /w_matrix_tb/i_a11_fxp
-add wave -noupdate /w_matrix_tb/i_a22_fxp
-add wave -noupdate /w_matrix_tb/i_a12_re_fxp
-add wave -noupdate /w_matrix_tb/i_a12_im_fxp
-add wave -noupdate -color {Olive Drab} /w_matrix_tb/det_a_fxp
-add wave -noupdate -color {Olive Drab} /w_matrix_tb/o_det_sat
-add wave -noupdate -color {Olive Drab} /w_matrix_tb/o_det_udf
-add wave -noupdate -color {Olive Drab} /w_matrix_tb/det_inv_fxp
-add wave -noupdate -color {Olive Drab} /w_matrix_tb/o_det_inv_inf
-add wave -noupdate -color Cyan /w_matrix_tb/o_w11_re
-add wave -noupdate -color Cyan /w_matrix_tb/o_w11_im
-add wave -noupdate -color Cyan /w_matrix_tb/o_w12_re
-add wave -noupdate -color Cyan /w_matrix_tb/o_w12_im
-add wave -noupdate -color Cyan /w_matrix_tb/o_w21_re
-add wave -noupdate -color Cyan /w_matrix_tb/o_w21_im
-add wave -noupdate -color Cyan /w_matrix_tb/o_w22_re
-add wave -noupdate -color Cyan /w_matrix_tb/o_w22_im
-add wave -noupdate -color Cyan /w_matrix_tb/o_sat_w11_re
-add wave -noupdate -color Cyan /w_matrix_tb/o_sat_w11_im
-add wave -noupdate -color Cyan /w_matrix_tb/o_sat_w12_re
-add wave -noupdate -color Cyan /w_matrix_tb/o_sat_w12_im
-add wave -noupdate -color Cyan /w_matrix_tb/o_sat_w21_re
-add wave -noupdate -color Cyan /w_matrix_tb/o_sat_w21_im
-add wave -noupdate -color Cyan /w_matrix_tb/o_sat_w22_re
-add wave -noupdate -color Cyan /w_matrix_tb/o_sat_w22_im
-add wave -noupdate -color {Olive Drab} /w_matrix_tb/o_m11_re
-add wave -noupdate -color {Olive Drab} /w_matrix_tb/o_m11_im
-add wave -noupdate -color {Olive Drab} /w_matrix_tb/o_m12_re
-add wave -noupdate -color {Olive Drab} /w_matrix_tb/o_m12_im
-add wave -noupdate -color {Olive Drab} /w_matrix_tb/o_m21_re
-add wave -noupdate -color {Olive Drab} /w_matrix_tb/o_m21_im
-add wave -noupdate -color {Olive Drab} /w_matrix_tb/o_m22_re
-add wave -noupdate -color {Olive Drab} /w_matrix_tb/o_m22_im
-add wave -noupdate -color Coral /w_matrix_tb/m11_re_fxp
-add wave -noupdate -color Coral /w_matrix_tb/m11_im_fxp
-add wave -noupdate -color Coral /w_matrix_tb/m12_re_fxp
-add wave -noupdate -color Coral /w_matrix_tb/m12_im_fxp
-add wave -noupdate -color Coral /w_matrix_tb/m21_re_fxp
-add wave -noupdate -color Coral /w_matrix_tb/m21_im_fxp
-add wave -noupdate -color Coral /w_matrix_tb/m22_re_fxp
-add wave -noupdate -color Coral /w_matrix_tb/m22_im_fxp
-add wave -noupdate -color Coral /w_matrix_tb/w11_re_fxp
-add wave -noupdate -color Coral /w_matrix_tb/w11_im_fxp
-add wave -noupdate -color Coral /w_matrix_tb/w12_re_fxp
-add wave -noupdate -color Coral /w_matrix_tb/w12_im_fxp
-add wave -noupdate -color Coral /w_matrix_tb/w21_re_fxp
-add wave -noupdate -color Coral /w_matrix_tb/w21_im_fxp
-add wave -noupdate -color Coral /w_matrix_tb/w22_re_fxp
-add wave -noupdate -color Coral /w_matrix_tb/w22_im_fxp
-add wave -noupdate -color {Olive Drab} /w_matrix_tb/o_sat_m11_re
-add wave -noupdate -color {Olive Drab} /w_matrix_tb/o_sat_m11_im
-add wave -noupdate -color {Olive Drab} /w_matrix_tb/o_sat_m12_re
-add wave -noupdate -color {Olive Drab} /w_matrix_tb/o_sat_m12_im
-add wave -noupdate -color {Olive Drab} /w_matrix_tb/o_sat_m21_re
-add wave -noupdate -color {Olive Drab} /w_matrix_tb/o_sat_m21_im
-add wave -noupdate -color {Olive Drab} /w_matrix_tb/o_sat_m22_re
-add wave -noupdate -color {Olive Drab} /w_matrix_tb/o_sat_m22_im
-add wave -noupdate -color Magenta /w_matrix_tb/e11_re_fxp
-add wave -noupdate -color Magenta /w_matrix_tb/e11_im_fxp
-add wave -noupdate -color Magenta /w_matrix_tb/e12_re_fxp
-add wave -noupdate -color Magenta /w_matrix_tb/e12_im_fxp
-add wave -noupdate -color Magenta /w_matrix_tb/e21_re_fxp
-add wave -noupdate -color Magenta /w_matrix_tb/e21_im_fxp
-add wave -noupdate -color Magenta /w_matrix_tb/e22_re_fxp
-add wave -noupdate -color Magenta /w_matrix_tb/e22_im_fxp
+add wave -noupdate -expand -group input /w_matrix_tb/i_stb
+add wave -noupdate -expand -group input -radix unsigned /w_matrix_tb/i_a11
+add wave -noupdate -expand -group input /w_matrix_tb/i_a12_re
+add wave -noupdate -expand -group input /w_matrix_tb/i_a12_im
+add wave -noupdate -expand -group input -radix unsigned /w_matrix_tb/i_a22
+add wave -noupdate -expand -group input /w_matrix_tb/i_a11_fxp
+add wave -noupdate -expand -group input /w_matrix_tb/i_a12_re_fxp
+add wave -noupdate -expand -group input /w_matrix_tb/i_a12_im_fxp
+add wave -noupdate -expand -group input /w_matrix_tb/i_a22_fxp
+add wave -noupdate -expand -group input /w_matrix_tb/h11_re_fxp
+add wave -noupdate -expand -group input /w_matrix_tb/h11_im_fxp
+add wave -noupdate -expand -group input /w_matrix_tb/h12_re_fxp
+add wave -noupdate -expand -group input /w_matrix_tb/h12_im_fxp
+add wave -noupdate -expand -group input /w_matrix_tb/h21_re_fxp
+add wave -noupdate -expand -group input /w_matrix_tb/h21_im_fxp
+add wave -noupdate -expand -group input /w_matrix_tb/h22_re_fxp
+add wave -noupdate -expand -group input /w_matrix_tb/h22_im_fxp
+add wave -noupdate -expand -group det_a -radix unsigned /w_matrix_tb/o_det_a
+add wave -noupdate -expand -group det_a -color {Olive Drab} /w_matrix_tb/det_a_fxp
+add wave -noupdate -expand -group det_a -color {Olive Drab} /w_matrix_tb/o_det_sat
+add wave -noupdate -expand -group det_a -color {Olive Drab} /w_matrix_tb/o_det_udf
+add wave -noupdate -expand -group det_a_inv -radix unsigned /w_matrix_tb/o_det_inv
+add wave -noupdate -expand -group det_a_inv -color {Olive Drab} /w_matrix_tb/o_det_inv_inf
+add wave -noupdate -expand -group det_a_inv -color {Olive Drab} /w_matrix_tb/det_inv_fxp
+add wave -noupdate -expand -group m_matrix -color {Olive Drab} /w_matrix_tb/o_m11_re
+add wave -noupdate -expand -group m_matrix -color {Olive Drab} /w_matrix_tb/o_m11_im
+add wave -noupdate -expand -group m_matrix -color {Olive Drab} /w_matrix_tb/o_m12_re
+add wave -noupdate -expand -group m_matrix -color {Olive Drab} /w_matrix_tb/o_m12_im
+add wave -noupdate -expand -group m_matrix -color {Olive Drab} /w_matrix_tb/o_m21_re
+add wave -noupdate -expand -group m_matrix -color {Olive Drab} /w_matrix_tb/o_m21_im
+add wave -noupdate -expand -group m_matrix -color {Olive Drab} /w_matrix_tb/o_m22_re
+add wave -noupdate -expand -group m_matrix -color {Olive Drab} /w_matrix_tb/o_m22_im
+add wave -noupdate -expand -group m_matrix -color Coral /w_matrix_tb/m11_re_fxp
+add wave -noupdate -expand -group m_matrix -color Coral /w_matrix_tb/m11_im_fxp
+add wave -noupdate -expand -group m_matrix -color Coral /w_matrix_tb/m12_re_fxp
+add wave -noupdate -expand -group m_matrix -color Coral /w_matrix_tb/m12_im_fxp
+add wave -noupdate -expand -group m_matrix -color Coral /w_matrix_tb/m21_re_fxp
+add wave -noupdate -expand -group m_matrix -color Coral /w_matrix_tb/m21_im_fxp
+add wave -noupdate -expand -group m_matrix -color Coral /w_matrix_tb/m22_re_fxp
+add wave -noupdate -expand -group m_matrix -color Coral /w_matrix_tb/m22_im_fxp
+add wave -noupdate -expand -group m_matrix -color {Olive Drab} /w_matrix_tb/o_sat_m11_re
+add wave -noupdate -expand -group m_matrix -color {Olive Drab} /w_matrix_tb/o_sat_m11_im
+add wave -noupdate -expand -group m_matrix -color {Olive Drab} /w_matrix_tb/o_sat_m12_re
+add wave -noupdate -expand -group m_matrix -color {Olive Drab} /w_matrix_tb/o_sat_m12_im
+add wave -noupdate -expand -group m_matrix -color {Olive Drab} /w_matrix_tb/o_sat_m21_re
+add wave -noupdate -expand -group m_matrix -color {Olive Drab} /w_matrix_tb/o_sat_m21_im
+add wave -noupdate -expand -group m_matrix -color {Olive Drab} /w_matrix_tb/o_sat_m22_re
+add wave -noupdate -expand -group m_matrix -color {Olive Drab} /w_matrix_tb/o_sat_m22_im
+add wave -noupdate -expand -group {output - w_matrix} /w_matrix_tb/o_stb
+add wave -noupdate -expand -group {output - w_matrix} -color Cyan -subitemconfig {{/w_matrix_tb/o_w11_re[65]} {-color Cyan} {/w_matrix_tb/o_w11_re[64]} {-color Cyan} {/w_matrix_tb/o_w11_re[63]} {-color Cyan} {/w_matrix_tb/o_w11_re[62]} {-color Cyan} {/w_matrix_tb/o_w11_re[61]} {-color Cyan} {/w_matrix_tb/o_w11_re[60]} {-color Cyan} {/w_matrix_tb/o_w11_re[59]} {-color Cyan} {/w_matrix_tb/o_w11_re[58]} {-color Cyan} {/w_matrix_tb/o_w11_re[57]} {-color Cyan} {/w_matrix_tb/o_w11_re[56]} {-color Cyan} {/w_matrix_tb/o_w11_re[55]} {-color Cyan} {/w_matrix_tb/o_w11_re[54]} {-color Cyan} {/w_matrix_tb/o_w11_re[53]} {-color Cyan} {/w_matrix_tb/o_w11_re[52]} {-color Cyan} {/w_matrix_tb/o_w11_re[51]} {-color Cyan} {/w_matrix_tb/o_w11_re[50]} {-color Cyan} {/w_matrix_tb/o_w11_re[49]} {-color Cyan} {/w_matrix_tb/o_w11_re[48]} {-color Cyan} {/w_matrix_tb/o_w11_re[47]} {-color Cyan} {/w_matrix_tb/o_w11_re[46]} {-color Cyan} {/w_matrix_tb/o_w11_re[45]} {-color Cyan} {/w_matrix_tb/o_w11_re[44]} {-color Cyan} {/w_matrix_tb/o_w11_re[43]} {-color Cyan} {/w_matrix_tb/o_w11_re[42]} {-color Cyan} {/w_matrix_tb/o_w11_re[41]} {-color Cyan} {/w_matrix_tb/o_w11_re[40]} {-color Cyan} {/w_matrix_tb/o_w11_re[39]} {-color Cyan} {/w_matrix_tb/o_w11_re[38]} {-color Cyan} {/w_matrix_tb/o_w11_re[37]} {-color Cyan} {/w_matrix_tb/o_w11_re[36]} {-color Cyan} {/w_matrix_tb/o_w11_re[35]} {-color Cyan} {/w_matrix_tb/o_w11_re[34]} {-color Cyan} {/w_matrix_tb/o_w11_re[33]} {-color Cyan} {/w_matrix_tb/o_w11_re[32]} {-color Cyan} {/w_matrix_tb/o_w11_re[31]} {-color Cyan} {/w_matrix_tb/o_w11_re[30]} {-color Cyan} {/w_matrix_tb/o_w11_re[29]} {-color Cyan} {/w_matrix_tb/o_w11_re[28]} {-color Cyan} {/w_matrix_tb/o_w11_re[27]} {-color Cyan} {/w_matrix_tb/o_w11_re[26]} {-color Cyan} {/w_matrix_tb/o_w11_re[25]} {-color Cyan} {/w_matrix_tb/o_w11_re[24]} {-color Cyan} {/w_matrix_tb/o_w11_re[23]} {-color Cyan} {/w_matrix_tb/o_w11_re[22]} {-color Cyan} {/w_matrix_tb/o_w11_re[21]} {-color Cyan} {/w_matrix_tb/o_w11_re[20]} {-color Cyan} {/w_matrix_tb/o_w11_re[19]} {-color Cyan} {/w_matrix_tb/o_w11_re[18]} {-color Cyan} {/w_matrix_tb/o_w11_re[17]} {-color Cyan} {/w_matrix_tb/o_w11_re[16]} {-color Cyan} {/w_matrix_tb/o_w11_re[15]} {-color Cyan} {/w_matrix_tb/o_w11_re[14]} {-color Cyan} {/w_matrix_tb/o_w11_re[13]} {-color Cyan} {/w_matrix_tb/o_w11_re[12]} {-color Cyan} {/w_matrix_tb/o_w11_re[11]} {-color Cyan} {/w_matrix_tb/o_w11_re[10]} {-color Cyan} {/w_matrix_tb/o_w11_re[9]} {-color Cyan} {/w_matrix_tb/o_w11_re[8]} {-color Cyan} {/w_matrix_tb/o_w11_re[7]} {-color Cyan} {/w_matrix_tb/o_w11_re[6]} {-color Cyan} {/w_matrix_tb/o_w11_re[5]} {-color Cyan} {/w_matrix_tb/o_w11_re[4]} {-color Cyan} {/w_matrix_tb/o_w11_re[3]} {-color Cyan} {/w_matrix_tb/o_w11_re[2]} {-color Cyan} {/w_matrix_tb/o_w11_re[1]} {-color Cyan} {/w_matrix_tb/o_w11_re[0]} {-color Cyan}} /w_matrix_tb/o_w11_re
+add wave -noupdate -expand -group {output - w_matrix} -color Cyan -subitemconfig {{/w_matrix_tb/o_w11_im[65]} {-color Cyan} {/w_matrix_tb/o_w11_im[64]} {-color Cyan} {/w_matrix_tb/o_w11_im[63]} {-color Cyan} {/w_matrix_tb/o_w11_im[62]} {-color Cyan} {/w_matrix_tb/o_w11_im[61]} {-color Cyan} {/w_matrix_tb/o_w11_im[60]} {-color Cyan} {/w_matrix_tb/o_w11_im[59]} {-color Cyan} {/w_matrix_tb/o_w11_im[58]} {-color Cyan} {/w_matrix_tb/o_w11_im[57]} {-color Cyan} {/w_matrix_tb/o_w11_im[56]} {-color Cyan} {/w_matrix_tb/o_w11_im[55]} {-color Cyan} {/w_matrix_tb/o_w11_im[54]} {-color Cyan} {/w_matrix_tb/o_w11_im[53]} {-color Cyan} {/w_matrix_tb/o_w11_im[52]} {-color Cyan} {/w_matrix_tb/o_w11_im[51]} {-color Cyan} {/w_matrix_tb/o_w11_im[50]} {-color Cyan} {/w_matrix_tb/o_w11_im[49]} {-color Cyan} {/w_matrix_tb/o_w11_im[48]} {-color Cyan} {/w_matrix_tb/o_w11_im[47]} {-color Cyan} {/w_matrix_tb/o_w11_im[46]} {-color Cyan} {/w_matrix_tb/o_w11_im[45]} {-color Cyan} {/w_matrix_tb/o_w11_im[44]} {-color Cyan} {/w_matrix_tb/o_w11_im[43]} {-color Cyan} {/w_matrix_tb/o_w11_im[42]} {-color Cyan} {/w_matrix_tb/o_w11_im[41]} {-color Cyan} {/w_matrix_tb/o_w11_im[40]} {-color Cyan} {/w_matrix_tb/o_w11_im[39]} {-color Cyan} {/w_matrix_tb/o_w11_im[38]} {-color Cyan} {/w_matrix_tb/o_w11_im[37]} {-color Cyan} {/w_matrix_tb/o_w11_im[36]} {-color Cyan} {/w_matrix_tb/o_w11_im[35]} {-color Cyan} {/w_matrix_tb/o_w11_im[34]} {-color Cyan} {/w_matrix_tb/o_w11_im[33]} {-color Cyan} {/w_matrix_tb/o_w11_im[32]} {-color Cyan} {/w_matrix_tb/o_w11_im[31]} {-color Cyan} {/w_matrix_tb/o_w11_im[30]} {-color Cyan} {/w_matrix_tb/o_w11_im[29]} {-color Cyan} {/w_matrix_tb/o_w11_im[28]} {-color Cyan} {/w_matrix_tb/o_w11_im[27]} {-color Cyan} {/w_matrix_tb/o_w11_im[26]} {-color Cyan} {/w_matrix_tb/o_w11_im[25]} {-color Cyan} {/w_matrix_tb/o_w11_im[24]} {-color Cyan} {/w_matrix_tb/o_w11_im[23]} {-color Cyan} {/w_matrix_tb/o_w11_im[22]} {-color Cyan} {/w_matrix_tb/o_w11_im[21]} {-color Cyan} {/w_matrix_tb/o_w11_im[20]} {-color Cyan} {/w_matrix_tb/o_w11_im[19]} {-color Cyan} {/w_matrix_tb/o_w11_im[18]} {-color Cyan} {/w_matrix_tb/o_w11_im[17]} {-color Cyan} {/w_matrix_tb/o_w11_im[16]} {-color Cyan} {/w_matrix_tb/o_w11_im[15]} {-color Cyan} {/w_matrix_tb/o_w11_im[14]} {-color Cyan} {/w_matrix_tb/o_w11_im[13]} {-color Cyan} {/w_matrix_tb/o_w11_im[12]} {-color Cyan} {/w_matrix_tb/o_w11_im[11]} {-color Cyan} {/w_matrix_tb/o_w11_im[10]} {-color Cyan} {/w_matrix_tb/o_w11_im[9]} {-color Cyan} {/w_matrix_tb/o_w11_im[8]} {-color Cyan} {/w_matrix_tb/o_w11_im[7]} {-color Cyan} {/w_matrix_tb/o_w11_im[6]} {-color Cyan} {/w_matrix_tb/o_w11_im[5]} {-color Cyan} {/w_matrix_tb/o_w11_im[4]} {-color Cyan} {/w_matrix_tb/o_w11_im[3]} {-color Cyan} {/w_matrix_tb/o_w11_im[2]} {-color Cyan} {/w_matrix_tb/o_w11_im[1]} {-color Cyan} {/w_matrix_tb/o_w11_im[0]} {-color Cyan}} /w_matrix_tb/o_w11_im
+add wave -noupdate -expand -group {output - w_matrix} -color Cyan -subitemconfig {{/w_matrix_tb/o_w12_re[65]} {-color Cyan} {/w_matrix_tb/o_w12_re[64]} {-color Cyan} {/w_matrix_tb/o_w12_re[63]} {-color Cyan} {/w_matrix_tb/o_w12_re[62]} {-color Cyan} {/w_matrix_tb/o_w12_re[61]} {-color Cyan} {/w_matrix_tb/o_w12_re[60]} {-color Cyan} {/w_matrix_tb/o_w12_re[59]} {-color Cyan} {/w_matrix_tb/o_w12_re[58]} {-color Cyan} {/w_matrix_tb/o_w12_re[57]} {-color Cyan} {/w_matrix_tb/o_w12_re[56]} {-color Cyan} {/w_matrix_tb/o_w12_re[55]} {-color Cyan} {/w_matrix_tb/o_w12_re[54]} {-color Cyan} {/w_matrix_tb/o_w12_re[53]} {-color Cyan} {/w_matrix_tb/o_w12_re[52]} {-color Cyan} {/w_matrix_tb/o_w12_re[51]} {-color Cyan} {/w_matrix_tb/o_w12_re[50]} {-color Cyan} {/w_matrix_tb/o_w12_re[49]} {-color Cyan} {/w_matrix_tb/o_w12_re[48]} {-color Cyan} {/w_matrix_tb/o_w12_re[47]} {-color Cyan} {/w_matrix_tb/o_w12_re[46]} {-color Cyan} {/w_matrix_tb/o_w12_re[45]} {-color Cyan} {/w_matrix_tb/o_w12_re[44]} {-color Cyan} {/w_matrix_tb/o_w12_re[43]} {-color Cyan} {/w_matrix_tb/o_w12_re[42]} {-color Cyan} {/w_matrix_tb/o_w12_re[41]} {-color Cyan} {/w_matrix_tb/o_w12_re[40]} {-color Cyan} {/w_matrix_tb/o_w12_re[39]} {-color Cyan} {/w_matrix_tb/o_w12_re[38]} {-color Cyan} {/w_matrix_tb/o_w12_re[37]} {-color Cyan} {/w_matrix_tb/o_w12_re[36]} {-color Cyan} {/w_matrix_tb/o_w12_re[35]} {-color Cyan} {/w_matrix_tb/o_w12_re[34]} {-color Cyan} {/w_matrix_tb/o_w12_re[33]} {-color Cyan} {/w_matrix_tb/o_w12_re[32]} {-color Cyan} {/w_matrix_tb/o_w12_re[31]} {-color Cyan} {/w_matrix_tb/o_w12_re[30]} {-color Cyan} {/w_matrix_tb/o_w12_re[29]} {-color Cyan} {/w_matrix_tb/o_w12_re[28]} {-color Cyan} {/w_matrix_tb/o_w12_re[27]} {-color Cyan} {/w_matrix_tb/o_w12_re[26]} {-color Cyan} {/w_matrix_tb/o_w12_re[25]} {-color Cyan} {/w_matrix_tb/o_w12_re[24]} {-color Cyan} {/w_matrix_tb/o_w12_re[23]} {-color Cyan} {/w_matrix_tb/o_w12_re[22]} {-color Cyan} {/w_matrix_tb/o_w12_re[21]} {-color Cyan} {/w_matrix_tb/o_w12_re[20]} {-color Cyan} {/w_matrix_tb/o_w12_re[19]} {-color Cyan} {/w_matrix_tb/o_w12_re[18]} {-color Cyan} {/w_matrix_tb/o_w12_re[17]} {-color Cyan} {/w_matrix_tb/o_w12_re[16]} {-color Cyan} {/w_matrix_tb/o_w12_re[15]} {-color Cyan} {/w_matrix_tb/o_w12_re[14]} {-color Cyan} {/w_matrix_tb/o_w12_re[13]} {-color Cyan} {/w_matrix_tb/o_w12_re[12]} {-color Cyan} {/w_matrix_tb/o_w12_re[11]} {-color Cyan} {/w_matrix_tb/o_w12_re[10]} {-color Cyan} {/w_matrix_tb/o_w12_re[9]} {-color Cyan} {/w_matrix_tb/o_w12_re[8]} {-color Cyan} {/w_matrix_tb/o_w12_re[7]} {-color Cyan} {/w_matrix_tb/o_w12_re[6]} {-color Cyan} {/w_matrix_tb/o_w12_re[5]} {-color Cyan} {/w_matrix_tb/o_w12_re[4]} {-color Cyan} {/w_matrix_tb/o_w12_re[3]} {-color Cyan} {/w_matrix_tb/o_w12_re[2]} {-color Cyan} {/w_matrix_tb/o_w12_re[1]} {-color Cyan} {/w_matrix_tb/o_w12_re[0]} {-color Cyan}} /w_matrix_tb/o_w12_re
+add wave -noupdate -expand -group {output - w_matrix} -color Cyan -subitemconfig {{/w_matrix_tb/o_w12_im[65]} {-color Cyan} {/w_matrix_tb/o_w12_im[64]} {-color Cyan} {/w_matrix_tb/o_w12_im[63]} {-color Cyan} {/w_matrix_tb/o_w12_im[62]} {-color Cyan} {/w_matrix_tb/o_w12_im[61]} {-color Cyan} {/w_matrix_tb/o_w12_im[60]} {-color Cyan} {/w_matrix_tb/o_w12_im[59]} {-color Cyan} {/w_matrix_tb/o_w12_im[58]} {-color Cyan} {/w_matrix_tb/o_w12_im[57]} {-color Cyan} {/w_matrix_tb/o_w12_im[56]} {-color Cyan} {/w_matrix_tb/o_w12_im[55]} {-color Cyan} {/w_matrix_tb/o_w12_im[54]} {-color Cyan} {/w_matrix_tb/o_w12_im[53]} {-color Cyan} {/w_matrix_tb/o_w12_im[52]} {-color Cyan} {/w_matrix_tb/o_w12_im[51]} {-color Cyan} {/w_matrix_tb/o_w12_im[50]} {-color Cyan} {/w_matrix_tb/o_w12_im[49]} {-color Cyan} {/w_matrix_tb/o_w12_im[48]} {-color Cyan} {/w_matrix_tb/o_w12_im[47]} {-color Cyan} {/w_matrix_tb/o_w12_im[46]} {-color Cyan} {/w_matrix_tb/o_w12_im[45]} {-color Cyan} {/w_matrix_tb/o_w12_im[44]} {-color Cyan} {/w_matrix_tb/o_w12_im[43]} {-color Cyan} {/w_matrix_tb/o_w12_im[42]} {-color Cyan} {/w_matrix_tb/o_w12_im[41]} {-color Cyan} {/w_matrix_tb/o_w12_im[40]} {-color Cyan} {/w_matrix_tb/o_w12_im[39]} {-color Cyan} {/w_matrix_tb/o_w12_im[38]} {-color Cyan} {/w_matrix_tb/o_w12_im[37]} {-color Cyan} {/w_matrix_tb/o_w12_im[36]} {-color Cyan} {/w_matrix_tb/o_w12_im[35]} {-color Cyan} {/w_matrix_tb/o_w12_im[34]} {-color Cyan} {/w_matrix_tb/o_w12_im[33]} {-color Cyan} {/w_matrix_tb/o_w12_im[32]} {-color Cyan} {/w_matrix_tb/o_w12_im[31]} {-color Cyan} {/w_matrix_tb/o_w12_im[30]} {-color Cyan} {/w_matrix_tb/o_w12_im[29]} {-color Cyan} {/w_matrix_tb/o_w12_im[28]} {-color Cyan} {/w_matrix_tb/o_w12_im[27]} {-color Cyan} {/w_matrix_tb/o_w12_im[26]} {-color Cyan} {/w_matrix_tb/o_w12_im[25]} {-color Cyan} {/w_matrix_tb/o_w12_im[24]} {-color Cyan} {/w_matrix_tb/o_w12_im[23]} {-color Cyan} {/w_matrix_tb/o_w12_im[22]} {-color Cyan} {/w_matrix_tb/o_w12_im[21]} {-color Cyan} {/w_matrix_tb/o_w12_im[20]} {-color Cyan} {/w_matrix_tb/o_w12_im[19]} {-color Cyan} {/w_matrix_tb/o_w12_im[18]} {-color Cyan} {/w_matrix_tb/o_w12_im[17]} {-color Cyan} {/w_matrix_tb/o_w12_im[16]} {-color Cyan} {/w_matrix_tb/o_w12_im[15]} {-color Cyan} {/w_matrix_tb/o_w12_im[14]} {-color Cyan} {/w_matrix_tb/o_w12_im[13]} {-color Cyan} {/w_matrix_tb/o_w12_im[12]} {-color Cyan} {/w_matrix_tb/o_w12_im[11]} {-color Cyan} {/w_matrix_tb/o_w12_im[10]} {-color Cyan} {/w_matrix_tb/o_w12_im[9]} {-color Cyan} {/w_matrix_tb/o_w12_im[8]} {-color Cyan} {/w_matrix_tb/o_w12_im[7]} {-color Cyan} {/w_matrix_tb/o_w12_im[6]} {-color Cyan} {/w_matrix_tb/o_w12_im[5]} {-color Cyan} {/w_matrix_tb/o_w12_im[4]} {-color Cyan} {/w_matrix_tb/o_w12_im[3]} {-color Cyan} {/w_matrix_tb/o_w12_im[2]} {-color Cyan} {/w_matrix_tb/o_w12_im[1]} {-color Cyan} {/w_matrix_tb/o_w12_im[0]} {-color Cyan}} /w_matrix_tb/o_w12_im
+add wave -noupdate -expand -group {output - w_matrix} -color Cyan -subitemconfig {{/w_matrix_tb/o_w21_re[65]} {-color Cyan} {/w_matrix_tb/o_w21_re[64]} {-color Cyan} {/w_matrix_tb/o_w21_re[63]} {-color Cyan} {/w_matrix_tb/o_w21_re[62]} {-color Cyan} {/w_matrix_tb/o_w21_re[61]} {-color Cyan} {/w_matrix_tb/o_w21_re[60]} {-color Cyan} {/w_matrix_tb/o_w21_re[59]} {-color Cyan} {/w_matrix_tb/o_w21_re[58]} {-color Cyan} {/w_matrix_tb/o_w21_re[57]} {-color Cyan} {/w_matrix_tb/o_w21_re[56]} {-color Cyan} {/w_matrix_tb/o_w21_re[55]} {-color Cyan} {/w_matrix_tb/o_w21_re[54]} {-color Cyan} {/w_matrix_tb/o_w21_re[53]} {-color Cyan} {/w_matrix_tb/o_w21_re[52]} {-color Cyan} {/w_matrix_tb/o_w21_re[51]} {-color Cyan} {/w_matrix_tb/o_w21_re[50]} {-color Cyan} {/w_matrix_tb/o_w21_re[49]} {-color Cyan} {/w_matrix_tb/o_w21_re[48]} {-color Cyan} {/w_matrix_tb/o_w21_re[47]} {-color Cyan} {/w_matrix_tb/o_w21_re[46]} {-color Cyan} {/w_matrix_tb/o_w21_re[45]} {-color Cyan} {/w_matrix_tb/o_w21_re[44]} {-color Cyan} {/w_matrix_tb/o_w21_re[43]} {-color Cyan} {/w_matrix_tb/o_w21_re[42]} {-color Cyan} {/w_matrix_tb/o_w21_re[41]} {-color Cyan} {/w_matrix_tb/o_w21_re[40]} {-color Cyan} {/w_matrix_tb/o_w21_re[39]} {-color Cyan} {/w_matrix_tb/o_w21_re[38]} {-color Cyan} {/w_matrix_tb/o_w21_re[37]} {-color Cyan} {/w_matrix_tb/o_w21_re[36]} {-color Cyan} {/w_matrix_tb/o_w21_re[35]} {-color Cyan} {/w_matrix_tb/o_w21_re[34]} {-color Cyan} {/w_matrix_tb/o_w21_re[33]} {-color Cyan} {/w_matrix_tb/o_w21_re[32]} {-color Cyan} {/w_matrix_tb/o_w21_re[31]} {-color Cyan} {/w_matrix_tb/o_w21_re[30]} {-color Cyan} {/w_matrix_tb/o_w21_re[29]} {-color Cyan} {/w_matrix_tb/o_w21_re[28]} {-color Cyan} {/w_matrix_tb/o_w21_re[27]} {-color Cyan} {/w_matrix_tb/o_w21_re[26]} {-color Cyan} {/w_matrix_tb/o_w21_re[25]} {-color Cyan} {/w_matrix_tb/o_w21_re[24]} {-color Cyan} {/w_matrix_tb/o_w21_re[23]} {-color Cyan} {/w_matrix_tb/o_w21_re[22]} {-color Cyan} {/w_matrix_tb/o_w21_re[21]} {-color Cyan} {/w_matrix_tb/o_w21_re[20]} {-color Cyan} {/w_matrix_tb/o_w21_re[19]} {-color Cyan} {/w_matrix_tb/o_w21_re[18]} {-color Cyan} {/w_matrix_tb/o_w21_re[17]} {-color Cyan} {/w_matrix_tb/o_w21_re[16]} {-color Cyan} {/w_matrix_tb/o_w21_re[15]} {-color Cyan} {/w_matrix_tb/o_w21_re[14]} {-color Cyan} {/w_matrix_tb/o_w21_re[13]} {-color Cyan} {/w_matrix_tb/o_w21_re[12]} {-color Cyan} {/w_matrix_tb/o_w21_re[11]} {-color Cyan} {/w_matrix_tb/o_w21_re[10]} {-color Cyan} {/w_matrix_tb/o_w21_re[9]} {-color Cyan} {/w_matrix_tb/o_w21_re[8]} {-color Cyan} {/w_matrix_tb/o_w21_re[7]} {-color Cyan} {/w_matrix_tb/o_w21_re[6]} {-color Cyan} {/w_matrix_tb/o_w21_re[5]} {-color Cyan} {/w_matrix_tb/o_w21_re[4]} {-color Cyan} {/w_matrix_tb/o_w21_re[3]} {-color Cyan} {/w_matrix_tb/o_w21_re[2]} {-color Cyan} {/w_matrix_tb/o_w21_re[1]} {-color Cyan} {/w_matrix_tb/o_w21_re[0]} {-color Cyan}} /w_matrix_tb/o_w21_re
+add wave -noupdate -expand -group {output - w_matrix} -color Cyan /w_matrix_tb/o_w21_im
+add wave -noupdate -expand -group {output - w_matrix} -color Cyan /w_matrix_tb/o_w22_re
+add wave -noupdate -expand -group {output - w_matrix} -color Cyan /w_matrix_tb/o_w22_im
+add wave -noupdate -expand -group {output - w_matrix} -color Coral /w_matrix_tb/w11_re_fxp
+add wave -noupdate -expand -group {output - w_matrix} -color Coral /w_matrix_tb/w11_im_fxp
+add wave -noupdate -expand -group {output - w_matrix} -color Coral /w_matrix_tb/w12_re_fxp
+add wave -noupdate -expand -group {output - w_matrix} -color Coral /w_matrix_tb/w12_im_fxp
+add wave -noupdate -expand -group {output - w_matrix} -color Coral /w_matrix_tb/w21_re_fxp
+add wave -noupdate -expand -group {output - w_matrix} -color Coral /w_matrix_tb/w21_im_fxp
+add wave -noupdate -expand -group {output - w_matrix} -color Coral /w_matrix_tb/w22_re_fxp
+add wave -noupdate -expand -group {output - w_matrix} -color Coral /w_matrix_tb/w22_im_fxp
+add wave -noupdate -expand -group {output - w_matrix} -color Cyan /w_matrix_tb/o_sat_w11_re
+add wave -noupdate -expand -group {output - w_matrix} -color Cyan /w_matrix_tb/o_sat_w11_im
+add wave -noupdate -expand -group {output - w_matrix} -color Cyan /w_matrix_tb/o_sat_w12_re
+add wave -noupdate -expand -group {output - w_matrix} -color Cyan /w_matrix_tb/o_sat_w12_im
+add wave -noupdate -expand -group {output - w_matrix} -color Cyan /w_matrix_tb/o_sat_w21_re
+add wave -noupdate -expand -group {output - w_matrix} -color Cyan /w_matrix_tb/o_sat_w21_im
+add wave -noupdate -expand -group {output - w_matrix} -color Cyan /w_matrix_tb/o_sat_w22_re
+add wave -noupdate -expand -group {output - w_matrix} -color Cyan /w_matrix_tb/o_sat_w22_im
+add wave -noupdate -expand -group {unit matrix} -color Magenta /w_matrix_tb/e11_re_fxp
+add wave -noupdate -expand -group {unit matrix} -color Magenta /w_matrix_tb/e11_im_fxp
+add wave -noupdate -expand -group {unit matrix} -color Magenta /w_matrix_tb/e12_re_fxp
+add wave -noupdate -expand -group {unit matrix} -color Magenta /w_matrix_tb/e12_im_fxp
+add wave -noupdate -expand -group {unit matrix} -color Magenta /w_matrix_tb/e21_re_fxp
+add wave -noupdate -expand -group {unit matrix} -color Magenta /w_matrix_tb/e21_im_fxp
+add wave -noupdate -expand -group {unit matrix} -color Magenta /w_matrix_tb/e22_re_fxp
+add wave -noupdate -expand -group {unit matrix} -color Magenta /w_matrix_tb/e22_im_fxp
 TreeUpdate [SetDefaultTree]
-WaveRestoreCursors {{Cursor 1} {111 ns} 0}
+WaveRestoreCursors {{Cursor 1} {331 ns} 0}
 quietly wave cursor active 1
 configure wave -namecolwidth 208
 configure wave -valuecolwidth 100
@@ -98,4 +100,4 @@ configure wave -griddelta 40
 configure wave -timeline 0
 configure wave -timelineunits ns
 update
-WaveRestoreZoom {101 ns} {437 ns}
+WaveRestoreZoom {0 ns} {441 ns}
