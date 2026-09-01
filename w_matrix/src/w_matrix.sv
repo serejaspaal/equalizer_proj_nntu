@@ -4,9 +4,12 @@ module w_matrix #(
     parameter int M_WIDTH       = A_WIDTH + H_WIDTH + 2,
     parameter int DET_WIDTH     = 2*A_WIDTH,
     parameter int FRAC_WIDTH    = 8,
-    parameter int W_WIDTH       = DET_WIDTH + M_WIDTH,
     //parameter int W_WIDTH       = 18 + M_WIDTH,
-    parameter int USE_DSP_VALUE = 1
+    parameter int USE_DSP_VALUE = 1,
+    parameter int USE_INTRP     = 1,
+    parameter int INTRP_WIDTH   = 7,
+    parameter int DET_INV_WIDTH = DET_WIDTH + USE_INTRP * INTRP_WIDTH + 1,
+    parameter int W_WIDTH       = DET_INV_WIDTH + M_WIDTH
 )(
     input  logic clk,
     input  logic rst,
@@ -34,7 +37,7 @@ module w_matrix #(
     output logic [DET_WIDTH-1:0] o_det_a,
     output logic o_det_sat,
     output logic o_det_udf,
-    output logic [DET_WIDTH-1:0] o_det_inv,
+    output logic [DET_INV_WIDTH-1:0] o_det_inv,
     output logic o_det_inv_inf,
 
     output logic signed [M_WIDTH-1:0] o_m11_re, o_m11_im,
@@ -96,8 +99,8 @@ module w_matrix #(
     func_reverse #( //8 takt
         .IN_WIDTH (DET_WIDTH),
         .FRAC_WIDTH (2*FRAC_WIDTH),
-        .OUT_WIDTH (DET_WIDTH)
-        //.OUT_WIDTH (18)
+        .INTRP_WIDTH (INTRP_WIDTH),
+        .USE_INTRP (USE_INTRP)
     ) inst_func_reverse (
         .i_clk (clk),
         .i_x (o_det_a),
@@ -167,7 +170,7 @@ module w_matrix #(
 
 
     cmult_matrix_on_real #( //10 takt
-        .DET_WIDTH (DET_WIDTH),
+        .DET_WIDTH (DET_INV_WIDTH),
         //.DET_WIDTH (18),
         .M_WIDTH (M_WIDTH),
         .W_WIDTH (W_WIDTH),

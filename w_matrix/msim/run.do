@@ -13,6 +13,8 @@ vlog -sv ../../lib/cmult_a_real/src/cmult_a_real.sv
 
 vlog -sv ../../func_reverse/src/func_reverse.sv
 
+vlog -sv ../../func_reverse/src/linear_intrp.sv
+
 vlog -sv ../../func_reverse/src/block_ram.sv
 
 vlog -sv ../../cmult_matrix_on_real/src/cmult_matrix_on_real.sv
