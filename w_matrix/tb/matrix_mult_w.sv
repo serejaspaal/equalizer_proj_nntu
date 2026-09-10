@@ -1,4 +1,4 @@
-module matrix_mult #(
+module matrix_mult_w #(
     parameter int A_WIDTH       = 16,
     parameter int W_WIDTH       = 66,
     parameter int E_WIDTH       = A_WIDTH + W_WIDTH + 2,

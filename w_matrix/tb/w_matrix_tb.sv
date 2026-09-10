@@ -116,7 +116,7 @@ module w_matrix_tb;
     );
 
 
-    matrix_mult #(
+    matrix_mult_w #(
         .A_WIDTH       ( A_WIDTH ),
         .W_WIDTH       ( W_WIDTH ),
         .E_WIDTH       ( A_WIDTH+2+W_WIDTH ),
