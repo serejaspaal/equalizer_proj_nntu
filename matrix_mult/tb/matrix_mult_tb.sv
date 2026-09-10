@@ -238,8 +238,6 @@ module matrix_mult_tb;
 
 
                     $display("Running Test %0d...", test_idx);
-                    $display("s11_re = %0d == %0d == %0d", i_s11_re, s11_re_fxp, tests[test_idx].s11_re);
-                    $display("s11_im = %0d == %0d == %0d", i_s11_im, s11_im_fxp, test_storage[test_idx].test.exp_f11_im);
 
                     @(posedge clk);
                 end
