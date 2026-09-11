@@ -1,7 +1,7 @@
 transcript on
 vlib work
 
-vlog -sv ../src/cmult.sv
+vlog -sv ../src/cmult.sv ../mdl/cmult.c
 
 vlog -sv ../tb/cmult_tb.sv
 
