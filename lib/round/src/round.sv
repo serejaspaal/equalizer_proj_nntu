@@ -21,7 +21,7 @@ module round #(
     generate
         if (DROP == 0) begin
             always_ff @(posedge clk) begin
-                o_data <= i_data[IN_WIDTH-1 : CLIP_WIDTH];
+                o_data <= i_data[OUT_WIDTH-1 : 0];
                 o_sat  <= 1'b0;
             end
         end else if (IN_SIGNED) begin
