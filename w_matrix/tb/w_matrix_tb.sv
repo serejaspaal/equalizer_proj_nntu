@@ -56,10 +56,23 @@ module w_matrix_tb;
     logic signed [A_WIDTH+W_WIDTH+1:0] o_e12_re, o_e12_im;
     logic signed [A_WIDTH+W_WIDTH+1:0] o_e21_re, o_e21_im;
     logic signed [A_WIDTH+W_WIDTH+1:0] o_e22_re, o_e22_im;
-    logic o_sat_e11_re, o_sat_e11_im;
-    logic o_sat_e12_re, o_sat_e12_im;
-    logic o_sat_e21_re, o_sat_e21_im;
-    logic o_sat_e22_re, o_sat_e22_im;
+
+    logic o_sat11_re;
+    logic o_sat11_im;
+    logic o_sat12_re;
+    logic o_sat12_im;
+    logic o_sat21_re;
+    logic o_sat21_im;
+    logic o_sat22_re;
+    logic o_sat22_im;
+    logic o_udf11_re;
+    logic o_udf11_im;
+    logic o_udf12_re;
+    logic o_udf12_im;
+    logic o_udf21_re;
+    logic o_udf21_im;
+    logic o_udf22_re;
+    logic o_udf22_im;
 
     real i_a11_fxp, i_a22_fxp;
     real i_a12_re_fxp, i_a12_im_fxp;
@@ -85,18 +98,18 @@ module w_matrix_tb;
     real e21_re_fxp, e21_im_fxp;
     real e22_re_fxp, e22_im_fxp;
 
-    logic [A_WIDTH-1:0] i_a11_sync;
-    logic [A_WIDTH-1:0] i_a22_sync;
-    logic [A_WIDTH-1:0] i_a12_re_sync;
-    logic [A_WIDTH-1:0] i_a12_im_sync;
-    logic [W_WIDTH-1:0] i_w11_re_sync;
-    logic [W_WIDTH-1:0] i_w11_im_sync;
-    logic [W_WIDTH-1:0] i_w12_re_sync;
-    logic [W_WIDTH-1:0] i_w12_im_sync;
-    logic [W_WIDTH-1:0] i_w21_re_sync;
-    logic [W_WIDTH-1:0] i_w21_im_sync;
-    logic [W_WIDTH-1:0] i_w22_re_sync;
-    logic [W_WIDTH-1:0] i_w22_im_sync;
+    logic [A_WIDTH:0] i_a11_sync;
+    logic [A_WIDTH:0] i_a22_sync;
+    logic signed [A_WIDTH:0] i_a12_re_sync;
+    logic signed [A_WIDTH:0] i_a12_im_sync;
+    logic signed [W_WIDTH-1:0] i_w11_re_sync;
+    logic signed [W_WIDTH-1:0] i_w11_im_sync;
+    logic signed [W_WIDTH-1:0] i_w12_re_sync;
+    logic signed [W_WIDTH-1:0] i_w12_im_sync;
+    logic signed [W_WIDTH-1:0] i_w21_re_sync;
+    logic signed [W_WIDTH-1:0] i_w21_im_sync;
+    logic signed [W_WIDTH-1:0] i_w22_re_sync;
+    logic signed [W_WIDTH-1:0] i_w22_im_sync;
 
     /////////////////////////////////////////////////////
 
@@ -116,35 +129,55 @@ module w_matrix_tb;
     );
 
 
-    matrix_mult_w #(
-        .A_WIDTH       ( A_WIDTH ),
-        .W_WIDTH       ( W_WIDTH ),
-        .E_WIDTH       ( A_WIDTH+2+W_WIDTH ),
-        .FRAC_WIDTH    ( FRAC_WIDTH ),
-        .USE_DSP_VALUE ( USE_DSP_VALUE )
-    ) awx (
-        .clk(clk),
-        .rst(rst),
-        .i_w11_re(i_w11_re_sync),
-        .i_w11_im(i_w11_im_sync),
-        .i_w12_re(i_w12_re_sync),
-        .i_w12_im(i_w12_im_sync),
-        .i_w21_re(i_w21_re_sync),
-        .i_w21_im(i_w21_im_sync),
-        .i_w22_re(i_w22_re_sync),
-        .i_w22_im(i_w22_im_sync),
-        .i_a11(i_a11_sync),
-        .i_a22(i_a22_sync),
-        .i_a12_re(i_a12_re_sync),
-        .i_a12_im(i_a12_im_sync),
-        .o_e11_re(o_e11_re),
-        .o_e11_im(o_e11_im),
-        .o_e12_re(o_e12_re),
-        .o_e12_im(o_e12_im),
-        .o_e21_re(o_e21_re),
-        .o_e21_im(o_e21_im),
-        .o_e22_re(o_e22_re),
-        .o_e22_im(o_e22_im)
+    matrix_mult #(
+	.W_WIDTH      (W_WIDTH),
+	.S_WIDTH      (A_WIDTH+1),
+	.F_WIDTH      (W_WIDTH+2+A_WIDTH),
+	.FRAC_WIDTH   (FRAC_WIDTH),
+	.USE_DSP_VALUE(USE_DSP_VALUE)
+     ) inst_matrix_mult (
+	.clk       (clk),
+	.rst       (rst),
+	.i_w11_re  (i_w11_re_sync),
+	.i_w11_im  (i_w11_im_sync),
+	.i_w12_re  (i_w12_re_sync),
+	.i_w12_im  (i_w12_im_sync),
+	.i_w21_re  (i_w21_re_sync),
+	.i_w21_im  (i_w21_im_sync),
+	.i_w22_re  (i_w22_re_sync),
+	.i_w22_im  (i_w22_im_sync),
+	.i_s11_re  (i_a11_sync),
+	.i_s11_im  (17'b0000_0000_0000_0000),
+	.i_s12_re  (i_a12_re_sync),
+	.i_s12_im  (i_a12_im_sync),
+	.i_s21_re  (i_a12_re_sync),
+	.i_s21_im  (-i_a12_im_sync),
+	.i_s22_re  (i_a22_sync),
+	.i_s22_im  (17'b0000_0000_0000_0000),
+	.o_f11_re  (o_e11_re),
+	.o_f11_im  (o_e11_im),
+	.o_f12_re  (o_e12_re),
+	.o_f12_im  (o_e12_im),
+	.o_f21_re  (o_e21_re),
+	.o_f21_im  (o_e21_im),
+	.o_f22_re  (o_e22_re),
+	.o_f22_im  (o_e22_im),
+	.o_sat11_re(o_sat11_re),
+	.o_sat11_im(o_sat11_im),
+	.o_sat12_re(o_sat12_re),
+	.o_sat12_im(o_sat12_im),
+	.o_sat21_re(o_sat21_re),
+	.o_sat21_im(o_sat21_im),
+	.o_sat22_re(o_sat22_re),
+	.o_sat22_im(o_sat22_im),
+	.o_udf11_re(o_udf11_re),
+	.o_udf11_im(o_udf11_im),
+	.o_udf12_re(o_udf12_re),
+	.o_udf12_im(o_udf12_im),
+	.o_udf21_re(o_udf21_re),
+	.o_udf21_im(o_udf21_im),
+	.o_udf22_re(o_udf22_re),
+	.o_udf22_im(o_udf22_im)
     );
 
     always #5 clk = ~clk;
@@ -186,14 +219,14 @@ module w_matrix_tb;
         w22_re_fxp = $signed(o_w22_re) * (2.0 ** (-4*FRAC_WIDTH-INTRP_WIDTH));
         w22_im_fxp = $signed(o_w22_im) * (2.0 ** (-4*FRAC_WIDTH-INTRP_WIDTH));
 
-        e11_re_fxp = $signed(o_e11_re) * (2.0 ** (-5*FRAC_WIDTH-INTRP_WIDTH));
-        e11_im_fxp = $signed(o_e11_im) * (2.0 ** (-5*FRAC_WIDTH-INTRP_WIDTH));
-        e12_re_fxp = $signed(o_e12_re) * (2.0 ** (-5*FRAC_WIDTH-INTRP_WIDTH));
-        e12_im_fxp = $signed(o_e12_im) * (2.0 ** (-5*FRAC_WIDTH-INTRP_WIDTH));
-        e21_re_fxp = $signed(o_e21_re) * (2.0 ** (-5*FRAC_WIDTH-INTRP_WIDTH));
-        e21_im_fxp = $signed(o_e21_im) * (2.0 ** (-5*FRAC_WIDTH-INTRP_WIDTH));
-        e22_re_fxp = $signed(o_e22_re) * (2.0 ** (-5*FRAC_WIDTH-INTRP_WIDTH));
-        e22_im_fxp = $signed(o_e22_im) * (2.0 ** (-5*FRAC_WIDTH-INTRP_WIDTH));
+        e11_re_fxp = $signed(o_e11_re) * (2.0 ** (-5*FRAC_WIDTH-INTRP_WIDTH+1));
+        e11_im_fxp = $signed(o_e11_im) * (2.0 ** (-5*FRAC_WIDTH-INTRP_WIDTH+1));
+        e12_re_fxp = $signed(o_e12_re) * (2.0 ** (-5*FRAC_WIDTH-INTRP_WIDTH+1));
+        e12_im_fxp = $signed(o_e12_im) * (2.0 ** (-5*FRAC_WIDTH-INTRP_WIDTH+1));
+        e21_re_fxp = $signed(o_e21_re) * (2.0 ** (-5*FRAC_WIDTH-INTRP_WIDTH+1));
+        e21_im_fxp = $signed(o_e21_im) * (2.0 ** (-5*FRAC_WIDTH-INTRP_WIDTH+1));
+        e22_re_fxp = $signed(o_e22_re) * (2.0 ** (-5*FRAC_WIDTH-INTRP_WIDTH+1));
+        e22_im_fxp = $signed(o_e22_im) * (2.0 ** (-5*FRAC_WIDTH-INTRP_WIDTH+1));
     end
 
     typedef struct {
@@ -278,7 +311,13 @@ module w_matrix_tb;
         i_h22_re  = 0; i_h22_im  = 0;
         i_a11     = 0; i_a22     = 0;
         i_a12_re  = 0; i_a12_im  = 0;
-
+        i_w11_re_sync = 0; i_w11_im_sync = 0;
+        i_w12_re_sync = 0; i_w12_im_sync = 0;
+        i_w21_re_sync = 0; i_w21_im_sync = 0;
+        i_w22_re_sync = 0; i_w22_im_sync = 0;
+        i_a11_sync = 0;
+        i_a12_re_sync = 0; i_a12_im_sync = 0;
+        i_a22_sync = 0;
         rst = 1;
         repeat (3) @(posedge clk);
         rst = 0;
@@ -315,7 +354,7 @@ module w_matrix_tb;
             end
 
             begin
-                for (int i = 0; i < 35; i++) begin
+                for (int i = 0; i < NUM_TESTS+17; i++) begin
                     if (cycle_cnt - 5 >= 0) begin
                         test_storage[cycle_cnt - 5].det_a = det_a_fxp;
                     end
@@ -324,7 +363,7 @@ module w_matrix_tb;
                         test_storage[cycle_cnt - 9].det_inv = det_inv_fxp;
                     end
 
-                    if (cycle_cnt - 11 >= 0) begin
+                    if (cycle_cnt - 11 >= 0 && cycle_cnt - 11 < NUM_TESTS) begin
                         i_w11_re_sync = o_w11_re;
                         i_w11_im_sync = o_w11_im;
                         i_w12_re_sync = o_w12_re;
@@ -333,17 +372,17 @@ module w_matrix_tb;
                         i_w21_im_sync = o_w21_im;
                         i_w22_re_sync = o_w22_re;
                         i_w22_im_sync = o_w22_im;
-                        i_a11_sync = test_storage[cycle_cnt - 11].in_a11;
-                        i_a22_sync = test_storage[cycle_cnt - 11].in_a22;
-                        i_a12_re_sync = test_storage[cycle_cnt - 11].in_a12_re;
-                        i_a12_im_sync = test_storage[cycle_cnt - 11].in_a12_im;
+                        i_a11_sync = {1'b0, test_storage[cycle_cnt - 11].in_a11};
+                        i_a22_sync = {1'b0, test_storage[cycle_cnt - 11].in_a22};
+                        i_a12_re_sync = {test_storage[cycle_cnt - 11].in_a12_re[15], test_storage[cycle_cnt - 11].in_a12_re};
+                        i_a12_im_sync = {test_storage[cycle_cnt - 11].in_a12_im[15], test_storage[cycle_cnt - 11].in_a12_im};
                     end
 
-                    if (cycle_cnt - 16 >= 0) begin
-                        test_storage[cycle_cnt - 16].e11_re_fxp = e11_re_fxp;
-                        test_storage[cycle_cnt - 16].e11_im_fxp = e11_im_fxp;
-                        test_storage[cycle_cnt - 16].e22_re_fxp = e22_re_fxp;
-                        test_storage[cycle_cnt - 16].e22_im_fxp = e22_im_fxp;
+                    if (cycle_cnt - 17 >= 0) begin
+                        test_storage[cycle_cnt - 17].e11_re_fxp = e11_re_fxp;
+                        test_storage[cycle_cnt - 17].e11_im_fxp = e11_im_fxp;
+                        test_storage[cycle_cnt - 17].e22_re_fxp = e22_re_fxp;
+                        test_storage[cycle_cnt - 17].e22_im_fxp = e22_im_fxp;
                     end
 
                     @(posedge clk);
