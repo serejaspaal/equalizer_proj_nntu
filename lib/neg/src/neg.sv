@@ -1,6 +1,5 @@
 `timescale 1ns / 1ps
 
-
 module neg #(
     parameter WIDTH = 4
 )(
@@ -20,4 +19,3 @@ module neg #(
         result <= result_next;
     end
 endmodule
-

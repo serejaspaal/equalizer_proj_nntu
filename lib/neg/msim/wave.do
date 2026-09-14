@@ -1,12 +1,15 @@
 onerror {resume}
 quietly WaveActivateNextPane {} 0
+
+delete wave *
+
 add wave -noupdate /neg_tb/clk
 add wave -noupdate -radix decimal /neg_tb/a
 add wave -noupdate -radix decimal /neg_tb/result
 add wave -noupdate -radix decimal /neg_tb/expected
+
 TreeUpdate [SetDefaultTree]
-WaveRestoreCursors {{Cursor 1} {133 ns} 0}
-quietly wave cursor active 1
+
 configure wave -namecolwidth 150
 configure wave -valuecolwidth 100
 configure wave -justifyvalue left
@@ -20,5 +23,6 @@ configure wave -gridperiod 1
 configure wave -griddelta 40
 configure wave -timeline 0
 configure wave -timelineunits ns
+
 update
-WaveRestoreZoom {92 ns} {111 ns}
+WaveRestoreZoom {0 ns} {200 ns}
