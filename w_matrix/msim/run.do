@@ -3,6 +3,7 @@ vlib work
 
 vlog -sv ../../lib/sum/src/sum.sv
 vlog -sv ../../lib/mult/src/mult.sv
+vlog -sv ../../lib/cmult/src/cmult.sv
 vlog -sv ../../lib/round/src/round.sv
 vlog -sv ../../lib/dline/src/dline.sv
 vlog -sv ../../lib/cmodule/src/cmodule.sv
@@ -27,13 +28,11 @@ vlog -sv ../../m_matrix/src/top_block_m_matrix.sv
 
 vlog -sv ../../m_matrix/src/m_matrix.sv
 
+vlog -sv ../../matrix_mult/src/matrix_mult.sv
+
+vlog -sv ../../matrix_mult/src/one_block_matrix_mult.sv
+
 vlog -sv ../src/w_matrix.sv
-
-vlog -sv ../tb/matrix_mult_w.sv
-
-vlog -sv ../tb/bot_block_mult_matrix.sv
-
-vlog -sv ../tb/top_block_mult_matrix.sv
 
 vlog -sv ../tb/w_matrix_tb.sv
 

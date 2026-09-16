@@ -3,7 +3,7 @@
 module matrix_mult_tb;
     parameter int W_WIDTH       = 16;
     parameter int S_WIDTH       = 16;
-    parameter int F_WIDTH       = W_WIDTH + S_WIDTH + 1;
+    parameter int F_WIDTH       = W_WIDTH + S_WIDTH + 2;
     parameter int FRAC_WIDTH    = 8;
     parameter int USE_DSP_VALUE = 1;
 
