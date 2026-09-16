@@ -1,8 +1,8 @@
 `timescale 1ns / 1ps
 
 module matrix_mult #(
-    parameter int W_WIDTH       = 66,
-    parameter int S_WIDTH       = 16,
+    parameter int W_WIDTH       = 16,
+    parameter int S_WIDTH       = 66,
     parameter int F_WIDTH       = W_WIDTH + S_WIDTH + 1,
     parameter int FRAC_WIDTH    = 8,
     parameter int USE_DSP_VALUE = 1
@@ -14,10 +14,10 @@ module matrix_mult #(
     input  logic signed [W_WIDTH-1:0] i_w21_re, i_w21_im,
     input  logic signed [W_WIDTH-1:0] i_w22_re, i_w22_im,
 
-    input  logic unsigned [S_WIDTH-1:0] i_s11_re, i_s11_im,
+    input  logic signed [S_WIDTH-1:0] i_s11_re, i_s11_im,
     input  logic signed [S_WIDTH-1:0] i_s12_re, i_s12_im,
     input  logic signed [S_WIDTH-1:0] i_s21_re, i_s21_im,
-    input  logic unsigned [S_WIDTH-1:0] i_s22_re, i_s22_im,
+    input  logic signed [S_WIDTH-1:0] i_s22_re, i_s22_im,
 
     output logic signed [F_WIDTH-1:0] o_f11_re, o_f11_im,
     output logic signed [F_WIDTH-1:0] o_f12_re, o_f12_im,
@@ -36,7 +36,7 @@ module matrix_mult #(
 );
 
 logic signed [3:0][W_WIDTH-1:0] w1_re, w1_im, w2_re, w2_im;
-logic [3:0][S_WIDTH-1:0] s1_re, s1_im, s2_re, s2_im;
+logic signed [3:0][S_WIDTH-1:0] s1_re, s1_im, s2_re, s2_im;
 logic signed [3:0][F_WIDTH-1:0] f_re, f_im;
 logic [3:0] sat_re, sat_im;
 logic [3:0] udf_re, udf_im;

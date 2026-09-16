@@ -11,10 +11,10 @@ module one_block_matrix_mult #(
     input  logic signed [W_WIDTH-1:0] i_w1_re, i_w1_im,
     input  logic signed [W_WIDTH-1:0] i_w2_re, i_w2_im,
 
-    input  logic [S_WIDTH-1:0] i_s1_re, i_s1_im,
-    input  logic [S_WIDTH-1:0] i_s2_re, i_s2_im,
+    input  logic signed [S_WIDTH-1:0] i_s1_re, i_s1_im,
+    input  logic signed [S_WIDTH-1:0] i_s2_re, i_s2_im,
 
-    output logic [F_WIDTH-1:0] o_f_re, o_f_im,
+    output logic signed [F_WIDTH-1:0] o_f_re, o_f_im,
     output logic o_sat_re, o_sat_im,
 
     output logic o_udf_f_re, o_udf_f_im
@@ -25,7 +25,7 @@ module one_block_matrix_mult #(
     logic signed [W_WIDTH+S_WIDTH:0] cmult2_re, cmult2_im;
 
 
-    logic [W_WIDTH+S_WIDTH+1:0] sum_re, sum_im;
+    logic signed [W_WIDTH+S_WIDTH+1:0] sum_re, sum_im;
 
 
     cmult #(

@@ -1,8 +1,8 @@
 `timescale 1ns / 1ps
 
 module matrix_mult_tb;
-    parameter int W_WIDTH       = 66;
-    parameter int S_WIDTH       = 17;
+    parameter int W_WIDTH       = 16;
+    parameter int S_WIDTH       = 16;
     parameter int F_WIDTH       = W_WIDTH + S_WIDTH + 1;
     parameter int FRAC_WIDTH    = 8;
     parameter int USE_DSP_VALUE = 1;
@@ -15,10 +15,10 @@ module matrix_mult_tb;
     logic signed [W_WIDTH-1:0] i_w21_re, i_w21_im;
     logic signed [W_WIDTH-1:0] i_w22_re, i_w22_im;
 
-    logic unsigned [S_WIDTH-1:0] i_s11_re, i_s11_im;
+    logic signed [S_WIDTH-1:0] i_s11_re, i_s11_im;
     logic signed [S_WIDTH-1:0] i_s12_re, i_s12_im;
     logic signed [S_WIDTH-1:0] i_s21_re, i_s21_im;
-    logic unsigned [S_WIDTH-1:0] i_s22_re, i_s22_im;
+    logic signed [S_WIDTH-1:0] i_s22_re, i_s22_im;
 
     logic signed [F_WIDTH-1:0] o_f11_re, o_f11_im;
     logic signed [F_WIDTH-1:0] o_f12_re, o_f12_im;
@@ -66,42 +66,41 @@ module matrix_mult_tb;
     always #5 clk = ~clk;
 
     always @* begin
-        w11_re_fxp = $signed(i_w11_re) * (2.0 ** (-4*FRAC_WIDTH-7));
-        w11_im_fxp = $signed(i_w11_im) * (2.0 ** (-4*FRAC_WIDTH-7));
-        w12_re_fxp = $signed(i_w12_re) * (2.0 ** (-4*FRAC_WIDTH-7));
-        w12_im_fxp = $signed(i_w12_im) * (2.0 ** (-4*FRAC_WIDTH-7));
-        w21_re_fxp = $signed(i_w21_re) * (2.0 ** (-4*FRAC_WIDTH-7));
-        w21_im_fxp = $signed(i_w21_im) * (2.0 ** (-4*FRAC_WIDTH-7));
-        w22_re_fxp = $signed(i_w22_re) * (2.0 ** (-4*FRAC_WIDTH-7));
-        w22_im_fxp = $signed(i_w22_im) * (2.0 ** (-4*FRAC_WIDTH-7));
+        w11_re_fxp = $signed(i_w11_re) * (2.0 ** (-FRAC_WIDTH));
+        w11_im_fxp = $signed(i_w11_im) * (2.0 ** (-FRAC_WIDTH));
+        w12_re_fxp = $signed(i_w12_re) * (2.0 ** (-FRAC_WIDTH));
+        w12_im_fxp = $signed(i_w12_im) * (2.0 ** (-FRAC_WIDTH));
+        w21_re_fxp = $signed(i_w21_re) * (2.0 ** (-FRAC_WIDTH));
+        w21_im_fxp = $signed(i_w21_im) * (2.0 ** (-FRAC_WIDTH));
+        w22_re_fxp = $signed(i_w22_re) * (2.0 ** (-FRAC_WIDTH));
+        w22_im_fxp = $signed(i_w22_im) * (2.0 ** (-FRAC_WIDTH));
 
-        s11_re_fxp = $unsigned(i_s11_re) * (2.0 ** (-FRAC_WIDTH));
-        s11_im_fxp = $unsigned(i_s11_im) * (2.0 ** (-FRAC_WIDTH));
+        s11_re_fxp = $signed(i_s11_re) * (2.0 ** (-FRAC_WIDTH));
+        s11_im_fxp = $signed(i_s11_im) * (2.0 ** (-FRAC_WIDTH));
         s12_re_fxp = $signed(i_s12_re) * (2.0 ** (-FRAC_WIDTH));
         s12_im_fxp = $signed(i_s12_im) * (2.0 ** (-FRAC_WIDTH));
         s21_re_fxp = $signed(i_s21_re) * (2.0 ** (-FRAC_WIDTH));
         s21_im_fxp = $signed(i_s21_im) * (2.0 ** (-FRAC_WIDTH));
-        s22_re_fxp = $unsigned(i_s22_re) * (2.0 ** (-FRAC_WIDTH));
-        s22_im_fxp = $unsigned(i_s22_im) * (2.0 ** (-FRAC_WIDTH));
+        s22_re_fxp = $signed(i_s22_re) * (2.0 ** (-FRAC_WIDTH));
+        s22_im_fxp = $signed(i_s22_im) * (2.0 ** (-FRAC_WIDTH));
 
-        f11_re_fxp = $signed(o_f11_re) * (2.0 ** (-5*FRAC_WIDTH-6));
-        f11_im_fxp = $signed(o_f11_im) * (2.0 ** (-5*FRAC_WIDTH-6));
-        f12_re_fxp = $signed(o_f12_re) * (2.0 ** (-5*FRAC_WIDTH-6));
-        f12_im_fxp = $signed(o_f12_im) * (2.0 ** (-5*FRAC_WIDTH-6));
-        f21_re_fxp = $signed(o_f21_re) * (2.0 ** (-5*FRAC_WIDTH-6));
-        f21_im_fxp = $signed(o_f21_im) * (2.0 ** (-5*FRAC_WIDTH-6));
-        f22_re_fxp = $signed(o_f22_re) * (2.0 ** (-5*FRAC_WIDTH-6));
-        f22_im_fxp = $signed(o_f22_im) * (2.0 ** (-5*FRAC_WIDTH-6));
+        f11_re_fxp = $signed(o_f11_re) * (2.0 ** (-2*FRAC_WIDTH+1));
+        f11_im_fxp = $signed(o_f11_im) * (2.0 ** (-2*FRAC_WIDTH+1));
+        f12_re_fxp = $signed(o_f12_re) * (2.0 ** (-2*FRAC_WIDTH+1));
+        f12_im_fxp = $signed(o_f12_im) * (2.0 ** (-2*FRAC_WIDTH+1));
+        f21_re_fxp = $signed(o_f21_re) * (2.0 ** (-2*FRAC_WIDTH+1));
+        f21_im_fxp = $signed(o_f21_im) * (2.0 ** (-2*FRAC_WIDTH+1));
+        f22_re_fxp = $signed(o_f22_re) * (2.0 ** (-2*FRAC_WIDTH+1));
+        f22_im_fxp = $signed(o_f22_im) * (2.0 ** (-2*FRAC_WIDTH+1));
     end
 
 
     // localparam NUM_TESTS = 6;
-    localparam NUM_TESTS = 1;
+    localparam NUM_TESTS = 6;
 
     typedef struct {
         logic signed [W_WIDTH-1:0] w11_re, w11_im, w12_re, w12_im, w21_re, w21_im, w22_re, w22_im;
-        logic signed [S_WIDTH-1:0] s12_re, s12_im, s21_re, s21_im;
-        logic unsigned [S_WIDTH-1:0] s11_re, s11_im, s22_re, s22_im;
+        logic signed [S_WIDTH-1:0] s11_re, s11_im, s12_re, s12_im, s21_re, s21_im, s22_re, s22_im;
         real exp_f11_re, exp_f11_im;
         real exp_f12_re, exp_f12_im;
         real exp_f21_re, exp_f21_im;
@@ -117,34 +116,33 @@ module matrix_mult_tb;
     initial begin
 
         for (int i = 0; i < NUM_TESTS; i++) begin
-            tests[i].w11_re  = 66'd2870554368; tests[i].w11_im  = 66'b0000_0000_0000_0000;
-            tests[i].w12_re  = -66'd1074906624; tests[i].w12_im  = -66'd552640512;
-            tests[i].w21_re  = -66'd1074906624; tests[i].w21_im  = 66'd552640512;
-            tests[i].w22_re  = 66'd4761143808; tests[i].w22_im  = 66'b0000_0000_0000_0000;
+            tests[i].w11_re  = 16'b0000_0001_0000_0000; tests[i].w11_im  = 16'b0000_0000_0000_0000;
+            tests[i].w12_re  = 16'b0000_0000_0000_0000; tests[i].w12_im  = 16'b0000_0000_0000_0000;
+            tests[i].w21_re  = 16'b0000_0000_0000_0000; tests[i].w21_im  = 16'b0000_0000_0000_0000;
+            tests[i].w22_re  = 16'b0000_0001_0000_0000; tests[i].w22_im  = 16'b0000_0000_0000_0000;
 
-            tests[i].s11_re = 54862;                    // i
-            tests[i].s11_im = 16'b0000_0000_0000_0000;
-            tests[i].s12_re = 12386;               // 2i
-            tests[i].s12_im = 6368;
-            tests[i].s21_re = 12386;
-            tests[i].s21_im = -6368;                   // i (мнимая)
-            tests[i].s22_re = 33077;                 // 3i
-            tests[i].s22_im = 16'b0000_0000_0000_0000;                 // 0
-            // tests[i].w11_re  = 66'd39406459158528; tests[i].w11_im  = 66'b0000_0000_0000_0000;
-            // tests[i].w12_re  = -66'd5629494165504; tests[i].w12_im  = -66'd22517976662016;
-            // tests[i].w21_re  = -66'd5629494165504; tests[i].w21_im  = 66'd22517976662016;
-            // tests[i].w22_re  = 66'd33776964993024; tests[i].w22_im  = 66'b0000_0000_0000_0000;
+            // tests[i].s11_re  = i * (2**(FRAC_WIDTH)); tests[i].s11_im  = ;
+            // tests[i].s12_re  = ; tests[i].s12_im  = ;
+            // tests[i].s21_re  = ; tests[i].s21_im  = ;
+            // tests[i].s22_re  = 3*i * (2**(FRAC_WIDTH)); tests[i].s22_im  = ;
+            tests[i].s11_re = i * (2**(FRAC_WIDTH));                    // i
+            tests[i].s11_im = (i+1) * (2**(FRAC_WIDTH)) ;           // (i+1)/4 (мнимая)
+            tests[i].s12_re = (2*i) * (2**(FRAC_WIDTH));               // 2i
+            tests[i].s12_im = 16'b0000_0000_0000_0000;                 // 0
+            tests[i].s21_re = 16'b0000_0000_0000_0000;                 // 0
+            tests[i].s21_im = i * (2**(FRAC_WIDTH));                   // i (мнимая)
+            tests[i].s22_re = 3*i * (2**(FRAC_WIDTH));                 // 3i
+            tests[i].s22_im = (2*i+1) * (2**(FRAC_WIDTH)) ;        // (2i+1)/2 (мнимая)
 
-            // tests[i].s11_re = 6;                    // i
-            // tests[i].s11_im = 16'b0000_0000_0000_0000;
-            // tests[i].s12_re = 1;               // 2i
-            // tests[i].s12_im = 4;
-            // tests[i].s21_re = 1;
-            // tests[i].s21_im = -4;                   // i (мнимая)
-            // tests[i].s22_re = 7;                 // 3i
-            // tests[i].s22_im = 16'b0000_0000_0000_0000;                 // 0
-
+            // test_queue.push_back(i);
+            // expected_queue.push_back(i);
         end
+// Формируем очередь отправки (можно отправлять все подряд)
+
+        // Запускаем отправку
+        // fork
+        //     check_results();
+        // join
 
     end
 
@@ -168,6 +166,36 @@ module matrix_mult_tb;
     } test_data_t;
     test_data_t test_storage[NUM_TESTS];
 
+    // task check_results();
+    //     int expected_idx;
+
+    //     forever begin
+    //         @(posedge clk);
+
+    //             // Проверяем, что есть ожидаемые результаты
+    //         if (expected_queue.size() == 0) begin
+    //             $warning("Unexpected result received!");
+    //             continue;
+    //         end
+
+    //         expected_idx = expected_queue.pop_front();
+
+    //         // Проверяем результат
+    //         compare_result(expected_idx);
+    //     end
+    // endtask
+
+    // function automatic void compare_result(int idx);
+    //     int local_errors = 0;
+    //     if ( expected ) begin
+
+    //         $display(" ERROR: Test %0d, det_inv = %f, det_a = %f, det_inv * det_a = %f, expected %f",
+    //                 test.test_idx, test.det_inv, test.det_a, test.det_inv * test.det_a, 1.0);
+    //         $display(" e11 = %f, e22 = %f",
+    //                 test.e11_re_fxp, test.e22_re_fxp);
+    //         local_errors++;
+    //     end
+    // endfunction
 
     initial begin
         i_w11_re  = 0; i_w11_im  = 0;
@@ -216,7 +244,7 @@ module matrix_mult_tb;
             end
 
             begin
-                for (int i = 0; i < NUM_TESTS + 6; i++) begin
+                for (int i = 0; i < NUM_TESTS+6; i++) begin
                     if (cycle_cnt - 1 >= 0) begin
                         test_storage[cycle_cnt-1].test.exp_f11_re = s11_re_fxp;
                         test_storage[cycle_cnt-1].test.exp_f11_im = s11_im_fxp;

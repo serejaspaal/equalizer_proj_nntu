@@ -50,26 +50,10 @@ add wave -noupdate -color Cyan /matrix_mult_tb/f21_re_fxp
 add wave -noupdate -color Cyan /matrix_mult_tb/f21_im_fxp
 add wave -noupdate -color Cyan /matrix_mult_tb/f22_re_fxp
 add wave -noupdate -color Cyan /matrix_mult_tb/f22_im_fxp
-add wave -noupdate /matrix_mult_tb/o_sat11_re
-add wave -noupdate /matrix_mult_tb/o_sat11_im
-add wave -noupdate /matrix_mult_tb/o_sat12_re
-add wave -noupdate /matrix_mult_tb/o_sat12_im
-add wave -noupdate /matrix_mult_tb/o_sat21_re
-add wave -noupdate /matrix_mult_tb/o_sat21_im
-add wave -noupdate /matrix_mult_tb/o_sat22_re
-add wave -noupdate /matrix_mult_tb/o_sat22_im
-add wave -noupdate /matrix_mult_tb/o_udf11_re
-add wave -noupdate /matrix_mult_tb/o_udf11_im
-add wave -noupdate /matrix_mult_tb/o_udf12_re
-add wave -noupdate /matrix_mult_tb/o_udf12_im
-add wave -noupdate /matrix_mult_tb/o_udf21_re
-add wave -noupdate /matrix_mult_tb/o_udf21_im
-add wave -noupdate /matrix_mult_tb/o_udf22_re
-add wave -noupdate /matrix_mult_tb/o_udf22_im
 TreeUpdate [SetDefaultTree]
-WaveRestoreCursors {{Cursor 1} {139 ns} 0}
-quietly wave cursor active 1
-configure wave -namecolwidth 305
+WaveRestoreCursors {{Cursor 1} {0 ns} 0}
+quietly wave cursor active 0
+configure wave -namecolwidth 150
 configure wave -valuecolwidth 100
 configure wave -justifyvalue left
 configure wave -signalnamewidth 0
@@ -83,4 +67,4 @@ configure wave -griddelta 40
 configure wave -timeline 0
 configure wave -timelineunits ns
 update
-WaveRestoreZoom {0 ns} {580 ns}
+WaveRestoreZoom {0 ns} {1 us}
