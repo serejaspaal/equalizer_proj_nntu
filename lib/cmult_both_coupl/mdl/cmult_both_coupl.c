@@ -9,13 +9,15 @@ static int sign_trunc(int value, int width)
     return value;
 }
 
-void cmult(
+void cmult_both_coupl(
     int A_WIDTH, int B_WIDTH,
     int x0, int y0,
     int x1, int y1,
     int *out_re, int *out_im
 )
 {
+    y0 = -y0;
+    y1 = -y1;
     int common = (x0 - y0) * y1;
     int multr  = (x1 - y1) * x0;
     int multi  = (x1 + y1) * y0;

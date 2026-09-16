@@ -1,7 +1,7 @@
 transcript on
 vlib work
 
-vlog -sv ../src/cmult_both_coupl.sv
+vlog -sv ../src/cmult_both_coupl.sv ../mdl/cmult_both_coupl.c
 
 vlog -sv ../tb/cmult_both_coupl_tb.sv
 
