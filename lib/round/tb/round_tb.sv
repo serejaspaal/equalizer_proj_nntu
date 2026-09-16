@@ -2,8 +2,10 @@
 module round_tb;
     localparam int IN_WIDTH   = 8;
     localparam int OUT_WIDTH  = 4;
-    localparam int DROP       = IN_WIDTH - OUT_WIDTH;
-    localparam int POINT_POS  = 4;         
+    localparam int CLIP_WIDTH = 2;
+    localparam int DROP       = IN_WIDTH - OUT_WIDTH - CLIP_WIDTH;
+    localparam int SUM_WIDTH  = OUT_WIDTH + CLIP_WIDTH + 1;
+    localparam int POINT_POS  = 4;
 
     logic clk;
     logic [IN_WIDTH-1:0] i_data;
@@ -11,11 +13,11 @@ module round_tb;
     logic [OUT_WIDTH-1:0] o_data_s;  logic o_sat_s;
     logic [IN_WIDTH-1:0]  o_data_p;  logic o_sat_p;
 
-    round #(.IN_WIDTH(IN_WIDTH), .OUT_WIDTH(IN_WIDTH), .IN_SIGNED(0))
+    round #(.IN_WIDTH(IN_WIDTH), .OUT_WIDTH(IN_WIDTH), .IN_SIGNED(0), .CLIP_WIDTH(0))
         dut_p (.clk, .i_data, .o_data(o_data_p), .o_sat(o_sat_p));
-    round #(.IN_WIDTH(IN_WIDTH), .OUT_WIDTH(OUT_WIDTH), .IN_SIGNED(0))
+    round #(.IN_WIDTH(IN_WIDTH), .OUT_WIDTH(OUT_WIDTH), .IN_SIGNED(0), .CLIP_WIDTH(CLIP_WIDTH))
         dut_u (.clk, .i_data, .o_data(o_data_u), .o_sat(o_sat_u));
-    round #(.IN_WIDTH(IN_WIDTH), .OUT_WIDTH(OUT_WIDTH), .IN_SIGNED(1))
+    round #(.IN_WIDTH(IN_WIDTH), .OUT_WIDTH(OUT_WIDTH), .IN_SIGNED(1), .CLIP_WIDTH(CLIP_WIDTH))
         dut_s (.clk, .i_data, .o_data(o_data_s), .o_sat(o_sat_s));
 
     initial clk = 0;
@@ -25,10 +27,10 @@ module round_tb;
     real round_fxp_s,  round_fxp_u;
 
     always_comb begin
-        i_data_fxp_s = $signed(i_data)   * (2.0**(-POINT_POS));
-        i_data_fxp_u = $unsigned(i_data) * (2.0**(-POINT_POS));
-        round_fxp_s  = $signed(o_data_s) * (2.0**(-(POINT_POS-DROP)));
-        round_fxp_u  = $unsigned(o_data_u)* (2.0**(-(POINT_POS-DROP)));
+        i_data_fxp_s = $signed(i_data)    * (2.0**(-POINT_POS));
+        i_data_fxp_u = $unsigned(i_data)  * (2.0**(-POINT_POS));
+        round_fxp_s  = $signed(o_data_s)  * (2.0**(-(POINT_POS - DROP)));
+        round_fxp_u  = $unsigned(o_data_u) * (2.0**(-(POINT_POS - DROP)));
     end
 
     always_ff @(posedge clk) begin
@@ -41,25 +43,29 @@ module round_tb;
         round_fxp_p <= $unsigned(o_data_p) * (2.0**(-POINT_POS));
     end
 
-    localparam signed [OUT_WIDTH:0] MAXP =  (1 <<< (OUT_WIDTH-1)) - 1;
-    localparam signed [OUT_WIDTH:0] MINN = -(1 <<< (OUT_WIDTH-1));
+    localparam signed [SUM_WIDTH-1:0] MAXP =  (1 <<< (OUT_WIDTH-1)) - 1;
+    localparam signed [SUM_WIDTH-1:0] MINN = -(1 <<< (OUT_WIDTH-1));
+    localparam        [SUM_WIDTH-1:0] MAXU =  (1 <<< OUT_WIDTH) - 1;
 
-    logic [OUT_WIDTH:0]        sum_comb_u; 
-    logic signed [OUT_WIDTH:0] sum_comb_s;  
+    logic [SUM_WIDTH-1:0]        sum_comb_u;
+    logic signed [SUM_WIDTH-1:0] sum_comb_s;
 
     always_comb begin
-        sum_comb_u = {1'b0, i_data[IN_WIDTH-1:DROP]} + i_data[DROP-1];
-        sum_comb_s = $signed(i_data[IN_WIDTH-1:DROP]) + $signed({1'b0, i_data[DROP-1]});
+        sum_comb_u = {1'b0, i_data[IN_WIDTH-1 : DROP]} + i_data[DROP-1];
+        sum_comb_s = $signed(i_data[IN_WIDTH-1 : DROP]) + $signed({1'b0, i_data[DROP-1]});
     end
 
-    logic [OUT_WIDTH-1:0] exp_data_u, exp_data_s;   
-    logic                 exp_sat_u,  exp_sat_s;    
+    logic [OUT_WIDTH-1:0] exp_data_u, exp_data_s;
+    logic                 exp_sat_u,  exp_sat_s;
     logic [IN_WIDTH-1:0]  i_data_d;
     logic                 started;
 
     always_ff @(posedge clk) begin
-        exp_sat_u  <= sum_comb_u[OUT_WIDTH];
-        exp_data_u <= sum_comb_u[OUT_WIDTH] ? {OUT_WIDTH{1'b1}} : sum_comb_u[OUT_WIDTH-1:0];
+        if (sum_comb_u > MAXU) begin
+            exp_data_u <= MAXU[OUT_WIDTH-1:0]; exp_sat_u <= 1'b1;
+        end else begin
+            exp_data_u <= sum_comb_u[OUT_WIDTH-1:0]; exp_sat_u <= 1'b0;
+        end
 
         if (sum_comb_s > MAXP) begin
             exp_data_s <= MAXP[OUT_WIDTH-1:0]; exp_sat_s <= 1'b1;
@@ -101,7 +107,8 @@ module round_tb;
     end
 
     initial begin
-        $display("=== testbench ===");
+        $display("=== testbench: IN=%0d OUT=%0d CLIP=%0d DROP=%0d SUM_WIDTH=%0d ===",
+                 IN_WIDTH, OUT_WIDTH, CLIP_WIDTH, DROP, SUM_WIDTH);
         i_data = 0; started = 0;
         @(negedge clk); i_data = 8'b1111_1111; started = 1;
         @(negedge clk); i_data = 8'b1111_0000;
