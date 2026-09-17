@@ -57,14 +57,14 @@ module w_matrix_tb;
     logic signed [A_WIDTH+W_WIDTH+1:0] o_e21_re, o_e21_im;
     logic signed [A_WIDTH+W_WIDTH+1:0] o_e22_re, o_e22_im;
 
-    logic o_sat11_re,_sat11_im;
-    logic o_sat12_re,_sat12_im;
-    logic o_sat21_re,_sat21_im;
-    logic o_sat22_re,_sat22_im;
-    logic o_udf11_re,_udf11_im;
-    logic o_udf12_re,_udf12_im;
-    logic o_udf21_re,_udf21_im;
-    logic o_udf22_re,_udf22_im;
+    logic o_sat11_re,o_sat11_im;
+    logic o_sat12_re,o_sat12_im;
+    logic o_sat21_re,o_sat21_im;
+    logic o_sat22_re,o_sat22_im;
+    logic o_udf11_re,o_udf11_im;
+    logic o_udf12_re,o_udf12_im;
+    logic o_udf21_re,o_udf21_im;
+    logic o_udf22_re,o_udf22_im;
 
     real i_a11_fxp, i_a22_fxp;
     real i_a12_re_fxp, i_a12_im_fxp;
@@ -90,10 +90,14 @@ module w_matrix_tb;
     real e21_re_fxp, e21_im_fxp;
     real e22_re_fxp, e22_im_fxp;
 
-    logic signed [A_WIDTH:0] i_a11_signed;
-    logic signed [A_WIDTH:0] i_a22_signed;
+    logic signed [A_WIDTH:0] i_a11_re_signed;
+    logic signed [A_WIDTH:0] i_a11_im_signed;
     logic signed [A_WIDTH:0] i_a12_re_signed;
     logic signed [A_WIDTH:0] i_a12_im_signed;
+    logic signed [A_WIDTH:0] i_a21_re_signed;
+    logic signed [A_WIDTH:0] i_a21_im_signed;
+    logic signed [A_WIDTH:0] i_a22_re_signed;
+    logic signed [A_WIDTH:0] i_a22_im_signed;
     logic signed [W_WIDTH-1:0] i_w11_re_sync;
     logic signed [W_WIDTH-1:0] i_w11_im_sync;
     logic signed [W_WIDTH-1:0] i_w12_re_sync;
@@ -137,14 +141,14 @@ module w_matrix_tb;
     	.i_w21_im  (i_w21_im_sync),
     	.i_w22_re  (i_w22_re_sync),
     	.i_w22_im  (i_w22_im_sync),
-    	.i_s11_re  (i_a11_signed),
-    	.i_s11_im  (17'b0000_0000_0000_0000),
+    	.i_s11_re  (i_a11_re_signed),
+    	.i_s11_im  (i_a11_im_signed),
     	.i_s12_re  (i_a12_re_signed),
     	.i_s12_im  (i_a12_im_signed),
-    	.i_s21_re  (i_a12_re_signed),
-    	.i_s21_im  (-i_a12_im_signed),
-    	.i_s22_re  (i_a22_signed),
-    	.i_s22_im  (17'b0000_0000_0000_0000),
+    	.i_s21_re  (i_a21_re_signed),
+    	.i_s21_im  (i_a21_im_signed),
+    	.i_s22_re  (i_a22_re_signed),
+    	.i_s22_im  (i_a22_im_signed),
     	.o_f11_re  (o_e11_re),
     	.o_f11_im  (o_e11_im),
     	.o_f12_re  (o_e12_re),
@@ -306,9 +310,10 @@ module w_matrix_tb;
         i_w12_re_sync = 0; i_w12_im_sync = 0;
         i_w21_re_sync = 0; i_w21_im_sync = 0;
         i_w22_re_sync = 0; i_w22_im_sync = 0;
-        i_a11_signed = 0;
+        i_a11_re_signed = 0; i_a11_im_signed = 0;
         i_a12_re_signed = 0; i_a12_im_signed = 0;
-        i_a22_signed = 0;
+        i_a21_re_signed = 0; i_a21_im_signed = 0;
+        i_a22_re_signed = 0; i_a22_im_signed = 0;
         rst = 1;
         repeat (3) @(posedge clk);
         rst = 0;
@@ -363,10 +368,14 @@ module w_matrix_tb;
                         i_w21_im_sync = o_w21_im;
                         i_w22_re_sync = o_w22_re;
                         i_w22_im_sync = o_w22_im;
-                        i_a11_signed = {1'b0, test_storage[cycle_cnt - 11].in_a11};
-                        i_a22_signed = {1'b0, test_storage[cycle_cnt - 11].in_a22};
-                        i_a12_re_signed = {test_storage[cycle_cnt - 11].in_a12_re[15], test_storage[cycle_cnt - 11].in_a12_re};
-                        i_a12_im_signed = {test_storage[cycle_cnt - 11].in_a12_im[15], test_storage[cycle_cnt - 11].in_a12_im};
+                        i_a11_re_signed = $signed({1'b0, test_storage[cycle_cnt - 11].in_a11});
+                        i_a11_im_signed = '0;
+                        i_a22_re_signed = $signed({1'b0, test_storage[cycle_cnt - 11].in_a22});
+                        i_a22_im_signed = '0;
+                        i_a12_re_signed = $signed({test_storage[cycle_cnt - 11].in_a12_re[15], test_storage[cycle_cnt - 11].in_a12_re});
+                        i_a12_im_signed = $signed({test_storage[cycle_cnt - 11].in_a12_im[15], test_storage[cycle_cnt - 11].in_a12_im});
+                        i_a21_re_signed = $signed({test_storage[cycle_cnt - 11].in_a12_re[15], test_storage[cycle_cnt - 11].in_a12_re});
+                        i_a21_im_signed = -$signed({(test_storage[cycle_cnt - 11].in_a12_im[15]), test_storage[cycle_cnt - 11].in_a12_im});
                     end
 
                     if (cycle_cnt - 16 >= 0) begin
