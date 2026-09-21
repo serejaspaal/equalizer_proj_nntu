@@ -1,8 +1,8 @@
 transcript on
+
 vlib work
 
-vlog -sv ../src/sum.sv
-
+vlog -sv ../src/sum.sv ../mdl/sum.c
 vlog -sv ../tb/sum_tb.sv
 
 vsim -t 1ns -voptargs="+acc" sum_tb
@@ -13,4 +13,4 @@ view wave
 view structure
 view signals
 
-run 300ns
+run 200ns
