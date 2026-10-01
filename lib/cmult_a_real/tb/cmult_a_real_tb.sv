@@ -6,9 +6,7 @@ module cmult_a_real_tb;
     parameter int B_WIDTH = 8;
 
     import "DPI-C" function void cmult_a_real(
-        input int A_WIDTH,
-        input int B_WIDTH,
-        input int A_SIGNED,
+        // input int a_signed,
         input int a,
         input int x1,
         input int y1,
@@ -64,9 +62,7 @@ module cmult_a_real_tb;
         test_number = test_num;
 
         cmult_a_real(
-            A_WIDTH,
-            B_WIDTH,
-            1,
+            // 1,
             a_signed,
             in_re,
             in_im,
@@ -77,9 +73,7 @@ module cmult_a_real_tb;
         exp_im_s = exp_im;
 
         cmult_a_real(
-            A_WIDTH,
-            B_WIDTH,
-            0,
+            // 0,
             a_unsigned,
             in_re,
             in_im,
