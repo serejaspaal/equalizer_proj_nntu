@@ -1,7 +1,7 @@
 transcript on
 vlib work
 
-vlog -sv ../src/cmult_a_real.sv
+vlog -sv ../src/cmult_a_real.sv ../mdl/cmult_a_real.c
 
 vlog -sv ../tb/cmult_a_real_tb.sv
 
@@ -13,4 +13,4 @@ view wave
 view structure
 view signals
 
-run 300ns
+run 400ns

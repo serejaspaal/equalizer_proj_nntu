@@ -5,12 +5,28 @@ module cmult_a_real_tb;
     parameter int A_WIDTH = 8;
     parameter int B_WIDTH = 8;
 
+    import "DPI-C" function void cmult_a_real(
+        input int A_WIDTH,
+        input int B_WIDTH,
+        input int A_SIGNED,
+        input int a,
+        input int x1,
+        input int y1,
+        output int out_re,
+        output int out_im
+    );
+
     logic clk;
     logic signed [A_WIDTH-1:0] a_s;
     logic [A_WIDTH-1:0] a_u;
     logic signed [B_WIDTH-1:0] x1, y1;
     logic signed [A_WIDTH+B_WIDTH-1:0] out_re_s, out_im_s;
     logic signed [A_WIDTH+B_WIDTH-1:0] out_re_u, out_im_u;
+
+    int errors = 0;
+    logic signed [A_WIDTH+B_WIDTH-1:0] exp_re_s, exp_im_s;
+    logic signed [A_WIDTH+B_WIDTH-1:0] exp_re_u, exp_im_u;
+    int test_number = 0;
 
     cmult_a_real #(
         .A_WIDTH(A_WIDTH), .B_WIDTH(B_WIDTH),
@@ -31,138 +47,86 @@ module cmult_a_real_tb;
     initial clk = 0;
     always #5 clk = ~clk;
 
-    int errors;
-    logic signed [A_WIDTH+B_WIDTH-1:0] exp_re_s, exp_im_s;
-    logic signed [A_WIDTH+B_WIDTH-1:0] exp_re_u, exp_im_u;
+    task automatic test(
+        input int test_num,
+        input int a_signed,
+        input int a_unsigned,
+        input int in_re,
+        input int in_im
+    );
+        int exp_re = 0;
+        int exp_im = 0;
+        @(posedge clk);
+        a_s = a_signed;
+        a_u = a_unsigned;
+        x1 = in_re;
+        y1 = in_im;
+        test_number = test_num;
 
-    always_ff @(posedge clk) begin
-        exp_re_s <= $signed(a_s) * x1;
-        exp_im_s <= $signed(a_s) * y1;
-        exp_re_u <= $signed({1'b0, a_u}) * x1;
-        exp_im_u <= $signed({1'b0, a_u}) * y1;
-    end
+        cmult_a_real(
+            A_WIDTH,
+            B_WIDTH,
+            1,
+            a_signed,
+            in_re,
+            in_im,
+            exp_re,
+            exp_im
+        );
+        exp_re_s = exp_re;
+        exp_im_s = exp_im;
+
+        cmult_a_real(
+            A_WIDTH,
+            B_WIDTH,
+            0,
+            a_unsigned,
+            in_re,
+            in_im,
+            exp_re,
+            exp_im
+        );
+        exp_re_u = exp_re;
+        exp_im_u = exp_im;
+
+        @(posedge clk);
+        #1;
+
+        if (out_re_s !== exp_re_s || out_im_s !== exp_im_s) begin
+            $error("S%0d FAIL: got (%0d,%0d), expected (%0d,%0d)", test_num, out_re_s, out_im_s, exp_re_s, exp_im_s);
+            errors++;
+        end else $display("S%0d PASS", test_num);
+
+        if (out_re_u !== exp_re_u || out_im_u !== exp_im_u) begin
+            $error("U%0d FAIL: got (%0d,%0d), expected (%0d,%0d)", test_num, out_re_u, out_im_u, exp_re_u, exp_im_u);
+            errors++;
+        end else $display("U%0d PASS", test_num);
+
+    endtask
+
     initial begin
-        errors = 0;
+        @(posedge clk);
+        test(0, -128, 0, -128, -128);
+        test(1, -128, 0, -128, 127);
+        test(2, -128, 0, 127, -128);
+        test(3, -128, 0, 127, 127);
+        test(4, 127, 0, -128, -128);
+        test(5, 127, 0, -128, 127);
+        test(6, 127, 0, 127, -128);
+        test(7, 127, 0, 127, 127);
+        test(8, 0, 0, -128, -128);
+        test(9, 0, 0, -128, 127);
+        test(10, 0, 0, 127, -128);
+        test(11, 0, 0, 127, 127);
+        test(12, 0, 255, -128, -128);
+        test(13, 0, 255, -128, 127);
+        test(14, 0, 255, 127, -128);
+        test(15, 0, 255, 127, 127);
 
         @(posedge clk);
 
-        
-        a_s = -128; a_u = 0; x1 = -128; y1 = -128; @(posedge clk);
-        a_s = -128; a_u = 0; x1 = -128; y1 = 127;  @(posedge clk);
-
-        if (out_re_s !== exp_re_s || out_im_s !== exp_im_s) begin
-            $error("S1 FAIL: got (%0d,%0d), expected (%0d,%0d)", out_re_s, out_im_s, exp_re_s, exp_im_s);
-            errors++;
-        end else $display("S1 PASS: (-128)*(-128-128i) = (%0d,%0d)", out_re_s, out_im_s);
-
-        a_s = -128; a_u = 0; x1 = 127; y1 = -128; @(posedge clk);
-
-        if (out_re_s !== exp_re_s || out_im_s !== exp_im_s) begin
-            $error("S2 FAIL: got (%0d,%0d), expected (%0d,%0d)", out_re_s, out_im_s, exp_re_s, exp_im_s);
-            errors++;
-        end else $display("S2 PASS: (-128)*(-128+127i) = (%0d,%0d)", out_re_s, out_im_s);
-
-        a_s = -128; a_u = 0; x1 = 127; y1 = 127;  @(posedge clk);
-
-        if (out_re_s !== exp_re_s || out_im_s !== exp_im_s) begin
-            $error("S3 FAIL: got (%0d,%0d), expected (%0d,%0d)", out_re_s, out_im_s, exp_re_s, exp_im_s);
-            errors++;
-        end else $display("S3 PASS: (-128)*(127-128i) = (%0d,%0d)", out_re_s, out_im_s);
-
-        a_s = 127; a_u = 0; x1 = -128; y1 = -128; @(posedge clk);
-
-        if (out_re_s !== exp_re_s || out_im_s !== exp_im_s) begin
-            $error("S4 FAIL: got (%0d,%0d), expected (%0d,%0d)", out_re_s, out_im_s, exp_re_s, exp_im_s);
-            errors++;
-        end else $display("S4 PASS: (-128)*(127+127i) = (%0d,%0d)", out_re_s, out_im_s);
-
-        a_s = 127; a_u = 0; x1 = -128; y1 = 127;  @(posedge clk);
-
-        if (out_re_s !== exp_re_s || out_im_s !== exp_im_s) begin
-            $error("S5 FAIL: got (%0d,%0d), expected (%0d,%0d)", out_re_s, out_im_s, exp_re_s, exp_im_s);
-            errors++;
-        end else $display("S5 PASS: (127)*(-128-128i) = (%0d,%0d)", out_re_s, out_im_s);
-
-        a_s = 127; a_u = 0; x1 = 127; y1 = -128; @(posedge clk);
-
-        if (out_re_s !== exp_re_s || out_im_s !== exp_im_s) begin
-            $error("S6 FAIL: got (%0d,%0d), expected (%0d,%0d)", out_re_s, out_im_s, exp_re_s, exp_im_s);
-            errors++;
-        end else $display("S6 PASS: (127)*(-128+127i) = (%0d,%0d)", out_re_s, out_im_s);
-
-        a_s = 127; a_u = 0; x1 = 127; y1 = 127;  @(posedge clk);
-
-        if (out_re_s !== exp_re_s || out_im_s !== exp_im_s) begin
-            $error("S7 FAIL: got (%0d,%0d), expected (%0d,%0d)", out_re_s, out_im_s, exp_re_s, exp_im_s);
-            errors++;
-        end else $display("S7 PASS: (127)*(127-128i) = (%0d,%0d)", out_re_s, out_im_s);
-
-        a_s = 0; a_u = 0;   x1 = -128; y1 = -128; @(posedge clk);
-        
-	if (out_re_s !== exp_re_s || out_im_s !== exp_im_s) begin
-            $error("S8 FAIL: got (%0d,%0d), expected (%0d,%0d)", out_re_s, out_im_s, exp_re_s, exp_im_s);
-            errors++;
-        end else $display("S8 PASS: (127)*(127+127i) = (%0d,%0d)", out_re_s, out_im_s);
-        
-	a_s = 0; a_u = 0;   x1 = -128; y1 = 127;  @(posedge clk);
-	
-	if (out_re_u !== exp_re_u || out_im_u !== exp_im_u) begin
-            $error("U1 FAIL: got (%0d,%0d), expected (%0d,%0d)", out_re_u, out_im_u, exp_re_u, exp_im_u);
-            errors++;
-        end else $display("U1 PASS: 0*(-128-128i) = (%0d,%0d)", out_re_u, out_im_u);
-
-        a_s = 0; a_u = 0;   x1 = 127; y1 = -128; @(posedge clk);
-
-        if (out_re_u !== exp_re_u || out_im_u !== exp_im_u) begin
-            $error("U2 FAIL: got (%0d,%0d), expected (%0d,%0d)", out_re_u, out_im_u, exp_re_u, exp_im_u);
-            errors++;
-        end else $display("U2 PASS: 0*(-128+127i) = (%0d,%0d)", out_re_u, out_im_u);
-
-        a_s = 0; a_u = 0;   x1 = 127; y1 = 127;  @(posedge clk);
-
-        if (out_re_u !== exp_re_u || out_im_u !== exp_im_u) begin
-            $error("U3 FAIL: got (%0d,%0d), expected (%0d,%0d)", out_re_u, out_im_u, exp_re_u, exp_im_u);
-            errors++;
-        end else $display("U3 PASS: 0*(127-128i) = (%0d,%0d)", out_re_u, out_im_u);
-
-        a_s = 0; a_u = 255; x1 = -128; y1 = -128; @(posedge clk);
-
-        if (out_re_u !== exp_re_u || out_im_u !== exp_im_u) begin
-            $error("U4 FAIL: got (%0d,%0d), expected (%0d,%0d)", out_re_u, out_im_u, exp_re_u, exp_im_u);
-            errors++;
-        end else $display("U4 PASS: 0*(127+127i) = (%0d,%0d)", out_re_u, out_im_u);
-
-        a_s = 0; a_u = 255; x1 = -128; y1 = 127; @(posedge clk);
-
-        if (out_re_u !== exp_re_u || out_im_u !== exp_im_u) begin
-            $error("U5 FAIL: got (%0d,%0d), expected (%0d,%0d)", out_re_u, out_im_u, exp_re_u, exp_im_u);
-            errors++;
-        end else $display("U5 PASS: 255*(-128-128i) = (%0d,%0d)", out_re_u, out_im_u);
-
-        a_s = 0; a_u = 255; x1 = 127; y1 = -128; @(posedge clk);
-
-        if (out_re_u !== exp_re_u || out_im_u !== exp_im_u) begin
-            $error("U6 FAIL: got (%0d,%0d), expected (%0d,%0d)", out_re_u, out_im_u, exp_re_u, exp_im_u);
-            errors++;
-        end else $display("U6 PASS: 255*(-128+127i) = (%0d,%0d)", out_re_u, out_im_u);
-
-        a_s = 0; a_u = 255; x1 = 127; y1 = 127; @(posedge clk);
-
-        if (out_re_u !== exp_re_u || out_im_u !== exp_im_u) begin
-            $error("U7 FAIL: got (%0d,%0d), expected (%0d,%0d)", out_re_u, out_im_u, exp_re_u, exp_im_u);
-            errors++;
-        end else $display("U7 PASS: 255*(127-128i) = (%0d,%0d)", out_re_u, out_im_u);
-
-        @(posedge clk);
-        if (out_re_u !== exp_re_u || out_im_u !== exp_im_u) begin
-            $error("U8 FAIL: got (%0d,%0d), expected (%0d,%0d)", out_re_u, out_im_u, exp_re_u, exp_im_u);
-            errors++;
-        end else $display("U8 PASS: 255*(127+127i) = (%0d,%0d)", out_re_u, out_im_u);
-
-        #20;
         if (errors == 0) $display("ALL TESTS PASSED");
         else             $display("%0d TESTS FAILED", errors);
-        $finish;
     end
 
 endmodule
