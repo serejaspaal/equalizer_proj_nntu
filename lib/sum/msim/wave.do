@@ -1,13 +1,33 @@
 onerror {resume}
 quietly WaveActivateNextPane {} 0
-add wave -noupdate /sum_tb/dut_1/clk
-add wave -noupdate -radix decimal /sum_tb/dut_1/A
-add wave -noupdate -radix decimal /sum_tb/dut_1/B
-add wave -noupdate /sum_tb/dut_1/sub
-add wave -noupdate -radix decimal /sum_tb/dut_1/S
+
+delete wave *
+
+add wave -noupdate /sum_tb/clk
+add wave -noupdate /sum_tb/rst
+
+add wave -noupdate /sum_tb/valid_in1
+add wave -noupdate -radix decimal /sum_tb/A1
+add wave -noupdate -radix decimal /sum_tb/B1
+add wave -noupdate /sum_tb/sub1
+add wave -noupdate /sum_tb/valid_out1
+add wave -noupdate -radix decimal /sum_tb/S1
+add wave -noupdate -radix decimal /sum_tb/exp_S1
+add wave -noupdate /sum_tb/underflow1
+add wave -noupdate /sum_tb/exp_u1
+
+add wave -noupdate /sum_tb/valid_in2
+add wave -noupdate -radix unsigned /sum_tb/A2
+add wave -noupdate -radix unsigned /sum_tb/B2
+add wave -noupdate /sum_tb/sub2
+add wave -noupdate /sum_tb/valid_out2
+add wave -noupdate -radix unsigned /sum_tb/S2
+add wave -noupdate -radix unsigned /sum_tb/exp_S2
+add wave -noupdate /sum_tb/underflow2
+add wave -noupdate /sum_tb/exp_u2
+
 TreeUpdate [SetDefaultTree]
-WaveRestoreCursors {{Cursor 1} {75 ns} 0}
-quietly wave cursor active 1
+
 configure wave -namecolwidth 150
 configure wave -valuecolwidth 100
 configure wave -justifyvalue left
@@ -21,5 +41,6 @@ configure wave -gridperiod 1
 configure wave -griddelta 40
 configure wave -timeline 0
 configure wave -timelineunits ns
+
 update
-WaveRestoreZoom {58 ns} {150 ns}
+WaveRestoreZoom {0 ns} {200 ns}
