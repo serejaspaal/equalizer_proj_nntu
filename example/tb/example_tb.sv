@@ -1,7 +1,13 @@
 `timescale 1ns / 1ps
 
 module example_tb;
+
     parameter int WIDTH = 8;
+
+    import "DPI-C" function int example(
+        input int i_Re,
+        input int i_Im
+    );
 
     logic        clk;
     logic        rst;
@@ -10,10 +16,13 @@ module example_tb;
     logic signed [WIDTH-1:0] Im;
     logic        valid_out;
     logic unsigned [2*WIDTH-1:0] MagSq;
+    logic unsigned [2*WIDTH-1:0] exp;
+    int          test_number;
+    int          errors = 0;
 
     example #(
         .WIDTH         (WIDTH),
-        .USE_DSP_VALUE ("yes")
+        .USE_DSP_VALUE (1)
     ) dut (
         .clk,
         .rst,
@@ -27,45 +36,49 @@ module example_tb;
     initial clk = 0;
     always #5 clk = ~clk;
 
-    logic unsigned [2*WIDTH-1:0] exp0, exp1;
-    logic v0, v1;
+    task automatic test(
+        input int test_num,
+        input int in_re,
+        input int in_im
+    );
+        @(posedge clk);
+        test_number = test_num;
+        Re = in_re;
+        Im = in_im;
 
-    always_ff @(posedge clk) begin
-        v0   <= valid_in;
-        exp0 <= (Re * Re) + (Im * Im);
-        v1   <= v0;
-        exp1 <= exp0;
-    end
+        exp = example(
+            Re,
+            Im
+        );
 
-    always @(posedge clk) begin
-        #0; 
-        if (v1 && valid_out) begin
-            if (MagSq !== exp1)
-                $error("FAIL at %0t: MagSq=%0d (expected %0d)", $time, MagSq, exp1);
-            else
-                $display("PASS at %0t: MagSq=%0d", $time, MagSq);
-        end
-    end
- 
+        repeat(3) @(posedge clk);
+
+        if (MagSq !== exp) begin
+            $error("FAIL at %0t: MagSq=%0d (expected %0d)", $time, MagSq, exp);
+            errors++;
+        end else
+            $display("PASS at %0t: MagSq=%0d", $time, MagSq);
+    endtask
+
     initial begin
-        $display("=== testbench ===");
         rst = 1; valid_in = 0; Re = 0; Im = 0;
         repeat(2) @(posedge clk);
         rst = 0;
-        @(posedge clk); valid_in = 1; Re = 0;       Im = 0;       
-        @(posedge clk); valid_in = 1; Re = 127;     Im = 0;       
-        @(posedge clk); valid_in = 1; Re = -128;    Im = 0;       
-        @(posedge clk); valid_in = 1; Re = 0;       Im = 127;
-        @(posedge clk); valid_in = 1; Re = 0;       Im = -128;
-        @(posedge clk); valid_in = 1; Re = 127;     Im = 127;     
-        @(posedge clk); valid_in = 1; Re = -128;    Im = -128;    
-        @(posedge clk); valid_in = 1; Re = 1;       Im = 1;      
-        @(posedge clk); valid_in = 1; Re = -1;      Im = -1;      
-        @(posedge clk); valid_in = 1; Re = 127;     Im = -128;    
-        @(posedge clk); valid_in = 0; Re = 0;       Im = 0;       
-        repeat(4) @(posedge clk);  
-        $display("=== Done ===");
-        $finish;
+        valid_in = 1;
+        test(1, 0, 0);
+        test(2, 127, 0);
+        test(3, -128, 0);
+        test(4, 0, 127);
+        test(5, 0, -128);
+        test(6, 127, 127);
+        test(7, -128, -128);
+        test(8, 1, 1);
+        test(9, -1, -1);
+        test(10, 127, -128);
+        valid_in = 0;
+        @(posedge clk);
+        if (errors == 0) $display("ALL TESTS PASSED");
+        else             $display("%0d TESTS FAILED", errors);
     end
 
 endmodule

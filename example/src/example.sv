@@ -1,7 +1,7 @@
 
 module example #(
-    parameter int    WIDTH         = 8,
-    parameter string USE_DSP_VALUE = "yes"
+    parameter int WIDTH         = 8,
+    parameter int USE_DSP_VALUE = 1
 )(
     input  logic clk,
     input  logic rst,
