@@ -31,11 +31,9 @@ add wave -noupdate -radix decimal /a_side_diag_tb/dut/sum_im
 add wave -noupdate -radix decimal /a_side_diag_tb/dut/round_re
 add wave -noupdate -radix decimal /a_side_diag_tb/dut/round_im
 
-add wave -noupdate -radix binary /a_side_diag_tb/dut/valid_cm1
-add wave -noupdate -radix binary /a_side_diag_tb/dut/valid_cm2
 add wave -noupdate -radix binary /a_side_diag_tb/dut/valid_cm3
 add wave -noupdate -radix binary /a_side_diag_tb/dut/valid_sum_re
-add wave -noupdate -radix binary /a_side_diag_tb/dut/valid_sum_im
+add wave -noupdate -radix binary /a_side_diag_tb/dut/valid_out
 
 TreeUpdate [SetDefaultTree]
 

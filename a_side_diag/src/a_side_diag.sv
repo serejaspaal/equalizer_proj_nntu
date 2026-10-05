@@ -39,12 +39,9 @@ module a_side_diag #(
     logic [SUM_WIDTH-1:0] sum_re;
     logic [SUM_WIDTH-1:0] sum_im;
 
-    logic valid_cm1;
-    logic valid_cm2;
     logic valid_cm3;
 
     logic valid_sum_re;
-    logic valid_sum_im;
 
     logic [A_WIDTH-1:0] round_re;
     logic [A_WIDTH-1:0] round_im;
@@ -86,6 +83,15 @@ module a_side_diag #(
         .out_im(cmult_im[1])
     );
 
+    dline #(
+        .DATA_WIDTH(1),
+        .DELAY(3)
+    ) inst_valid_cm3 (
+        .i_clk(clk),
+        .i_data(valid_in),
+        .o_data(valid_cm3)
+    );
+
     sum #(
         .A_WIDTH(CMULT_WIDTH),
         .B_WIDTH(CMULT_WIDTH),
@@ -119,7 +125,7 @@ module a_side_diag #(
         .B(cmult_im[1]),
         .sub(1'b0),
 
-        .valid_out(valid_sum_im),
+        .valid_out(),
         .S(sum_im),
         .underflow()
     );
@@ -148,20 +154,14 @@ module a_side_diag #(
         .o_sat(sat_im)
     );
 
-    always_ff @(posedge clk) begin
-        if (rst) begin
-            valid_cm1 <= 1'b0;
-            valid_cm2 <= 1'b0;
-            valid_cm3 <= 1'b0;
-            valid_out <= 1'b0;
-        end else begin
-            valid_cm1 <= valid_in;
-            valid_cm2 <= valid_cm1;
-            valid_cm3 <= valid_cm2;
-
-            valid_out <= valid_sum_re;
-        end
-    end
+    dline #(
+        .DATA_WIDTH(1),
+        .DELAY(1)
+    ) inst_valid_out (
+        .i_clk(clk),
+        .i_data(valid_sum_re),
+        .o_data(valid_out)
+    );
 
     always_comb begin
         o_a12_re = round_re;
