@@ -1,50 +1,92 @@
 `timescale 1ns / 1ps
 
+import "DPI-C" function int neg(input int a);
 
-module neg_tb ();
-    parameter WIDTH = 4;
+module neg_tb;
+
+    localparam int WIDTH = 4;
+
     logic clk;
-    logic [WIDTH-1:0] a;
-    logic signed [WIDTH:0] result, expected;
+    logic signed [WIDTH-1:0] a;
+    logic signed [WIDTH:0] result;
 
-    neg #(.WIDTH(WIDTH)) dut (.*);
+    int expected;
+    int error_count;
 
-    initial clk = 0;
-    always #4 clk = ~clk;
-        
-    integer errors;
+    neg #(
+        .WIDTH(WIDTH)
+    ) dut (
+        .clk    (clk),
+        .a      (a),
+        .result (result)
+    );
 
     initial begin
-      
-        integer i;
-        
-        errors = 0;
-        for (i = 0; i < 2**WIDTH; i++) begin
+        clk = 1'b0;
+        forever #4 clk = ~clk;
+    end
+
+    initial begin
+        error_count = 0;
+        a = '0;
+        expected = 0;
+
+        for (int value = -(2**(WIDTH-1));
+                     value < 2**(WIDTH-1);
+                     value++) begin
+
+            @(negedge clk);
+
+            a = value;
+            expected = neg(value);
+
             @(posedge clk);
-            a <= i;
-	    expected <= -$signed(a);
-            if (result != expected) begin
-                $display("FAIL: a=%d (%b) -> result=%d (%b), expected=%d (%b)", $signed(a), a, $signed(result), result, $signed(expected), expected);
-                errors++;
+            #1;
+
+            if ($signed(result) != expected) begin
+
+                $display(
+                    "ERROR: a = %0d (%b), RTL = %0d (%b), C = %0d (%b)",
+                    $signed(a),
+                    a,
+                    $signed(result),
+                    result,
+                    expected,
+                    expected
+                );
+
+                error_count++;
+            end
+            else begin
+
+                $display(
+                    "OK: a = %0d (%b), result = %0d (%b)",
+                    $signed(a),
+                    a,
+                    $signed(result),
+                    result
+                );
+
             end
         end
-        @(posedge clk);
-        expected <= -$signed(a);
-        if (result != expected) begin
-            $display("FAIL: a=%d (%b) -> result=%d (%b), expected=%d (%b)", $signed(a), a, $signed(result), result, $signed(expected), expected);
-            errors++;
+
+        $display("");
+
+        if (error_count == 0) begin
+            $display("================================");
+            $display("NEG TEST PASSED");
+            $display("All values match C reference.");
+            $display("================================");
         end
-        @(posedge clk);
-        if (result != expected) begin
-            $display("FAIL: a=%d (%b) -> result=%d (%b), expected=%d (%b)", $signed(a), a, $signed(result), result, $signed(expected), expected);
-            errors++;
+        else begin
+            $display("================================");
+            $display("NEG TEST FAILED");
+            $display("Errors: %0d", error_count);
+            $display("================================");
         end
-        if (errors == 0)
-            $display("TESTS PASSED");
-        else
-            $display("TESTS FAILED: %0d errors", errors);
-        #15;
+
+        #10;
+        $finish;
     end
+
 endmodule
-
-
