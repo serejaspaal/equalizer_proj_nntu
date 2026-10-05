@@ -6,15 +6,13 @@ module sum_tb;
     localparam int B_WIDTH = 8;
     localparam int MAX_W   = (A_WIDTH > B_WIDTH) ? A_WIDTH : B_WIDTH;
 
-    import "DPI-C" function int sum(
-        input int A,
-        input int B,
-        input int sub,
-        input int signed_operands,
-        input int A_WIDTH,
-        input int B_WIDTH,
-        output int underflow
-    );
+import "DPI-C" function int sum(
+    input int sign,
+    input int sub,
+    input int a,
+    input int b,
+    output int udf
+);
 
     logic clk;
     logic rst;
@@ -106,12 +104,10 @@ module sum_tb;
         c_underflow = 0;
 
         exp_S1 = sum(
+            1,
+            signed_sub,        
             signed_a,
             signed_b,
-            signed_sub,
-            1,
-            A_WIDTH,
-            B_WIDTH,
             c_underflow
         );
 
@@ -120,12 +116,10 @@ module sum_tb;
         c_underflow = 0;
 
         exp_S2 = sum(
+            0,
+            signed_sub,
             unsigned_a,
             unsigned_b,
-            unsigned_sub,
-            0,
-            A_WIDTH,
-            B_WIDTH,
             c_underflow
         );
 
