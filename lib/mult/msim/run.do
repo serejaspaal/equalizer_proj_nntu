@@ -1,7 +1,7 @@
 transcript on
 vlib work
 
-vlog -sv ../src/mult.sv
+vlog -sv ../src/mult.sv ../mdl/mult.c
 
 vlog -sv ../tb/mult_tb.sv
 
@@ -13,4 +13,4 @@ view wave
 view structure
 view signals
 
-run 1035ns
+run 70ns
