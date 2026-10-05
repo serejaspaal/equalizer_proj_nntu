@@ -1,7 +1,9 @@
 transcript on
 vlib work
 
-vlog -sv ../src/cmodule.sv
+vlog -sv ../../dline/src/dline.sv
+
+vlog -sv ../src/cmodule.sv ../mdl/cmodule.c
 
 vlog -sv ../tb/cmodule_tb.sv
 
@@ -13,4 +15,4 @@ view wave
 view structure
 view signals
 
-run 300ns
+run 600ns
