@@ -1,8 +1,6 @@
 `timescale 1ns / 1ps
 
 import "DPI-C" function void cmult(
-    input  int A_WIDTH,
-    input  int B_WIDTH,
     input  int x0, input int y0,
     input  int x1, input int y1,
     output int out_re, output int out_im
@@ -44,7 +42,7 @@ module cmult_tb;
     
     task automatic check(string name, int ix0, int iy0, int ix1, int iy1);
         int c_re, c_im;
-        cmult(A_WIDTH, B_WIDTH, ix0, iy0, ix1, iy1, c_re, c_im);
+        cmult(ix0, iy0, ix1, iy1, c_re, c_im);
         ref_re = c_re;
         ref_im = c_im;
     endtask
