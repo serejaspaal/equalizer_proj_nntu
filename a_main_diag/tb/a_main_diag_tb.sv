@@ -3,7 +3,7 @@
 module a_main_diag_tb;
     parameter int H_WIDTH = 8;
     parameter int C_WIDTH = 16;
-    parameter int A_WIDTH = 8;
+    parameter int A_WIDTH = 2*H_WIDTH + 2;
     parameter int USE_DSP_VALUE = 1;
 
     localparam int CMAG_WIDTH = 2*H_WIDTH;
@@ -11,6 +11,7 @@ module a_main_diag_tb;
     localparam int S2_WIDTH = (S1_WIDTH > C_WIDTH) ? S1_WIDTH : C_WIDTH;
     localparam int ROUND_IN = S2_WIDTH + 1;
     localparam int DROP = ROUND_IN - A_WIDTH;
+    localparam int ROUND_BIT = (DROP > 0) ? DROP - 1 : 0;
     localparam int LATENCY = 5;
     localparam [A_WIDTH:0] MAXU = (1 <<< A_WIDTH) - 1;
 
@@ -93,8 +94,12 @@ module a_main_diag_tb;
     end
 
     always_comb begin
-        ref_sum[0] = {1'b0, ref_s2[0][ROUND_IN-1 : DROP]} + ref_s2[0][DROP-1];
-        ref_sum[1] = {1'b0, ref_s2[1][ROUND_IN-1 : DROP]} + ref_s2[1][DROP-1];
+        ref_sum[0] = {1'b0, ref_s2[0][ROUND_IN-1 : DROP]};
+        ref_sum[1] = {1'b0, ref_s2[1][ROUND_IN-1 : DROP]};
+        if (DROP > 0) begin
+            ref_sum[0] = ref_sum[0] + ref_s2[0][ROUND_BIT];
+            ref_sum[1] = ref_sum[1] + ref_s2[1][ROUND_BIT];
+        end
     end
 
     int errors = 0;

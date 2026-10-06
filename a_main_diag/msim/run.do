@@ -4,6 +4,7 @@ vlib work
 vlog -sv ../../lib/cmodule/src/cmodule.sv
 vlog -sv ../../lib/round/src/round.sv
 vlog -sv ../../lib/sum/src/sum.sv
+vlog -sv ../../lib/dline/src/dline.sv
 
 vlog -sv ../src/a_main_diag.sv
 

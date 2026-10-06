@@ -3,7 +3,7 @@
 module a_main_diag #(
     parameter int H_WIDTH = 8,
     parameter int C_WIDTH = 8,
-    parameter int A_WIDTH = 8,
+    parameter int A_WIDTH = 2*H_WIDTH + 2,
     parameter int USE_DSP_VALUE = 1    
 )(
     input logic clk,
@@ -39,6 +39,15 @@ module a_main_diag #(
     genvar i;
     generate
         for (i=0;i<2;i++) begin : gen_lane
+            logic signed [H_WIDTH-1:0] h1_re, h1_im, h2_re, h2_im;
+            logic [C_WIDTH-1:0] c_diag;
+            assign h1_re = (i == 0) ? i_h11_re : i_h21_re;
+            assign h1_im = (i == 0) ? i_h11_im : i_h21_im;
+            assign h2_re = (i == 0) ? i_h12_re : i_h22_re;
+            assign h2_im = (i == 0) ? i_h12_im : i_h22_im;
+            assign c_diag = (i == 0) ? i_c11 : i_c22;
+            
+            
             cmodule #(
                 .WIDTH(H_WIDTH),
                 .USE_DSP_VALUE(USE_DSP_VALUE)
@@ -46,8 +55,8 @@ module a_main_diag #(
                 .clk(clk),
                 .rst(rst),
                 .valid_in(valid_in),
-                .Re(i == 0 ? i_h11_re : i_h21_re),
-                .Im(i == 0 ? i_h11_im : i_h21_im),
+                .Re(h1_re),
+                .Im(h1_im),
                 .valid_out(valid_cm[i]),
                 .MagSq(cmag_out[i*2])
             );
@@ -59,8 +68,8 @@ module a_main_diag #(
                 .clk(clk),
                 .rst(rst),
                 .valid_in(valid_in),
-                .Re(i == 0 ? i_h12_re : i_h22_re),
-                .Im(i == 0 ? i_h12_im : i_h22_im),
+                .Re(h2_re),
+                .Im(h2_im),
                 .valid_out(),
                 .MagSq(cmag_out[i*2+1])
             );
@@ -90,7 +99,7 @@ module a_main_diag #(
                 .rst(rst),
                 .valid_in(valid_s1[i]),
                 .A(s1_out[i]),
-                .B(i == 0 ? i_c11 : i_c22),
+                .B(c_diag),
                 .sub(1'b0),
                 .valid_out(valid_s2[i]),
                 .S(s2_out[i]),
@@ -111,11 +120,14 @@ module a_main_diag #(
     endgenerate
     
     logic valid_r;
-    always_ff @(posedge clk) begin
-        if (rst) valid_r <= 1'b0;
-        else valid_r <= valid_s2[0];
-    end
-    
+    dline #(
+        .DATA_WIDTH(1),
+        .DELAY(1)
+    ) inst_valid_dline (
+        .i_clk(clk),
+        .i_data(valid_s2[0]),
+        .o_data(valid_r)
+    );
     assign valid_out = valid_r;
     
     always_comb begin
