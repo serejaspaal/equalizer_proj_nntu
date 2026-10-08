@@ -4,7 +4,6 @@ module w_matrix #(
     parameter int M_WIDTH       = A_WIDTH + H_WIDTH + 2,
     parameter int DET_WIDTH     = 2*A_WIDTH,
     parameter int FRAC_WIDTH    = 8,
-    //parameter int W_WIDTH       = 18 + M_WIDTH,
     parameter int USE_DSP_VALUE = 1,
     parameter int USE_INTRP     = 1,
     parameter int INTRP_WIDTH   = 7,
@@ -19,7 +18,7 @@ module w_matrix #(
     input  logic signed [H_WIDTH-1:0] i_h21_re, i_h21_im,
     input  logic signed [H_WIDTH-1:0] i_h22_re, i_h22_im,
 
-    input  logic [A_WIDTH-1:0] i_a11, i_a22,
+    input  logic unsigned [A_WIDTH-1:0] i_a11, i_a22,
     input  logic signed [A_WIDTH-1:0] i_a12_re, i_a12_im,
 
     output logic o_stb,
