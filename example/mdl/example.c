@@ -3,6 +3,6 @@ int example(
     int i_Im
 )
 {
-    int out = i_Re * i_Re + i_Im * i_Im;
+    int out = cmodule(i_Re, i_Im);
     return out;
 }
