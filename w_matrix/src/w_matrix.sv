@@ -1,14 +1,17 @@
+`timescale 1ns / 1ps
+
 module w_matrix #(
-    parameter int A_WIDTH       = 16,
-    parameter int H_WIDTH       = 16,
-    parameter int M_WIDTH       = A_WIDTH + H_WIDTH + 2,
-    parameter int DET_WIDTH     = 2*A_WIDTH,
-    parameter int FRAC_WIDTH    = 8,
-    parameter int USE_DSP_VALUE = 1,
-    parameter int USE_INTRP     = 1,
-    parameter int INTRP_WIDTH   = 7,
-    parameter int DET_INV_WIDTH = DET_WIDTH + USE_INTRP * INTRP_WIDTH + 1,
-    parameter int W_WIDTH       = DET_INV_WIDTH + M_WIDTH
+    parameter int A_WIDTH            = 16,
+    parameter int H_WIDTH            = 16,
+    parameter int M_WIDTH            = A_WIDTH + H_WIDTH + 2,
+    parameter int DET_WIDTH          = 2*A_WIDTH,
+    parameter int FRAC_WIDTH         = 8,
+    parameter int USE_DSP_VALUE      = 1,
+    parameter int USE_INTRP          = 1,
+    parameter int INTRP_WIDTH        = 7,
+    parameter int DET_INV_WIDTH      = DET_WIDTH + USE_INTRP * INTRP_WIDTH + 1,
+    parameter int RNDD_DET_INV_WIDTH = 40,
+    parameter int W_WIDTH            = RNDD_DET_INV_WIDTH + M_WIDTH
 )(
     input  logic clk,
     input  logic rst,
@@ -19,7 +22,7 @@ module w_matrix #(
     input  logic signed [H_WIDTH-1:0] i_h22_re, i_h22_im,
 
     input  logic unsigned [A_WIDTH-1:0] i_a11, i_a22,
-    input  logic signed [A_WIDTH-1:0] i_a12_re, i_a12_im,
+    input  logic signed   [A_WIDTH-1:0] i_a12_re, i_a12_im,
 
     output logic o_stb,
 
@@ -33,16 +36,19 @@ module w_matrix #(
     output logic o_sat_w21_re, o_sat_w21_im,
     output logic o_sat_w22_re, o_sat_w22_im,
 
-    output logic [DET_WIDTH-1:0] o_det_a,
-    output logic o_det_sat,
-    output logic o_det_udf,
-    output logic [DET_INV_WIDTH-1:0] o_det_inv,
-    output logic o_det_inv_inf,
+    output logic [DET_WIDTH-1:0]          o_det_a,
+    output logic                          o_det_sat,
+    output logic                          o_det_udf,
+    output logic [DET_INV_WIDTH-1:0]      o_det_inv,
+    output logic                          o_det_inv_inf,
+    output logic [RNDD_DET_INV_WIDTH-1:0] o_rounded_det_inv,
+    output logic                          o_sat_det_inv,
 
     output logic signed [M_WIDTH-1:0] o_m11_re, o_m11_im,
     output logic signed [M_WIDTH-1:0] o_m12_re, o_m12_im,
     output logic signed [M_WIDTH-1:0] o_m21_re, o_m21_im,
     output logic signed [M_WIDTH-1:0] o_m22_re, o_m22_im,
+
     output logic o_sat_m11_re, o_sat_m11_im,
     output logic o_sat_m12_re, o_sat_m12_im,
     output logic o_sat_m21_re, o_sat_m21_im,
@@ -72,14 +78,14 @@ module w_matrix #(
 
     dline #(
         .DATA_WIDTH (1),
-        .DELAY (10)
+        .DELAY (11)
     ) inst_dline (
         .i_clk (clk),
         .i_data (i_stb),
         .o_data (o_stb)
     );
 
-    a_det #(//4 takt
+    a_det #(
         .A_WIDTH (A_WIDTH),
         .DET_WIDTH (DET_WIDTH),
         .USE_DSP_VALUE (USE_DSP_VALUE)
@@ -95,19 +101,25 @@ module w_matrix #(
         .o_sum_udf (o_det_udf)
     );
 
-    func_reverse #( //8 takt
-        .IN_WIDTH (DET_WIDTH),
-        .FRAC_WIDTH (2*FRAC_WIDTH),
+    reverse #(
+        .DET_WIDTH (DET_WIDTH),
+        .FRAC_WIDTH (FRAC_WIDTH),
+        .USE_INTRP (USE_INTRP),
         .INTRP_WIDTH (INTRP_WIDTH),
-        .USE_INTRP (USE_INTRP)
+        .DET_INV_WIDTH (DET_INV_WIDTH),
+        .IN_SIGNED (0),
+        .ROUNDED_WIDTH (RNDD_DET_INV_WIDTH),
+        .CLIP_WIDTH (0)
     ) inst_func_reverse (
-        .i_clk (clk),
-        .i_x (o_det_a),
-        .o_result (o_det_inv),
-        .o_inf (o_det_inv_inf)
+        .clk (clk),
+        .i_det_a (o_det_a),
+        .o_det_inv (o_det_inv),
+        .o_det_inv_inf (o_det_inv_inf),
+        .o_rounded_det_inv (o_rounded_det_inv),
+        .o_sat_det_inv (o_sat_det_inv)
     );
 
-    m_matrix #(//5 takt
+    m_matrix #(
         .A_WIDTH (A_WIDTH),
         .H_WIDTH (H_WIDTH),
         .M_WIDTH (M_WIDTH),
@@ -157,7 +169,7 @@ module w_matrix #(
         for (genvar i = 0; i < 8; i++) begin : gen_dline
             dline #(
                 .DATA_WIDTH (M_WIDTH),
-                .DELAY (3)
+                .DELAY (4)
             ) inst_dline (
                 .i_clk (clk),
                 .i_data (dline_m[i]),
@@ -168,15 +180,15 @@ module w_matrix #(
     assign {dline_m11_re, dline_m11_im, dline_m12_re, dline_m12_im, dline_m21_re, dline_m21_im, dline_m22_re, dline_m22_im} = o_dline_m;
 
 
-    cmult_matrix_on_real #( //10 takt
-        .DET_WIDTH (DET_INV_WIDTH),
+    cmult_matrix_on_real #(
+        .DET_WIDTH (RNDD_DET_INV_WIDTH),
         //.DET_WIDTH (18),
         .M_WIDTH (M_WIDTH),
         .W_WIDTH (W_WIDTH),
         .USE_DSP_VALUE (USE_DSP_VALUE)
     ) inst_cmult_matrix_on_real (
         .clk (clk),
-        .det_inv (o_det_inv),
+        .det_inv (o_rounded_det_inv),
         .i_m11_re (dline_m11_re),
         .i_m11_im (dline_m11_im),
         .i_m12_re (dline_m12_re),

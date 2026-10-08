@@ -10,7 +10,8 @@ module w_matrix_tb;
     parameter int USE_INTRP     = 1;
     parameter int INTRP_WIDTH   = 7;
     parameter int DET_INV_WIDTH = DET_WIDTH + USE_INTRP * INTRP_WIDTH + 1;
-    parameter int W_WIDTH       = DET_INV_WIDTH + M_WIDTH;
+    parameter int RNDD_DET_INV_WIDTH = 35;
+    parameter int W_WIDTH       = RNDD_DET_INV_WIDTH + M_WIDTH;
 
     logic clk = 0;
     logic rst = 0;
@@ -50,6 +51,8 @@ module w_matrix_tb;
 
     logic [DET_INV_WIDTH-1:0] o_det_inv;
     logic o_det_inv_inf;
+    logic [RNDD_DET_INV_WIDTH-1:0] o_rounded_det_inv;
+    logic                          o_sat_det_inv;
 
 
     logic signed [A_WIDTH+W_WIDTH+1:0] o_e11_re, o_e11_im;
@@ -115,6 +118,7 @@ module w_matrix_tb;
         .M_WIDTH       ( M_WIDTH ),
         .DET_WIDTH     ( DET_WIDTH ),
         .DET_INV_WIDTH ( DET_INV_WIDTH ),
+        .RNDD_DET_INV_WIDTH ( RNDD_DET_INV_WIDTH ),
         .FRAC_WIDTH    ( FRAC_WIDTH ),
         .W_WIDTH       ( W_WIDTH ),
         .USE_DSP_VALUE ( USE_DSP_VALUE ),
@@ -185,7 +189,7 @@ module w_matrix_tb;
         i_a12_im_fxp = $signed(i_a12_im) * (2.0 ** (-FRAC_WIDTH));
 
         det_a_fxp    = $unsigned(o_det_a) * (2.0 ** (-2*FRAC_WIDTH));
-        det_inv_fxp  = $unsigned(o_det_inv) * (2.0 ** (-2*FRAC_WIDTH-INTRP_WIDTH));
+        det_inv_fxp  = $unsigned(o_rounded_det_inv) * (2.0 ** (-2*FRAC_WIDTH-INTRP_WIDTH+DET_INV_WIDTH-RNDD_DET_INV_WIDTH));
 
         h11_re_fxp = $signed(i_h11_re) * (2.0 ** (-FRAC_WIDTH));
         h11_im_fxp = $signed(i_h11_im) * (2.0 ** (-FRAC_WIDTH));
@@ -214,14 +218,14 @@ module w_matrix_tb;
         w22_re_fxp = $signed(o_w22_re) * (2.0 ** (-4*FRAC_WIDTH-INTRP_WIDTH));
         w22_im_fxp = $signed(o_w22_im) * (2.0 ** (-4*FRAC_WIDTH-INTRP_WIDTH));
 
-        e11_re_fxp = $signed(o_e11_re) * (2.0 ** (-5*FRAC_WIDTH-INTRP_WIDTH+1));
-        e11_im_fxp = $signed(o_e11_im) * (2.0 ** (-5*FRAC_WIDTH-INTRP_WIDTH+1));
-        e12_re_fxp = $signed(o_e12_re) * (2.0 ** (-5*FRAC_WIDTH-INTRP_WIDTH+1));
-        e12_im_fxp = $signed(o_e12_im) * (2.0 ** (-5*FRAC_WIDTH-INTRP_WIDTH+1));
-        e21_re_fxp = $signed(o_e21_re) * (2.0 ** (-5*FRAC_WIDTH-INTRP_WIDTH+1));
-        e21_im_fxp = $signed(o_e21_im) * (2.0 ** (-5*FRAC_WIDTH-INTRP_WIDTH+1));
-        e22_re_fxp = $signed(o_e22_re) * (2.0 ** (-5*FRAC_WIDTH-INTRP_WIDTH+1));
-        e22_im_fxp = $signed(o_e22_im) * (2.0 ** (-5*FRAC_WIDTH-INTRP_WIDTH+1));
+        e11_re_fxp = $signed(o_e11_re) * (2.0 ** (-5*FRAC_WIDTH-INTRP_WIDTH+1+DET_INV_WIDTH-RNDD_DET_INV_WIDTH));
+        e11_im_fxp = $signed(o_e11_im) * (2.0 ** (-5*FRAC_WIDTH-INTRP_WIDTH+1+DET_INV_WIDTH-RNDD_DET_INV_WIDTH));
+        e12_re_fxp = $signed(o_e12_re) * (2.0 ** (-5*FRAC_WIDTH-INTRP_WIDTH+1+DET_INV_WIDTH-RNDD_DET_INV_WIDTH));
+        e12_im_fxp = $signed(o_e12_im) * (2.0 ** (-5*FRAC_WIDTH-INTRP_WIDTH+1+DET_INV_WIDTH-RNDD_DET_INV_WIDTH));
+        e21_re_fxp = $signed(o_e21_re) * (2.0 ** (-5*FRAC_WIDTH-INTRP_WIDTH+1+DET_INV_WIDTH-RNDD_DET_INV_WIDTH));
+        e21_im_fxp = $signed(o_e21_im) * (2.0 ** (-5*FRAC_WIDTH-INTRP_WIDTH+1+DET_INV_WIDTH-RNDD_DET_INV_WIDTH));
+        e22_re_fxp = $signed(o_e22_re) * (2.0 ** (-5*FRAC_WIDTH-INTRP_WIDTH+1+DET_INV_WIDTH-RNDD_DET_INV_WIDTH));
+        e22_im_fxp = $signed(o_e22_im) * (2.0 ** (-5*FRAC_WIDTH-INTRP_WIDTH+1+DET_INV_WIDTH-RNDD_DET_INV_WIDTH));
     end
 
     typedef struct {
@@ -350,16 +354,16 @@ module w_matrix_tb;
             end
 
             begin
-                for (int i = 0; i < NUM_TESTS+17; i++) begin
-                    if (cycle_cnt - 5 >= 0) begin
+                for (int i = 0; i < NUM_TESTS+18; i++) begin
+                    if (cycle_cnt - 5 >= 0 && cycle_cnt - 5 < 16) begin
                         test_storage[cycle_cnt - 5].det_a = det_a_fxp;
                     end
 
-                    if (cycle_cnt - 9 >= 0) begin
-                        test_storage[cycle_cnt - 9].det_inv = det_inv_fxp;
+                    if (cycle_cnt - 10 >= 0 && cycle_cnt - 10 < 16) begin
+                        test_storage[cycle_cnt - 10].det_inv = det_inv_fxp;
                     end
 
-                    if (cycle_cnt - 11 >= 0) begin
+                    if (cycle_cnt - 12 >= 0 && cycle_cnt - 12 < 16) begin
                         i_w11_re_sync = o_w11_re;
                         i_w11_im_sync = o_w11_im;
                         i_w12_re_sync = o_w12_re;
@@ -368,21 +372,21 @@ module w_matrix_tb;
                         i_w21_im_sync = o_w21_im;
                         i_w22_re_sync = o_w22_re;
                         i_w22_im_sync = o_w22_im;
-                        i_a11_re_signed = $signed({1'b0, test_storage[cycle_cnt - 11].in_a11});
+                        i_a11_re_signed = $signed({1'b0, test_storage[cycle_cnt - 12].in_a11});
                         i_a11_im_signed = '0;
-                        i_a22_re_signed = $signed({1'b0, test_storage[cycle_cnt - 11].in_a22});
+                        i_a22_re_signed = $signed({1'b0, test_storage[cycle_cnt - 12].in_a22});
                         i_a22_im_signed = '0;
-                        i_a12_re_signed = $signed({test_storage[cycle_cnt - 11].in_a12_re[15], test_storage[cycle_cnt - 11].in_a12_re});
-                        i_a12_im_signed = $signed({test_storage[cycle_cnt - 11].in_a12_im[15], test_storage[cycle_cnt - 11].in_a12_im});
-                        i_a21_re_signed = $signed({test_storage[cycle_cnt - 11].in_a12_re[15], test_storage[cycle_cnt - 11].in_a12_re});
-                        i_a21_im_signed = -$signed({(test_storage[cycle_cnt - 11].in_a12_im[15]), test_storage[cycle_cnt - 11].in_a12_im});
+                        i_a12_re_signed = $signed({test_storage[cycle_cnt - 12].in_a12_re[15], test_storage[cycle_cnt - 12].in_a12_re});
+                        i_a12_im_signed = $signed({test_storage[cycle_cnt - 12].in_a12_im[15], test_storage[cycle_cnt - 12].in_a12_im});
+                        i_a21_re_signed = $signed({test_storage[cycle_cnt - 12].in_a12_re[15], test_storage[cycle_cnt - 12].in_a12_re});
+                        i_a21_im_signed = -$signed({(test_storage[cycle_cnt - 12].in_a12_im[15]), test_storage[cycle_cnt - 12].in_a12_im});
                     end
 
-                    if (cycle_cnt - 16 >= 0) begin
-                        test_storage[cycle_cnt - 17].e11_re_fxp = e11_re_fxp;
-                        test_storage[cycle_cnt - 17].e11_im_fxp = e11_im_fxp;
-                        test_storage[cycle_cnt - 17].e22_re_fxp = e22_re_fxp;
-                        test_storage[cycle_cnt - 17].e22_im_fxp = e22_im_fxp;
+                    if (cycle_cnt - 18 >= 0) begin
+                        test_storage[cycle_cnt - 18].e11_re_fxp = e11_re_fxp;
+                        test_storage[cycle_cnt - 18].e11_im_fxp = e11_im_fxp;
+                        test_storage[cycle_cnt - 18].e22_re_fxp = e22_re_fxp;
+                        test_storage[cycle_cnt - 18].e22_im_fxp = e22_im_fxp;
                     end
 
                     @(posedge clk);
