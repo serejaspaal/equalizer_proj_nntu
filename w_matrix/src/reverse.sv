@@ -15,7 +15,7 @@ module reverse #(
 
     output logic [DET_INV_WIDTH-1:0] o_det_inv,
     output logic                     o_det_inv_inf,
-    output logic [ROUNDED_WIDTH-1:0] o_rounded_det_inv,
+    output logic [ROUNDED_WIDTH-1:0] o_det_inv_round,
     output logic                     o_sat_det_inv
 );
 
@@ -39,7 +39,7 @@ module reverse #(
     ) inst_round (
         .clk    (clk),
         .i_data (o_det_inv),
-        .o_data (o_rounded_det_inv),
+        .o_data (o_det_inv_round),
         .o_sat  (o_sat_det_inv)
     );
 

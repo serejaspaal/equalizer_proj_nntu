@@ -10,8 +10,9 @@ module w_matrix #(
     parameter int USE_INTRP          = 1,
     parameter int INTRP_WIDTH        = 7,
     parameter int DET_INV_WIDTH      = DET_WIDTH + USE_INTRP * INTRP_WIDTH + 1,
-    parameter int RNDD_DET_INV_WIDTH = 40,
-    parameter int W_WIDTH            = RNDD_DET_INV_WIDTH + M_WIDTH
+    parameter int DET_INV_ROUND_WIDTH = 40,
+    parameter int DET_INV_CLIP_WIDTH = 3,
+    parameter int W_WIDTH            = DET_INV_ROUND_WIDTH + M_WIDTH
 )(
     input  logic clk,
     input  logic rst,
@@ -41,7 +42,7 @@ module w_matrix #(
     output logic                          o_det_udf,
     output logic [DET_INV_WIDTH-1:0]      o_det_inv,
     output logic                          o_det_inv_inf,
-    output logic [RNDD_DET_INV_WIDTH-1:0] o_rounded_det_inv,
+    output logic [DET_INV_ROUND_WIDTH-1:0] o_det_inv_round,
     output logic                          o_sat_det_inv,
 
     output logic signed [M_WIDTH-1:0] o_m11_re, o_m11_im,
@@ -53,27 +54,7 @@ module w_matrix #(
     output logic o_sat_m12_re, o_sat_m12_im,
     output logic o_sat_m21_re, o_sat_m21_im,
     output logic o_sat_m22_re, o_sat_m22_im
-
-//    output real i_a11_fxp, i_a22_fxp,
-//    output real i_a12_re_fxp, i_a12_im_fxp,
-//    output real det_a_fxp, det_inv_fxp
 );
-
-//    logic [DET_WIDTH-1:0] o_det_a;
-//    logic sat_det;
-//    logic o_sum_udf;
-//
-//    logic signed [M_WIDTH-1:0] o_m11_re, o_m11_im;
-//    logic signed [M_WIDTH-1:0] o_m12_re, o_m12_im;
-//    logic signed [M_WIDTH-1:0] o_m21_re, o_m21_im;
-//    logic signed [M_WIDTH-1:0] o_m22_re, o_m22_im;
-//    logic o_sat_m11_re, o_sat_m11_im;
-//    logic o_sat_m12_re, o_sat_m12_im;
-//    logic o_sat_m21_re, o_sat_m21_im;
-//    logic o_sat_m22_re, o_sat_m22_im;
-//
-//    logic [DET_WIDTH-1:0] o_det_inv;
-//    logic o_det_inv_inf;
 
 
     dline #(
@@ -108,14 +89,14 @@ module w_matrix #(
         .INTRP_WIDTH (INTRP_WIDTH),
         .DET_INV_WIDTH (DET_INV_WIDTH),
         .IN_SIGNED (0),
-        .ROUNDED_WIDTH (RNDD_DET_INV_WIDTH),
-        .CLIP_WIDTH (0)
+        .ROUNDED_WIDTH (DET_INV_ROUND_WIDTH),
+        .CLIP_WIDTH (DET_INV_CLIP_WIDTH)
     ) inst_func_reverse (
         .clk (clk),
         .i_det_a (o_det_a),
         .o_det_inv (o_det_inv),
         .o_det_inv_inf (o_det_inv_inf),
-        .o_rounded_det_inv (o_rounded_det_inv),
+        .o_det_inv_round (o_det_inv_round),
         .o_sat_det_inv (o_sat_det_inv)
     );
 
@@ -181,14 +162,14 @@ module w_matrix #(
 
 
     cmult_matrix_on_real #(
-        .DET_WIDTH (RNDD_DET_INV_WIDTH),
+        .DET_WIDTH (DET_INV_ROUND_WIDTH),
         //.DET_WIDTH (18),
         .M_WIDTH (M_WIDTH),
         .W_WIDTH (W_WIDTH),
         .USE_DSP_VALUE (USE_DSP_VALUE)
     ) inst_cmult_matrix_on_real (
         .clk (clk),
-        .det_inv (o_rounded_det_inv),
+        .det_inv (o_det_inv_round),
         .i_m11_re (dline_m11_re),
         .i_m11_im (dline_m11_im),
         .i_m12_re (dline_m12_re),
