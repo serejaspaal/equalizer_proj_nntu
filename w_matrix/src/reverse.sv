@@ -7,7 +7,7 @@ module reverse #(
     parameter int INTRP_WIDTH   = 7,
     parameter int DET_INV_WIDTH = DET_WIDTH + USE_INTRP * INTRP_WIDTH + 1,
     parameter int IN_SIGNED     = 0,
-    parameter int ROUNDED_WIDTH = 30,
+    parameter int ROUND_WIDTH   = 30,
     parameter int CLIP_WIDTH    = 0
 )(
     input logic                 clk,
@@ -15,7 +15,7 @@ module reverse #(
 
     output logic [DET_INV_WIDTH-1:0] o_det_inv,
     output logic                     o_det_inv_inf,
-    output logic [ROUNDED_WIDTH-1:0] o_det_inv_round,
+    output logic [ROUND_WIDTH-1:0]   o_det_inv_round,
     output logic                     o_sat_det_inv
 );
 
@@ -33,7 +33,7 @@ module reverse #(
 
     round # (
         .IN_WIDTH   (DET_INV_WIDTH),
-        .OUT_WIDTH  (ROUNDED_WIDTH),
+        .OUT_WIDTH  (ROUND_WIDTH),
         .IN_SIGNED  (IN_SIGNED),
         .CLIP_WIDTH (CLIP_WIDTH)
     ) inst_round (

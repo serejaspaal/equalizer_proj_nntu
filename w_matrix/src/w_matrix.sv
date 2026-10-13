@@ -89,7 +89,7 @@ module w_matrix #(
         .INTRP_WIDTH (INTRP_WIDTH),
         .DET_INV_WIDTH (DET_INV_WIDTH),
         .IN_SIGNED (0),
-        .ROUNDED_WIDTH (DET_INV_ROUND_WIDTH),
+        .ROUND_WIDTH (DET_INV_ROUND_WIDTH),
         .CLIP_WIDTH (DET_INV_CLIP_WIDTH)
     ) inst_func_reverse (
         .clk (clk),

@@ -1,21 +1,22 @@
 `timescale 1ns / 1ps
 
 module w_matrix_tb;
-    parameter int A_WIDTH       = 16;
-    parameter int H_WIDTH       = 16;
-    parameter int M_WIDTH       = A_WIDTH + H_WIDTH + 2;
-    parameter int DET_WIDTH     = 2*A_WIDTH;
-    parameter int FRAC_WIDTH    = 8;
-    parameter int USE_DSP_VALUE = 1;
-    parameter int USE_INTRP     = 1;
-    parameter int INTRP_WIDTH   = 7;
-    parameter int DET_INV_WIDTH = DET_WIDTH + USE_INTRP * INTRP_WIDTH + 1;
+    parameter int A_WIDTH             = 16;
+    parameter int H_WIDTH             = 16;
+    parameter int M_WIDTH             = A_WIDTH + H_WIDTH + 2;
+    parameter int DET_WIDTH           = 2*A_WIDTH;
+    parameter int FRAC_WIDTH          = 8;
+    parameter int USE_DSP_VALUE       = 1;
+    parameter int USE_INTRP           = 1;
+    parameter int INTRP_WIDTH         = 7;
+    parameter int DET_INV_WIDTH       = DET_WIDTH + USE_INTRP * INTRP_WIDTH + 1;
     parameter int DET_INV_ROUND_WIDTH = 32;
     parameter int DET_INV_CLIP_WIDTH  = 3;
-    parameter int W_WIDTH       = DET_INV_ROUND_WIDTH + M_WIDTH;
+    parameter int W_WIDTH             = DET_INV_ROUND_WIDTH + M_WIDTH;
 
     logic clk = 0;
     logic rst = 0;
+
     logic i_stb = 0;
     logic o_stb = 0;
 
@@ -23,7 +24,7 @@ module w_matrix_tb;
     logic signed [H_WIDTH-1:0] i_h12_re, i_h12_im;
     logic signed [H_WIDTH-1:0] i_h21_re, i_h21_im;
     logic signed [H_WIDTH-1:0] i_h22_re, i_h22_im;
-    logic [A_WIDTH-1:0] i_a11, i_a22;
+    logic        [A_WIDTH-1:0] i_a11, i_a22;
     logic signed [A_WIDTH-1:0] i_a12_re, i_a12_im;
 
     logic signed [W_WIDTH-1:0] o_w11_re, o_w11_im;
@@ -50,10 +51,10 @@ module w_matrix_tb;
     logic o_sat_m21_re, o_sat_m21_im;
     logic o_sat_m22_re, o_sat_m22_im;
 
-    logic [DET_INV_WIDTH-1:0] o_det_inv;
-    logic o_det_inv_inf;
+    logic [DET_INV_WIDTH-1:0]       o_det_inv;
+    logic                           o_det_inv_inf;
     logic [DET_INV_ROUND_WIDTH-1:0] o_det_inv_round;
-    logic                          o_sat_det_inv;
+    logic                           o_sat_det_inv;
 
 
     logic signed [A_WIDTH+W_WIDTH+1:0] o_e11_re, o_e11_im;
@@ -72,7 +73,8 @@ module w_matrix_tb;
 
     real i_a11_fxp, i_a22_fxp;
     real i_a12_re_fxp, i_a12_im_fxp;
-    real det_a_fxp, det_inv_fxp;
+    real det_a_fxp;
+    real det_inv_fxp, det_inv_round_fxp;
 
     real h11_re_fxp, h11_im_fxp;
     real h12_re_fxp, h12_im_fxp;
@@ -191,7 +193,9 @@ module w_matrix_tb;
         i_a12_im_fxp = $signed(i_a12_im) * (2.0 ** (-FRAC_WIDTH));
 
         det_a_fxp    = $unsigned(o_det_a) * (2.0 ** (-2*FRAC_WIDTH));
-        det_inv_fxp  = $unsigned(o_det_inv_round) * (2.0 ** (-2*FRAC_WIDTH-INTRP_WIDTH+DET_INV_WIDTH-DET_INV_ROUND_WIDTH-DET_INV_CLIP_WIDTH));
+
+        det_inv_fxp       = $unsigned(o_det_inv) * (2.0 ** (-2*FRAC_WIDTH-INTRP_WIDTH));
+        det_inv_round_fxp = $unsigned(o_det_inv_round) * (2.0 ** (-2*FRAC_WIDTH-INTRP_WIDTH+DET_INV_WIDTH-DET_INV_ROUND_WIDTH-DET_INV_CLIP_WIDTH));
 
         h11_re_fxp = $signed(i_h11_re) * (2.0 ** (-FRAC_WIDTH));
         h11_im_fxp = $signed(i_h11_im) * (2.0 ** (-FRAC_WIDTH));
@@ -362,7 +366,7 @@ module w_matrix_tb;
                     end
 
                     if (cycle_cnt - 10 >= 0 && cycle_cnt - 10 < 16) begin
-                        test_storage[cycle_cnt - 10].det_inv = det_inv_fxp;
+                        test_storage[cycle_cnt - 10].det_inv = det_inv_round_fxp;
                     end
 
                     if (cycle_cnt - 12 >= 0 && cycle_cnt - 12 < 16) begin
