@@ -3,7 +3,6 @@
 module w_matrix_tb;
     parameter int A_WIDTH             = 16;
     parameter int H_WIDTH             = 16;
-    parameter int M_WIDTH             = A_WIDTH + H_WIDTH + 2;
     parameter int DET_WIDTH           = 2*A_WIDTH;
     parameter int FRAC_WIDTH          = 8;
     parameter int USE_DSP_VALUE       = 1;
@@ -12,6 +11,8 @@ module w_matrix_tb;
     parameter int DET_INV_WIDTH       = DET_WIDTH + USE_INTRP * INTRP_WIDTH + 1;
     parameter int DET_INV_ROUND_WIDTH = 32;
     parameter int DET_INV_CLIP_WIDTH  = 3;
+    parameter int M_WIDTH             = 18;
+    parameter int M_CLIP              = 9;
     parameter int W_WIDTH             = DET_INV_ROUND_WIDTH + M_WIDTH;
 
     logic clk = 0;
@@ -118,11 +119,12 @@ module w_matrix_tb;
     w_matrix #(
         .A_WIDTH       ( A_WIDTH ),
         .H_WIDTH       ( H_WIDTH ),
-        .M_WIDTH       ( M_WIDTH ),
         .DET_WIDTH     ( DET_WIDTH ),
         .DET_INV_WIDTH ( DET_INV_WIDTH ),
         .DET_INV_ROUND_WIDTH ( DET_INV_ROUND_WIDTH ),
         .DET_INV_CLIP_WIDTH ( DET_INV_CLIP_WIDTH ),
+        .M_WIDTH       ( M_WIDTH ),
+        .M_CLIP        ( M_CLIP ),
         .FRAC_WIDTH    ( FRAC_WIDTH ),
         .W_WIDTH       ( W_WIDTH ),
         .USE_DSP_VALUE ( USE_DSP_VALUE ),
@@ -206,32 +208,32 @@ module w_matrix_tb;
         h22_re_fxp = $signed(i_h22_re) * (2.0 ** (-FRAC_WIDTH));
         h22_im_fxp = $signed(i_h22_im) * (2.0 ** (-FRAC_WIDTH));
 
-        m11_re_fxp = $signed(o_m11_re) * (2.0 ** (-2*FRAC_WIDTH));
-        m11_im_fxp = $signed(o_m11_im) * (2.0 ** (-2*FRAC_WIDTH));
-        m12_re_fxp = $signed(o_m12_re) * (2.0 ** (-2*FRAC_WIDTH));
-        m12_im_fxp = $signed(o_m12_im) * (2.0 ** (-2*FRAC_WIDTH));
-        m21_re_fxp = $signed(o_m21_re) * (2.0 ** (-2*FRAC_WIDTH));
-        m21_im_fxp = $signed(o_m21_im) * (2.0 ** (-2*FRAC_WIDTH));
-        m22_re_fxp = $signed(o_m22_re) * (2.0 ** (-2*FRAC_WIDTH));
-        m22_im_fxp = $signed(o_m22_im) * (2.0 ** (-2*FRAC_WIDTH));
+        m11_re_fxp = $signed(o_m11_re) * (2.0 ** (-FRAC_WIDTH-1));
+        m11_im_fxp = $signed(o_m11_im) * (2.0 ** (-FRAC_WIDTH-1));
+        m12_re_fxp = $signed(o_m12_re) * (2.0 ** (-FRAC_WIDTH-1));
+        m12_im_fxp = $signed(o_m12_im) * (2.0 ** (-FRAC_WIDTH-1));
+        m21_re_fxp = $signed(o_m21_re) * (2.0 ** (-FRAC_WIDTH-1));
+        m21_im_fxp = $signed(o_m21_im) * (2.0 ** (-FRAC_WIDTH-1));
+        m22_re_fxp = $signed(o_m22_re) * (2.0 ** (-FRAC_WIDTH-1));
+        m22_im_fxp = $signed(o_m22_im) * (2.0 ** (-FRAC_WIDTH-1));
 
-        w11_re_fxp = $signed(o_w11_re) * (2.0 ** (-4*FRAC_WIDTH-INTRP_WIDTH));
-        w11_im_fxp = $signed(o_w11_im) * (2.0 ** (-4*FRAC_WIDTH-INTRP_WIDTH));
-        w12_re_fxp = $signed(o_w12_re) * (2.0 ** (-4*FRAC_WIDTH-INTRP_WIDTH));
-        w12_im_fxp = $signed(o_w12_im) * (2.0 ** (-4*FRAC_WIDTH-INTRP_WIDTH));
-        w21_re_fxp = $signed(o_w21_re) * (2.0 ** (-4*FRAC_WIDTH-INTRP_WIDTH));
-        w21_im_fxp = $signed(o_w21_im) * (2.0 ** (-4*FRAC_WIDTH-INTRP_WIDTH));
-        w22_re_fxp = $signed(o_w22_re) * (2.0 ** (-4*FRAC_WIDTH-INTRP_WIDTH));
-        w22_im_fxp = $signed(o_w22_im) * (2.0 ** (-4*FRAC_WIDTH-INTRP_WIDTH));
+        w11_re_fxp = $signed(o_w11_re) * (2.0 ** (-2*FRAC_WIDTH-USE_INTRP*INTRP_WIDTH-4));
+        w11_im_fxp = $signed(o_w11_im) * (2.0 ** (-2*FRAC_WIDTH-USE_INTRP*INTRP_WIDTH-4));
+        w12_re_fxp = $signed(o_w12_re) * (2.0 ** (-2*FRAC_WIDTH-USE_INTRP*INTRP_WIDTH-4));
+        w12_im_fxp = $signed(o_w12_im) * (2.0 ** (-2*FRAC_WIDTH-USE_INTRP*INTRP_WIDTH-4));
+        w21_re_fxp = $signed(o_w21_re) * (2.0 ** (-2*FRAC_WIDTH-USE_INTRP*INTRP_WIDTH-4));
+        w21_im_fxp = $signed(o_w21_im) * (2.0 ** (-2*FRAC_WIDTH-USE_INTRP*INTRP_WIDTH-4));
+        w22_re_fxp = $signed(o_w22_re) * (2.0 ** (-2*FRAC_WIDTH-USE_INTRP*INTRP_WIDTH-4));
+        w22_im_fxp = $signed(o_w22_im) * (2.0 ** (-2*FRAC_WIDTH-USE_INTRP*INTRP_WIDTH-4));
 
-        e11_re_fxp = $signed(o_e11_re) * (2.0 ** (-5*FRAC_WIDTH-INTRP_WIDTH+1+DET_INV_WIDTH-DET_INV_ROUND_WIDTH-DET_INV_CLIP_WIDTH));
-        e11_im_fxp = $signed(o_e11_im) * (2.0 ** (-5*FRAC_WIDTH-INTRP_WIDTH+1+DET_INV_WIDTH-DET_INV_ROUND_WIDTH-DET_INV_CLIP_WIDTH));
-        e12_re_fxp = $signed(o_e12_re) * (2.0 ** (-5*FRAC_WIDTH-INTRP_WIDTH+1+DET_INV_WIDTH-DET_INV_ROUND_WIDTH-DET_INV_CLIP_WIDTH));
-        e12_im_fxp = $signed(o_e12_im) * (2.0 ** (-5*FRAC_WIDTH-INTRP_WIDTH+1+DET_INV_WIDTH-DET_INV_ROUND_WIDTH-DET_INV_CLIP_WIDTH));
-        e21_re_fxp = $signed(o_e21_re) * (2.0 ** (-5*FRAC_WIDTH-INTRP_WIDTH+1+DET_INV_WIDTH-DET_INV_ROUND_WIDTH-DET_INV_CLIP_WIDTH));
-        e21_im_fxp = $signed(o_e21_im) * (2.0 ** (-5*FRAC_WIDTH-INTRP_WIDTH+1+DET_INV_WIDTH-DET_INV_ROUND_WIDTH-DET_INV_CLIP_WIDTH));
-        e22_re_fxp = $signed(o_e22_re) * (2.0 ** (-5*FRAC_WIDTH-INTRP_WIDTH+1+DET_INV_WIDTH-DET_INV_ROUND_WIDTH-DET_INV_CLIP_WIDTH));
-        e22_im_fxp = $signed(o_e22_im) * (2.0 ** (-5*FRAC_WIDTH-INTRP_WIDTH+1+DET_INV_WIDTH-DET_INV_ROUND_WIDTH-DET_INV_CLIP_WIDTH));
+        e11_re_fxp = $signed(o_e11_re) * (2.0 ** (-5*FRAC_WIDTH-USE_INTRP*INTRP_WIDTH+8+DET_INV_WIDTH-DET_INV_ROUND_WIDTH-DET_INV_CLIP_WIDTH));
+        e11_im_fxp = $signed(o_e11_im) * (2.0 ** (-5*FRAC_WIDTH-USE_INTRP*INTRP_WIDTH+8+DET_INV_WIDTH-DET_INV_ROUND_WIDTH-DET_INV_CLIP_WIDTH));
+        e12_re_fxp = $signed(o_e12_re) * (2.0 ** (-5*FRAC_WIDTH-USE_INTRP*INTRP_WIDTH+8+DET_INV_WIDTH-DET_INV_ROUND_WIDTH-DET_INV_CLIP_WIDTH));
+        e12_im_fxp = $signed(o_e12_im) * (2.0 ** (-5*FRAC_WIDTH-USE_INTRP*INTRP_WIDTH+8+DET_INV_WIDTH-DET_INV_ROUND_WIDTH-DET_INV_CLIP_WIDTH));
+        e21_re_fxp = $signed(o_e21_re) * (2.0 ** (-5*FRAC_WIDTH-USE_INTRP*INTRP_WIDTH+8+DET_INV_WIDTH-DET_INV_ROUND_WIDTH-DET_INV_CLIP_WIDTH));
+        e21_im_fxp = $signed(o_e21_im) * (2.0 ** (-5*FRAC_WIDTH-USE_INTRP*INTRP_WIDTH+8+DET_INV_WIDTH-DET_INV_ROUND_WIDTH-DET_INV_CLIP_WIDTH));
+        e22_re_fxp = $signed(o_e22_re) * (2.0 ** (-5*FRAC_WIDTH-USE_INTRP*INTRP_WIDTH+8+DET_INV_WIDTH-DET_INV_ROUND_WIDTH-DET_INV_CLIP_WIDTH));
+        e22_im_fxp = $signed(o_e22_im) * (2.0 ** (-5*FRAC_WIDTH-USE_INTRP*INTRP_WIDTH+8+DET_INV_WIDTH-DET_INV_ROUND_WIDTH-DET_INV_CLIP_WIDTH));
     end
 
     typedef struct {

@@ -4,6 +4,8 @@ module m_matrix_tb;
     parameter int    A_WIDTH       = 16;
     parameter int    H_WIDTH       = 16;
     parameter int    M_WIDTH       = A_WIDTH + H_WIDTH + 2;
+    parameter int M_CLIP           = 9;
+    parameter int M_ROUND_WIDTH    = 18;
     parameter int USE_DSP_VALUE    = 1;
 
     logic clk = 0;
@@ -16,10 +18,10 @@ module m_matrix_tb;
     logic [A_WIDTH-1:0] i_a11, i_a22;
     logic signed [A_WIDTH-1:0] i_a12_re, i_a12_im;
 
-    logic signed [M_WIDTH-1:0] o_m11_re, o_m11_im;
-    logic signed [M_WIDTH-1:0] o_m12_re, o_m12_im;
-    logic signed [M_WIDTH-1:0] o_m21_re, o_m21_im;
-    logic signed [M_WIDTH-1:0] o_m22_re, o_m22_im;
+    logic signed [M_ROUND_WIDTH-1:0] o_m11_re, o_m11_im;
+    logic signed [M_ROUND_WIDTH-1:0] o_m12_re, o_m12_im;
+    logic signed [M_ROUND_WIDTH-1:0] o_m21_re, o_m21_im;
+    logic signed [M_ROUND_WIDTH-1:0] o_m22_re, o_m22_im;
 
     logic o_sat_m11_re, o_sat_m11_im;
     logic o_sat_m12_re, o_sat_m12_im;
@@ -43,6 +45,8 @@ module m_matrix_tb;
         .A_WIDTH       ( A_WIDTH ),
         .H_WIDTH       ( H_WIDTH ),
         .M_WIDTH ( M_WIDTH ),
+        .M_CLIP  ( M_CLIP ),
+        .M_ROUND_WIDTH ( M_ROUND_WIDTH ),
         .USE_DSP_VALUE ( USE_DSP_VALUE )
     ) dut (
         .*
@@ -80,13 +84,13 @@ module m_matrix_tb;
         logic signed [H_WIDTH-1:0] h11_re, h11_im, h12_re, h12_im, h21_re, h21_im, h22_re, h22_im;
         logic [A_WIDTH-1:0] a11, a22;
         logic signed [A_WIDTH-1:0] a12_re, a12_im;
-        logic signed [M_WIDTH-1:0] exp_m11_re, exp_m11_im;
-        logic signed [M_WIDTH-1:0] exp_m12_re, exp_m12_im;
-        logic signed [M_WIDTH-1:0] exp_m21_re, exp_m21_im;
-        logic signed [M_WIDTH-1:0] exp_m22_re, exp_m22_im;
+        logic signed [M_ROUND_WIDTH-1:0] exp_m11_re, exp_m11_im;
+        logic signed [M_ROUND_WIDTH-1:0] exp_m12_re, exp_m12_im;
+        logic signed [M_ROUND_WIDTH-1:0] exp_m21_re, exp_m21_im;
+        logic signed [M_ROUND_WIDTH-1:0] exp_m22_re, exp_m22_im;
     } test_t;
 
-    localparam NUM_TESTS = 1;
+    localparam NUM_TESTS = 4;
 
     test_t tests[NUM_TESTS];
 

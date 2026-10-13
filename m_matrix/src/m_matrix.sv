@@ -1,7 +1,11 @@
+`timescale 1ns / 1ps
+
 module m_matrix #(
     parameter int    A_WIDTH       = 16,
     parameter int    H_WIDTH       = 16,
     parameter int    M_WIDTH       = A_WIDTH + H_WIDTH + 2,
+    parameter int M_CLIP           = 9,
+    parameter int M_ROUND_WIDTH    = 18,
     parameter int USE_DSP_VALUE    = 1
 )(
     input  logic clk,
@@ -11,13 +15,13 @@ module m_matrix #(
     input  logic signed [H_WIDTH-1:0] i_h21_re, i_h21_im,
     input  logic signed [H_WIDTH-1:0] i_h22_re, i_h22_im,
 
-    input  logic [A_WIDTH-1:0] i_a11, i_a22,
+    input  logic        [A_WIDTH-1:0] i_a11, i_a22,
     input  logic signed [A_WIDTH-1:0] i_a12_re, i_a12_im,
 
-    output logic signed [M_WIDTH-1:0] o_m11_re, o_m11_im,
-    output logic signed [M_WIDTH-1:0] o_m12_re, o_m12_im,
-    output logic signed [M_WIDTH-1:0] o_m21_re, o_m21_im,
-    output logic signed [M_WIDTH-1:0] o_m22_re, o_m22_im,
+    output logic signed [M_ROUND_WIDTH-1:0] o_m11_re, o_m11_im,
+    output logic signed [M_ROUND_WIDTH-1:0] o_m12_re, o_m12_im,
+    output logic signed [M_ROUND_WIDTH-1:0] o_m21_re, o_m21_im,
+    output logic signed [M_ROUND_WIDTH-1:0] o_m22_re, o_m22_im,
 
     output logic o_sat_m11_re, o_sat_m11_im,
     output logic o_sat_m12_re, o_sat_m12_im,
@@ -29,7 +33,7 @@ module m_matrix #(
     logic signed [1:0][H_WIDTH-1:0] h1_re, h1_im, h2_re, h2_im;
     //logic signed [A_WIDTH+H_WIDTH+1:0] m_top_re [0:1], m_top_im [0:1];
     //logic signed [A_WIDTH+H_WIDTH+1:0] m_bot_re [0:1], m_bot_im [0:1];
-    logic signed [1:0][M_WIDTH-1:0] m_top_re, m_top_im, m_bot_re, m_bot_im;
+    logic signed [1:0][M_ROUND_WIDTH-1:0] m_top_re, m_top_im, m_bot_re, m_bot_im;
 
     //logic sat_top_re [0:1], sat_top_im [0:1];
     //logic sat_bot_re [0:1], sat_bot_im [0:1];
@@ -46,6 +50,8 @@ module m_matrix #(
                 .A_WIDTH (A_WIDTH),
                 .H_WIDTH (H_WIDTH),
                 .M_WIDTH (M_WIDTH),
+                .M_CLIP  (M_CLIP),
+                .M_ROUND_WIDTH (M_ROUND_WIDTH),
                 .USE_DSP_VALUE (USE_DSP_VALUE)
             ) inst_top_block (
                 .clk(clk),
@@ -67,6 +73,8 @@ module m_matrix #(
                 .A_WIDTH (A_WIDTH),
                 .H_WIDTH (H_WIDTH),
                 .M_WIDTH (M_WIDTH),
+                .M_CLIP  (M_CLIP),
+                .M_ROUND_WIDTH (M_ROUND_WIDTH),
                 .USE_DSP_VALUE (USE_DSP_VALUE)
             ) inst_bot_block (
                 .clk(clk),

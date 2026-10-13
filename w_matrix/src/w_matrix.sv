@@ -3,7 +3,6 @@
 module w_matrix #(
     parameter int A_WIDTH            = 16,
     parameter int H_WIDTH            = 16,
-    parameter int M_WIDTH            = A_WIDTH + H_WIDTH + 2,
     parameter int DET_WIDTH          = 2*A_WIDTH,
     parameter int FRAC_WIDTH         = 8,
     parameter int USE_DSP_VALUE      = 1,
@@ -12,6 +11,8 @@ module w_matrix #(
     parameter int DET_INV_WIDTH      = DET_WIDTH + USE_INTRP * INTRP_WIDTH + 1,
     parameter int DET_INV_ROUND_WIDTH = 40,
     parameter int DET_INV_CLIP_WIDTH = 3,
+    parameter int M_CLIP             = 10,
+    parameter int M_WIDTH            = 18,
     parameter int W_WIDTH            = DET_INV_ROUND_WIDTH + M_WIDTH
 )(
     input  logic clk,
@@ -103,7 +104,8 @@ module w_matrix #(
     m_matrix #(
         .A_WIDTH (A_WIDTH),
         .H_WIDTH (H_WIDTH),
-        .M_WIDTH (M_WIDTH),
+        .M_ROUND_WIDTH (M_WIDTH),
+        .M_CLIP ( M_CLIP ),
         .USE_DSP_VALUE (USE_DSP_VALUE)
     ) inst_m_matrix (
         .clk (clk),
