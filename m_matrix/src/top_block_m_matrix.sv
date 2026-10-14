@@ -3,7 +3,7 @@
 module top_block_m_matrix #(
     parameter int    A_WIDTH       = 16,
     parameter int    H_WIDTH       = 16,
-    parameter int M_WIDTH          = 18,
+    parameter int    M_WIDTH       = A_WIDTH + H_WIDTH + 2,
     parameter int M_CLIP           = 4,
     parameter int USE_DSP_VALUE    = 1
 )(

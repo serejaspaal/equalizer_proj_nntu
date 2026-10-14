@@ -12,7 +12,7 @@ module w_matrix #(
     parameter int DET_INV_ROUND_WIDTH = 40,
     parameter int DET_INV_CLIP_WIDTH = 3,
     parameter int M_CLIP             = 10,
-    parameter int M_WIDTH            = 18,
+    parameter int M_WIDTH            = A_WIDTH + H_WIDTH + 2,
     parameter int W_WIDTH            = DET_INV_ROUND_WIDTH + M_WIDTH
 )(
     input  logic clk,
