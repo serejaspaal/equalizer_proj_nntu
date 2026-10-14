@@ -3,9 +3,8 @@
 module top_block_m_matrix #(
     parameter int    A_WIDTH       = 16,
     parameter int    H_WIDTH       = 16,
-    parameter int    M_WIDTH       = A_WIDTH + H_WIDTH + 2,
+    parameter int M_WIDTH          = 18,
     parameter int M_CLIP           = 4,
-    parameter int M_ROUND_WIDTH    = 18,
     parameter int USE_DSP_VALUE    = 1
 )(
     input  logic clk,
@@ -17,14 +16,14 @@ module top_block_m_matrix #(
     input  logic signed [A_WIDTH-1:0] i_a12_re, i_a12_im,
 
 
-    output logic signed [M_ROUND_WIDTH-1:0] m_re, m_im,
+    output logic signed [M_WIDTH-1:0] m_re, m_im,
 
     output logic o_sat_m_re, o_sat_m_im
 );
 
     logic sub = 1;
 
-    logic signed [M_ROUND_WIDTH-1:0] round_m_re, round_m_im;
+    logic signed [M_WIDTH-1:0] round_m_re, round_m_im;
 
     logic signed [A_WIDTH+H_WIDTH-1:0] cmult1_m_re, cmult1_m_im;
     logic signed [A_WIDTH+H_WIDTH-1:0] dline_m_re, dline_m_im;
@@ -119,7 +118,7 @@ module top_block_m_matrix #(
 
     round #(
         .IN_WIDTH ( A_WIDTH+H_WIDTH+2 ),
-        .OUT_WIDTH ( M_ROUND_WIDTH ),
+        .OUT_WIDTH ( M_WIDTH ),
         .IN_SIGNED ( 1 ),
         .CLIP_WIDTH (M_CLIP)
     ) inst_round_m_re (
@@ -131,7 +130,7 @@ module top_block_m_matrix #(
 
     round #(
         .IN_WIDTH ( A_WIDTH+H_WIDTH+2 ),
-        .OUT_WIDTH ( M_ROUND_WIDTH ),
+        .OUT_WIDTH ( M_WIDTH ),
         .IN_SIGNED ( 1 ),
         .CLIP_WIDTH (M_CLIP)
     ) inst_round_m_im (

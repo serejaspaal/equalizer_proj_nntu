@@ -104,7 +104,7 @@ module w_matrix #(
     m_matrix #(
         .A_WIDTH (A_WIDTH),
         .H_WIDTH (H_WIDTH),
-        .M_ROUND_WIDTH (M_WIDTH),
+        .M_WIDTH (M_WIDTH),
         .M_CLIP ( M_CLIP ),
         .USE_DSP_VALUE (USE_DSP_VALUE)
     ) inst_m_matrix (
