@@ -1,11 +1,15 @@
 onerror {resume}
 quietly WaveActivateNextPane {} 0
 add wave -noupdate /round_tb/clk
+add wave -noupdate /round_tb/i_data_fxp_s
+add wave -noupdate /round_tb/round_fxp_s
+add wave -noupdate /round_tb/i_data_fxp_u
+add wave -noupdate /round_tb/round_fxp_u
 add wave -noupdate /round_tb/i_data_fxp_p
 add wave -noupdate /round_tb/round_fxp_p
 TreeUpdate [SetDefaultTree]
-WaveRestoreCursors {{Cursor 1} {0 ns} 0}
-quietly wave cursor active 0
+WaveRestoreCursors {{Cursor 1} {16 ns} 0}
+quietly wave cursor active 1
 configure wave -namecolwidth 170
 configure wave -valuecolwidth 100
 configure wave -justifyvalue left
@@ -20,4 +24,4 @@ configure wave -griddelta 40
 configure wave -timeline 0
 configure wave -timelineunits ns
 update
-WaveRestoreZoom {36 ns} {98 ns}
+WaveRestoreZoom {0 ns} {62 ns}

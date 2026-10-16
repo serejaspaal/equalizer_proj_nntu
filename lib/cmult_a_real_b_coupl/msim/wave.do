@@ -6,12 +6,18 @@ add wave -noupdate -radix unsigned /cmult_a_real_b_coupl_tb/a_u
 add wave -noupdate -radix decimal /cmult_a_real_b_coupl_tb/x1
 add wave -noupdate -radix decimal /cmult_a_real_b_coupl_tb/y1
 add wave -noupdate -radix decimal /cmult_a_real_b_coupl_tb/out_re_s
+add wave -noupdate -radix decimal /cmult_a_real_b_coupl_tb/exp_re_s
 add wave -noupdate -radix decimal /cmult_a_real_b_coupl_tb/out_im_s
+add wave -noupdate -radix decimal /cmult_a_real_b_coupl_tb/exp_im_s
 add wave -noupdate -radix unsigned /cmult_a_real_b_coupl_tb/out_re_u
+add wave -noupdate -radix unsigned /cmult_a_real_b_coupl_tb/exp_re_u
 add wave -noupdate -radix unsigned /cmult_a_real_b_coupl_tb/out_im_u
+add wave -noupdate -radix unsigned /cmult_a_real_b_coupl_tb/exp_im_u
+add wave -noupdate /cmult_a_real_b_coupl_tb/test_number
+add wave -noupdate /cmult_a_real_b_coupl_tb/errors
 TreeUpdate [SetDefaultTree]
-WaveRestoreCursors {{Cursor 1} {0 ns} 0}
-quietly wave cursor active 0
+WaveRestoreCursors {{Cursor 1} {288 ns} 0}
+quietly wave cursor active 1
 configure wave -namecolwidth 238
 configure wave -valuecolwidth 100
 configure wave -justifyvalue left
@@ -26,4 +32,4 @@ configure wave -griddelta 40
 configure wave -timeline 0
 configure wave -timelineunits ns
 update
-WaveRestoreZoom {0 ns} {790 ns}
+WaveRestoreZoom {0 ns} {348 ns}
