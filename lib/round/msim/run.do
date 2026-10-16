@@ -1,7 +1,8 @@
 transcript on
 vlib work
 
-vlog -sv ../src/round.sv
+
+vlog -sv ../src/round.sv ../mdl/round.c 
 
 vlog -sv ../tb/round_tb.sv
 
