@@ -11,9 +11,10 @@ import "DPI-C" function void next_sample(
 
 module a_matrix_tb;
 
-    parameter int H_WIDTH = 8;
-    parameter int C_WIDTH = 8;
+    parameter int H_WIDTH = 16;
+    parameter int C_WIDTH = 16;
     parameter int A_WIDTH = 2*H_WIDTH + 2;
+    parameter int POINT_POS = 8;
     parameter int USE_DSP_VALUE = 1;
     
     logic clk, rst, i_stb, o_stb;
@@ -29,8 +30,8 @@ module a_matrix_tb;
     logic signed [A_WIDTH-1:0] o_a12_re, o_a12_im;
     logic o_sat_a11, o_sat_a22, o_sat_a12_re, o_sat_a12_im;
     
-    localparam int H_SFT = H_WIDTH - 1;
-    localparam real H_SCALE = 1.0 * (1 << H_SFT);
+    localparam real H_SCALE = 2**POINT_POS;
+    localparam real C_SCALE = 2**POINT_POS;
     
     initial clk = 0;
     always #5 clk = ~clk;
@@ -62,7 +63,7 @@ module a_matrix_tb;
     real rh11r,rh11i,rh12r,rh12i,rh21r,rh21i,rh22r,rh22i, rc11,rc22;
     
     initial begin
-        set_disp(0);
+        set_disp(3);
         
         rst = 1'b1;
         i_stb = 1'b0;
@@ -90,8 +91,8 @@ module a_matrix_tb;
             i_h22_re <= H_WIDTH'($rtoi(rh22r * H_SCALE));
             i_h22_im <= H_WIDTH'($rtoi(rh22i * H_SCALE));
             
-            i_c11 <= C_WIDTH'($rtoi(rc11));
-            i_c22 <= C_WIDTH'($rtoi(rc22));
+            i_c11 <= C_WIDTH'($rtoi(rc11 * C_SCALE));
+            i_c22 <= C_WIDTH'($rtoi(rc22 * C_SCALE));
             
             i_stb <= 1'b1;
         end

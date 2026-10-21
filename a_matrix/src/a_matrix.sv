@@ -1,8 +1,9 @@
 `timescale 1ns / 1ps
 module a_matrix #(
-    parameter int H_WIDTH = 8,
-    parameter int C_WIDTH = 8,
+    parameter int H_WIDTH = 16,
+    parameter int C_WIDTH = 16,
     parameter int A_WIDTH = 2*H_WIDTH + 2,
+    parameter int POINT_POS = 8,
     parameter int USE_DSP_VALUE = 1    
 )(
     input logic clk,
