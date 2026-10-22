@@ -180,7 +180,11 @@ module s_recover_tb;
                     o_sat_s21_re !== 1'b0 ||
                     o_sat_s21_im !== 1'b0
                 ) begin
-                    $display("SATURATION FLAG ASSERTED");
+                    errors = errors + 1;
+                    $display(
+                        "FAIL TEST %0d: unexpected saturation flag",
+                        tests
+                    );
                 end
             end
         end
@@ -211,7 +215,7 @@ module s_recover_tb;
         repeat (4) @(negedge clk);
         rst = 1'b0;
 
-        // TEST 1: Basic complex multiplication and addition
+        // TEST 1: Complex multiplication and addition
         apply_inputs(
             1, 0,  0, 0,
             0, 0,  0, 1,
@@ -219,7 +223,7 @@ module s_recover_tb;
         );
         check_result(5, 2, -4, -3);
 
-        // TEST 2: Real-valued coefficients
+        // TEST 2: Real coefficients
         apply_inputs(
             1, 0,  1, 0,
             1, 0, -1, 0,
@@ -227,7 +231,7 @@ module s_recover_tb;
         );
         check_result(6, 0, -2, 0);
 
-        // TEST 3: General complex-valued inputs
+        // TEST 3: Complex inputs
         apply_inputs(
              1,  2, -1,  1,
              2, -1,  1,  1,
@@ -235,7 +239,7 @@ module s_recover_tb;
         );
         check_result(0, 10, 10, 0);
 
-        // TEST 4: All inputs are zero
+        // TEST 4: All inputs zero
         apply_inputs(
             0, 0, 0, 0,
             0, 0, 0, 0,
@@ -243,7 +247,7 @@ module s_recover_tb;
         );
         check_result(0, 0, 0, 0);
 
-        // TEST 5: Negative complex-valued inputs
+        // TEST 5: Negative complex inputs
         apply_inputs(
             -1,  1,  0,  0,
              0,  0, -1,  1,
@@ -251,7 +255,7 @@ module s_recover_tb;
         );
         check_result(-1, -5, 1, 3);
 
-        // TEST 6: Larger input values
+        // TEST 6: Larger inputs
         apply_inputs(
             100, 0,    0, 0,
               0, 0, -100, 0,
@@ -259,7 +263,7 @@ module s_recover_tb;
         );
         check_result(200, 300, -100, -100);
 
-        // TEST 7: Zero matrix with non-zero input vector
+        // TEST 7: Zero matrix with not zero inputs vector
         apply_inputs(
             0, 0, 0, 0,
             0, 0, 0, 0,
