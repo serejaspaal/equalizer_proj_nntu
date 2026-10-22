@@ -63,7 +63,7 @@ module a_matrix_tb;
     real rh11r,rh11i,rh12r,rh12i,rh21r,rh21i,rh22r,rh22i, rc11,rc22;
     
     initial begin
-        set_disp(3);
+        set_disp(4); // задаем дисперсию от 100 до 0.00001 с шагом 10 по индексу от 0 до 7 соотв
         
         rst = 1'b1;
         i_stb = 1'b0;

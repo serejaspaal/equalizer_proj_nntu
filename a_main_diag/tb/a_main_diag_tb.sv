@@ -1,14 +1,16 @@
 `timescale 1ns / 1ps
 
 module a_main_diag_tb;
-    parameter int H_WIDTH = 8;
+    parameter int H_WIDTH = 16;
     parameter int C_WIDTH = 16;
     parameter int A_WIDTH = 2*H_WIDTH + 2;
+    parameter int POINT_POS = 8;
     parameter int USE_DSP_VALUE = 1;
-
+    
+    localparam int C_WIDTH_EXT = C_WIDTH+POINT_POS;
     localparam int CMAG_WIDTH = 2*H_WIDTH;
     localparam int S1_WIDTH = CMAG_WIDTH + 1;
-    localparam int S2_WIDTH = (S1_WIDTH > C_WIDTH) ? S1_WIDTH : C_WIDTH;
+    localparam int S2_WIDTH = (S1_WIDTH > C_WIDTH_EXT) ? S1_WIDTH : C_WIDTH_EXT;
     localparam int ROUND_IN = S2_WIDTH + 1;
     localparam int DROP = ROUND_IN - A_WIDTH;
     localparam int ROUND_BIT = (DROP > 0) ? DROP - 1 : 0;
@@ -26,6 +28,7 @@ module a_main_diag_tb;
         .H_WIDTH(H_WIDTH),
         .C_WIDTH(C_WIDTH),
         .A_WIDTH(A_WIDTH),
+        .POINT_POS(POINT_POS),
         .USE_DSP_VALUE(USE_DSP_VALUE)
     ) dut (.*);
 
@@ -78,8 +81,8 @@ module a_main_diag_tb;
             ref_s1[0] <= ref_cmag[0] + ref_cmag[1];
             ref_s1[1] <= ref_cmag[2] + ref_cmag[3];
 
-            ref_s2[0] <= ref_s1[0] + i_c11;
-            ref_s2[1] <= ref_s1[1] + i_c22;
+            ref_s2[0] <= ref_s1[0] + (i_c11 << POINT_POS);
+            ref_s2[1] <= ref_s1[1] + (i_c22 << POINT_POS);
 
             for (int i = 0; i < 2; i++) begin
                 if (ref_sum[i] > MAXU) begin

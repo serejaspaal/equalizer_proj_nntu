@@ -1,9 +1,10 @@
 `timescale 1ns / 1ps
 
 module a_main_diag #(
-    parameter int H_WIDTH = 8,
-    parameter int C_WIDTH = 8,
+    parameter int H_WIDTH = 16,
+    parameter int C_WIDTH = 16,
     parameter int A_WIDTH = 2*H_WIDTH + 2,
+    parameter int POINT_POS = 8,
     parameter int USE_DSP_VALUE = 1    
 )(
     input logic clk,
@@ -23,9 +24,10 @@ module a_main_diag #(
     output logic valid_out
     );
     
+    localparam int C_WIDTH_EXT = C_WIDTH+POINT_POS;
     localparam int CMAG_WIDTH = 2*H_WIDTH;
     localparam int S1_WIDTH = CMAG_WIDTH + 1;
-    localparam int S2_WIDTH = (S1_WIDTH > C_WIDTH) ? S1_WIDTH : C_WIDTH;
+    localparam int S2_WIDTH = (S1_WIDTH > C_WIDTH_EXT) ? S1_WIDTH : C_WIDTH_EXT;
     localparam int ROUND_IN = S2_WIDTH + 1;
     
     logic valid_cm [1:0], valid_s1 [1:0], valid_s2 [1:0];
@@ -41,11 +43,14 @@ module a_main_diag #(
         for (i=0;i<2;i++) begin : gen_lane
             logic signed [H_WIDTH-1:0] h1_re, h1_im, h2_re, h2_im;
             logic [C_WIDTH-1:0] c_diag;
+            logic [C_WIDTH_EXT-1:0] c_diag_ext;
+            
             assign h1_re = (i == 0) ? i_h11_re : i_h21_re;
             assign h1_im = (i == 0) ? i_h11_im : i_h21_im;
             assign h2_re = (i == 0) ? i_h12_re : i_h22_re;
             assign h2_im = (i == 0) ? i_h12_im : i_h22_im;
             assign c_diag = (i == 0) ? i_c11 : i_c22;
+            assign c_diag_ext = c_diag << POINT_POS;
             
             
             cmodule #(
@@ -92,14 +97,14 @@ module a_main_diag #(
             
             sum #(
                 .A_WIDTH(S1_WIDTH),
-                .B_WIDTH(C_WIDTH),
+                .B_WIDTH(C_WIDTH_EXT),
                 .SIGNED_OPERANDS(0)
             ) inst_sum2 (
                 .clk(clk),
                 .rst(rst),
                 .valid_in(valid_s1[i]),
                 .A(s1_out[i]),
-                .B(c_diag),
+                .B(c_diag_ext),
                 .sub(1'b0),
                 .valid_out(valid_s2[i]),
                 .S(s2_out[i]),

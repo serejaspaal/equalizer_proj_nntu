@@ -31,6 +31,7 @@ module a_matrix #(
         .H_WIDTH(H_WIDTH), 
         .C_WIDTH(C_WIDTH), 
         .A_WIDTH(A_WIDTH),
+        .POINT_POS(POINT_POS),
         .USE_DSP_VALUE(USE_DSP_VALUE)
         ) inst_a_main_diag (
             .clk(clk),
