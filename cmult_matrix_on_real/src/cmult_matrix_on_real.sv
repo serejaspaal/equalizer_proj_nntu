@@ -2,6 +2,7 @@ module cmult_matrix_on_real#(
     parameter int DET_WIDTH = 8,
     parameter int M_WIDTH = 8,
     parameter int W_WIDTH = DET_WIDTH+M_WIDTH,
+    parameter int W_CLIP  = 3,
     parameter int USE_DSP_VALUE = 1
 )(
     input logic clk,
@@ -10,30 +11,30 @@ module cmult_matrix_on_real#(
     input logic signed [M_WIDTH-1:0] i_m12_re, i_m12_im,
     input logic signed [M_WIDTH-1:0] i_m21_re, i_m21_im,
     input logic signed [M_WIDTH-1:0] i_m22_re, i_m22_im,
-    
+
     output logic signed [W_WIDTH-1:0] o_w11_re, o_w11_im,
     output logic signed [W_WIDTH-1:0] o_w12_re, o_w12_im,
     output logic signed [W_WIDTH-1:0] o_w21_re, o_w21_im,
     output logic signed [W_WIDTH-1:0] o_w22_re, o_w22_im,
-    
+
     output logic o_sat_w11_re, o_sat_w11_im,
     output logic o_sat_w12_re, o_sat_w12_im,
     output logic o_sat_w21_re, o_sat_w21_im,
     output logic o_sat_w22_re, o_sat_w22_im
     );
-    
+
     localparam int CMULT_WIDTH = DET_WIDTH+M_WIDTH;
-    
+
     logic signed [CMULT_WIDTH-1:0] cmult_out[7:0];
     logic signed [W_WIDTH-1:0] round_out_data[7:0];
     logic round_out_sat[7:0];
-    
+
     logic signed [M_WIDTH-1:0] i_m_re[4], i_m_im[4];
     assign i_m_re[0] = i_m11_re; assign i_m_im[0] = i_m11_im;
     assign i_m_re[1] = i_m12_re; assign i_m_im[1] = i_m12_im;
     assign i_m_re[2] = i_m21_re; assign i_m_im[2] = i_m21_im;
     assign i_m_re[3] = i_m22_re; assign i_m_im[3] = i_m22_im;
-    
+
     genvar i;
     generate
         for (i=0;i<4;i++) begin : gen_w
@@ -53,6 +54,7 @@ module cmult_matrix_on_real#(
             round #(
                 .IN_WIDTH(CMULT_WIDTH),
                 .OUT_WIDTH(W_WIDTH),
+                .CLIP_WIDTH (W_CLIP),
                 .IN_SIGNED(1)
             ) inst_round_re (
                 .clk(clk),
@@ -63,6 +65,7 @@ module cmult_matrix_on_real#(
             round #(
                 .IN_WIDTH(CMULT_WIDTH),
                 .OUT_WIDTH(W_WIDTH),
+                .CLIP_WIDTH (W_CLIP),
                 .IN_SIGNED(1)
             ) inst_round_im (
                 .clk(clk),
@@ -72,7 +75,7 @@ module cmult_matrix_on_real#(
             );
         end
     endgenerate
-    
+
     always_comb begin
         o_w11_re = round_out_data[0]; o_w11_im = round_out_data[1];
         o_w12_re = round_out_data[2]; o_w12_im = round_out_data[3];

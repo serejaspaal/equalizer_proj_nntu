@@ -13,7 +13,8 @@ module w_matrix #(
     parameter int DET_INV_CLIP_WIDTH = 3,
     parameter int M_CLIP             = 10,
     parameter int M_WIDTH            = A_WIDTH + H_WIDTH + 2,
-    parameter int W_WIDTH            = DET_INV_ROUND_WIDTH + M_WIDTH
+    parameter int W_WIDTH            = DET_INV_ROUND_WIDTH + M_WIDTH,
+    parameter int W_CLIP             = 3
 )(
     input  logic clk,
     input  logic rst,
@@ -168,6 +169,7 @@ module w_matrix #(
         //.DET_WIDTH (18),
         .M_WIDTH (M_WIDTH),
         .W_WIDTH (W_WIDTH),
+        .W_CLIP  (W_CLIP),
         .USE_DSP_VALUE (USE_DSP_VALUE)
     ) inst_cmult_matrix_on_real (
         .clk (clk),
