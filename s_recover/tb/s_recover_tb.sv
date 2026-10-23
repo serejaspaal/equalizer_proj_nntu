@@ -2,51 +2,53 @@
 
 module s_recover_tb;
 
-    localparam int H_WIDTH = 8;
-    localparam int A_WIDTH = 2 * H_WIDTH + 2;
+    localparam int W_WIDTH = 8;
+    localparam int S_WIDTH = 8;
+    localparam int SR_WIDTH = W_WIDTH + S_WIDTH + 2;
     localparam int USE_DSP_VALUE = 1;
 
     logic clk;
     logic rst;
-    logic valid_in;
+    logic i_stb;
 
-    logic signed [H_WIDTH-1:0] i_w11_re;
-    logic signed [H_WIDTH-1:0] i_w11_im;
-    logic signed [H_WIDTH-1:0] i_w12_re;
-    logic signed [H_WIDTH-1:0] i_w12_im;
-    logic signed [H_WIDTH-1:0] i_w21_re;
-    logic signed [H_WIDTH-1:0] i_w21_im;
-    logic signed [H_WIDTH-1:0] i_w22_re;
-    logic signed [H_WIDTH-1:0] i_w22_im;
+    logic signed [W_WIDTH-1:0] i_w11_re;
+    logic signed [W_WIDTH-1:0] i_w11_im;
+    logic signed [W_WIDTH-1:0] i_w12_re;
+    logic signed [W_WIDTH-1:0] i_w12_im;
+    logic signed [W_WIDTH-1:0] i_w21_re;
+    logic signed [W_WIDTH-1:0] i_w21_im;
+    logic signed [W_WIDTH-1:0] i_w22_re;
+    logic signed [W_WIDTH-1:0] i_w22_im;
 
-    logic signed [H_WIDTH-1:0] i_s11_re;
-    logic signed [H_WIDTH-1:0] i_s11_im;
-    logic signed [H_WIDTH-1:0] i_s21_re;
-    logic signed [H_WIDTH-1:0] i_s21_im;
+    logic signed [S_WIDTH-1:0] i_s11_re;
+    logic signed [S_WIDTH-1:0] i_s11_im;
+    logic signed [S_WIDTH-1:0] i_s21_re;
+    logic signed [S_WIDTH-1:0] i_s21_im;
 
-    logic [A_WIDTH-1:0] o_s11_re;
-    logic [A_WIDTH-1:0] o_s11_im;
+    logic [SR_WIDTH-1:0] o_s11_re;
+    logic [SR_WIDTH-1:0] o_s11_im;
     logic o_sat_s11_re;
     logic o_sat_s11_im;
 
-    logic [A_WIDTH-1:0] o_s21_re;
-    logic [A_WIDTH-1:0] o_s21_im;
+    logic [SR_WIDTH-1:0] o_s21_re;
+    logic [SR_WIDTH-1:0] o_s21_im;
     logic o_sat_s21_re;
     logic o_sat_s21_im;
 
-    logic valid_out;
+    logic o_stb;
 
     integer tests;
     integer errors;
 
     s_recover #(
-        .H_WIDTH(H_WIDTH),
-        .A_WIDTH(A_WIDTH),
+        .W_WIDTH(W_WIDTH),
+        .S_WIDTH(S_WIDTH),
+        .SR_WIDTH(SR_WIDTH),
         .USE_DSP_VALUE(USE_DSP_VALUE)
     ) dut (
         .clk(clk),
         .rst(rst),
-        .valid_in(valid_in),
+        .i_stb(i_stb),
 
         .i_w11_re(i_w11_re),
         .i_w11_im(i_w11_im),
@@ -72,7 +74,7 @@ module s_recover_tb;
         .o_sat_s21_re(o_sat_s21_re),
         .o_sat_s21_im(o_sat_s21_im),
 
-        .valid_out(valid_out)
+        .o_stb(o_stb)
     );
 
     always #5 clk = ~clk;
@@ -108,10 +110,10 @@ module s_recover_tb;
             i_s21_re = s21_re;
             i_s21_im = s21_im;
 
-            valid_in = 1'b1;
+            i_stb = 1'b1;
 
             @(negedge clk);
-            valid_in = 1'b0;
+            i_stb = 1'b0;
         end
     endtask
 
@@ -130,7 +132,7 @@ module s_recover_tb;
                 @(posedge clk);
                 #1;
 
-                if (valid_out === 1'b1) begin
+                if (o_stb === 1'b1) begin
                     found = 1'b1;
                     cycles = 20;
                 end
@@ -141,7 +143,7 @@ module s_recover_tb;
             if (!found) begin
                 errors = errors + 1;
                 $display(
-                    "FAIL TEST %0d: timeout waiting for valid_out",
+                    "FAIL TEST %0d: timeout waiting for o_stb",
                     tests
                 );
             end
@@ -193,7 +195,7 @@ module s_recover_tb;
     initial begin
         clk = 1'b0;
         rst = 1'b1;
-        valid_in = 1'b0;
+        i_stb = 1'b0;
 
         i_w11_re = '0;
         i_w11_im = '0;

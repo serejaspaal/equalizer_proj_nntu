@@ -1,26 +1,27 @@
 `timescale 1ns / 1ps
 
 module one_block_s_recover #(
-    parameter int H_WIDTH = 8,
-    parameter int A_WIDTH = 2 * H_WIDTH + 2,
+    parameter int W_WIDTH = 8,
+    parameter int S_WIDTH = 8,
+    parameter int SR_WIDTH = W_WIDTH + S_WIDTH + 2,
     parameter int USE_DSP_VALUE = 1
 )(
     input logic clk,
     input logic rst,
     input logic valid_cm3,
 
-    input logic signed [H_WIDTH-1:0] i_w1_re,
-    input logic signed [H_WIDTH-1:0] i_w1_im,
-    input logic signed [H_WIDTH-1:0] i_w2_re,
-    input logic signed [H_WIDTH-1:0] i_w2_im,
+    input logic signed [W_WIDTH-1:0] i_w1_re,
+    input logic signed [W_WIDTH-1:0] i_w1_im,
+    input logic signed [W_WIDTH-1:0] i_w2_re,
+    input logic signed [W_WIDTH-1:0] i_w2_im,
 
-    input logic signed [H_WIDTH-1:0] i_s1_re,
-    input logic signed [H_WIDTH-1:0] i_s1_im,
-    input logic signed [H_WIDTH-1:0] i_s2_re,
-    input logic signed [H_WIDTH-1:0] i_s2_im,
+    input logic signed [S_WIDTH-1:0] i_s1_re,
+    input logic signed [S_WIDTH-1:0] i_s1_im,
+    input logic signed [S_WIDTH-1:0] i_s2_re,
+    input logic signed [S_WIDTH-1:0] i_s2_im,
 
-    output logic [A_WIDTH-1:0] o_s_re,
-    output logic [A_WIDTH-1:0] o_s_im,
+    output logic [SR_WIDTH-1:0] o_s_re,
+    output logic [SR_WIDTH-1:0] o_s_im,
 
     output logic o_sat_re,
     output logic o_sat_im,
@@ -28,20 +29,20 @@ module one_block_s_recover #(
     output logic valid_sum
 );
 
-    localparam int CMULT_WIDTH = 2 * H_WIDTH + 1;
-    localparam int SUM_WIDTH   = CMULT_WIDTH + 1;
+    localparam int CMULT_WIDTH = W_WIDTH + S_WIDTH + 1;
+    localparam int SUM_WIDTH = CMULT_WIDTH + 1;
 
     logic signed [CMULT_WIDTH-1:0] cmult1_re;
     logic signed [CMULT_WIDTH-1:0] cmult1_im;
     logic signed [CMULT_WIDTH-1:0] cmult2_re;
     logic signed [CMULT_WIDTH-1:0] cmult2_im;
 
-    logic [SUM_WIDTH-1:0] sum_re;
-    logic [SUM_WIDTH-1:0] sum_im;
+    logic signed [SUM_WIDTH-1:0] sum_re;
+    logic signed [SUM_WIDTH-1:0] sum_im;
 
     cmult #(
-        .A_WIDTH(H_WIDTH),
-        .B_WIDTH(H_WIDTH),
+        .A_WIDTH(W_WIDTH),
+        .B_WIDTH(S_WIDTH),
         .USE_DSP_VALUE(USE_DSP_VALUE)
     ) inst_cmult1 (
         .clk(clk),
@@ -54,8 +55,8 @@ module one_block_s_recover #(
     );
 
     cmult #(
-        .A_WIDTH(H_WIDTH),
-        .B_WIDTH(H_WIDTH),
+        .A_WIDTH(W_WIDTH),
+        .B_WIDTH(S_WIDTH),
         .USE_DSP_VALUE(USE_DSP_VALUE)
     ) inst_cmult2 (
         .clk(clk),
@@ -103,7 +104,7 @@ module one_block_s_recover #(
 
     round #(
         .IN_WIDTH(SUM_WIDTH),
-        .OUT_WIDTH(A_WIDTH),
+        .OUT_WIDTH(SR_WIDTH),
         .IN_SIGNED(1),
         .CLIP_WIDTH(0)
     ) inst_round_re (
@@ -115,7 +116,7 @@ module one_block_s_recover #(
 
     round #(
         .IN_WIDTH(SUM_WIDTH),
-        .OUT_WIDTH(A_WIDTH),
+        .OUT_WIDTH(SR_WIDTH),
         .IN_SIGNED(1),
         .CLIP_WIDTH(0)
     ) inst_round_im (

@@ -1,11 +1,10 @@
-
 onerror {resume}
 quietly WaveActivateNextPane {} 0
 
 add wave -noupdate -radix binary /s_recover_tb/clk
 add wave -noupdate -radix binary /s_recover_tb/rst
-add wave -noupdate -radix binary /s_recover_tb/valid_in
-add wave -noupdate -radix binary /s_recover_tb/valid_out
+add wave -noupdate -radix binary /s_recover_tb/i_stb
+add wave -noupdate -radix binary /s_recover_tb/o_stb
 
 add wave -divider "W MATRIX"
 
@@ -39,14 +38,8 @@ add wave -noupdate -radix binary /s_recover_tb/o_sat_s21_im
 
 add wave -divider "S_RECOVER INTERNAL"
 
-add wave -noupdate -radix decimal /s_recover_tb/dut/s11_mult_re
-add wave -noupdate -radix decimal /s_recover_tb/dut/s11_mult_im
-add wave -noupdate -radix decimal /s_recover_tb/dut/s21_mult_re
-add wave -noupdate -radix decimal /s_recover_tb/dut/s21_mult_im
-
 add wave -noupdate -radix binary /s_recover_tb/dut/valid_cm3
-add wave -noupdate -radix binary /s_recover_tb/dut/valid_sum
-add wave -noupdate -radix binary /s_recover_tb/dut/valid_out
+add wave -noupdate -radix binary /s_recover_tb/dut/valid_sum_s11
 
 TreeUpdate [SetDefaultTree]
 

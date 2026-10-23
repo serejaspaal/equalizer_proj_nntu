@@ -1,40 +1,41 @@
 `timescale 1ns / 1ps
 
 module s_recover #(
-    parameter int H_WIDTH = 8,
-    parameter int A_WIDTH = 2 * H_WIDTH + 2,
+    parameter int W_WIDTH = 8,
+    parameter int S_WIDTH = 8,
+    parameter int SR_WIDTH = W_WIDTH + S_WIDTH + 2,
     parameter int USE_DSP_VALUE = 1
 )(
     input logic clk,
     input logic rst,
-    input logic valid_in,
+    input logic i_stb,
 
-    input logic signed [H_WIDTH-1:0] i_w11_re,
-    input logic signed [H_WIDTH-1:0] i_w11_im,
-    input logic signed [H_WIDTH-1:0] i_w12_re,
-    input logic signed [H_WIDTH-1:0] i_w12_im,
+    input logic signed [W_WIDTH-1:0] i_w11_re,
+    input logic signed [W_WIDTH-1:0] i_w11_im,
+    input logic signed [W_WIDTH-1:0] i_w12_re,
+    input logic signed [W_WIDTH-1:0] i_w12_im,
 
-    input logic signed [H_WIDTH-1:0] i_w21_re,
-    input logic signed [H_WIDTH-1:0] i_w21_im,
-    input logic signed [H_WIDTH-1:0] i_w22_re,
-    input logic signed [H_WIDTH-1:0] i_w22_im,
+    input logic signed [W_WIDTH-1:0] i_w21_re,
+    input logic signed [W_WIDTH-1:0] i_w21_im,
+    input logic signed [W_WIDTH-1:0] i_w22_re,
+    input logic signed [W_WIDTH-1:0] i_w22_im,
 
-    input logic signed [H_WIDTH-1:0] i_s11_re,
-    input logic signed [H_WIDTH-1:0] i_s11_im,
-    input logic signed [H_WIDTH-1:0] i_s21_re,
-    input logic signed [H_WIDTH-1:0] i_s21_im,
+    input logic signed [S_WIDTH-1:0] i_s11_re,
+    input logic signed [S_WIDTH-1:0] i_s11_im,
+    input logic signed [S_WIDTH-1:0] i_s21_re,
+    input logic signed [S_WIDTH-1:0] i_s21_im,
 
-    output logic [A_WIDTH-1:0] o_s11_re,
-    output logic [A_WIDTH-1:0] o_s11_im,
+    output logic [SR_WIDTH-1:0] o_s11_re,
+    output logic [SR_WIDTH-1:0] o_s11_im,
     output logic o_sat_s11_re,
     output logic o_sat_s11_im,
 
-    output logic [A_WIDTH-1:0] o_s21_re,
-    output logic [A_WIDTH-1:0] o_s21_im,
+    output logic [SR_WIDTH-1:0] o_s21_re,
+    output logic [SR_WIDTH-1:0] o_s21_im,
     output logic o_sat_s21_re,
     output logic o_sat_s21_im,
 
-    output logic valid_out
+    output logic o_stb
 );
 
     logic valid_cm3;
@@ -45,13 +46,14 @@ module s_recover #(
         .DELAY(3)
     ) inst_valid_cm3 (
         .i_clk(clk),
-        .i_data(valid_in),
+        .i_data(i_stb),
         .o_data(valid_cm3)
     );
 
     one_block_s_recover #(
-        .H_WIDTH(H_WIDTH),
-        .A_WIDTH(A_WIDTH),
+        .W_WIDTH(W_WIDTH),
+        .S_WIDTH(S_WIDTH),
+        .SR_WIDTH(SR_WIDTH),
         .USE_DSP_VALUE(USE_DSP_VALUE)
     ) inst_s11 (
         .clk(clk),
@@ -77,8 +79,9 @@ module s_recover #(
     );
 
     one_block_s_recover #(
-        .H_WIDTH(H_WIDTH),
-        .A_WIDTH(A_WIDTH),
+        .W_WIDTH(W_WIDTH),
+        .S_WIDTH(S_WIDTH),
+        .SR_WIDTH(SR_WIDTH),
         .USE_DSP_VALUE(USE_DSP_VALUE)
     ) inst_s21 (
         .clk(clk),
@@ -109,7 +112,7 @@ module s_recover #(
     ) inst_valid_out (
         .i_clk(clk),
         .i_data(valid_sum_s11),
-        .o_data(valid_out)
+        .o_data(o_stb)
     );
 
 endmodule
