@@ -32,7 +32,7 @@ vlog -sv ../../matrix_mult/src/matrix_mult.sv
 
 vlog -sv ../../matrix_mult/src/one_block_matrix_mult.sv
 
-vlog -sv ../src/w_matrix.sv
+vlog -sv ../src/w_matrix.sv ../src/reverse.sv
 
 vlog -sv ../tb/w_matrix_tb.sv
 

@@ -4,46 +4,48 @@ module cmult_matrix_on_real_tb;
     parameter int M_WIDTH = 16;
     localparam int CMULT_WIDTH = DET_WIDTH+M_WIDTH;
     parameter int W_WIDTH = CMULT_WIDTH;
-    
+    parameter int W_CLIP = 3;
+
     localparam int DROP = CMULT_WIDTH - W_WIDTH;
     localparam signed [W_WIDTH:0] MAXP = (1 <<< (W_WIDTH-1)) - 1;
     localparam signed [W_WIDTH:0] MINN = -(1 <<< (W_WIDTH-1));
-    
+
     logic clk;
     logic [DET_WIDTH-1:0] det_inv;
-    
+
     logic signed [M_WIDTH-1:0] i_m11_re, i_m11_im;
     logic signed [M_WIDTH-1:0] i_m12_re, i_m12_im;
     logic signed [M_WIDTH-1:0] i_m21_re, i_m21_im;
     logic signed [M_WIDTH-1:0] i_m22_re, i_m22_im;
-    
+
     logic signed [W_WIDTH-1:0] o_w11_re, o_w11_im;
     logic signed [W_WIDTH-1:0] o_w12_re, o_w12_im;
     logic signed [W_WIDTH-1:0] o_w21_re, o_w21_im;
     logic signed [W_WIDTH-1:0] o_w22_re, o_w22_im;
-    
+
     logic o_sat_w11_re, o_sat_w11_im;
     logic o_sat_w12_re, o_sat_w12_im;
     logic o_sat_w21_re, o_sat_w21_im;
     logic o_sat_w22_re, o_sat_w22_im;
-    
+
     cmult_matrix_on_real #(
         .DET_WIDTH(DET_WIDTH),
         .M_WIDTH(M_WIDTH),
-        .W_WIDTH(W_WIDTH)
+        .W_WIDTH(W_WIDTH),
+        .W_CLIP (W_CLIP)
     ) dut (.*);
-    
-        
+
+
     initial clk = 0;
     always #5 clk = ~clk;
-    
+
     logic signed [CMULT_WIDTH-1:0] ref_cmult[7:0];
     logic signed [W_WIDTH:0] ref_sum[7:0];
     logic signed [W_WIDTH-1:0] ref_data[7:0];
     logic signed [W_WIDTH-1:0] ref_data_reg[7:0];
     logic ref_sat[7:0];
     logic ref_sat_reg[7:0];
-    
+
     always_ff @(posedge clk) begin
         ref_cmult[0] <= $signed({1'b0, det_inv}) * i_m11_re;
         ref_cmult[1] <= $signed({1'b0, det_inv}) * i_m11_im;
@@ -78,14 +80,14 @@ module cmult_matrix_on_real_tb;
             end
         end
     end
-    
+
     always_comb begin
         ref_data_reg = ref_data;
         ref_sat_reg  = ref_sat;
     end
-    
-    int errors = 0;    
-    
+
+    int errors = 0;
+
     task check_all(input string label);
         $display("%s: w11_re=%0d o_w11_im=%0d o_w12_re=%0d o_w12_im=%0d o_w21_re=%0d o_w21_im=%0d o_w22_re=%0d o_w22_im=%0d", label,
             o_w11_re, o_w11_im, o_w12_re, o_w12_im, o_w21_re, o_w21_im, o_w22_re, o_w22_im);
@@ -96,41 +98,41 @@ module cmult_matrix_on_real_tb;
         end
         if (o_w11_im !== ref_data_reg[1] || o_sat_w11_im !== ref_sat_reg[1]) begin
             $error("%s w11_im: got (%0d,%0d) exp (%0d,%0d)", label,
-                   o_w11_im, o_sat_w11_im, ref_data_reg[1], ref_sat_reg[1]); 
+                   o_w11_im, o_sat_w11_im, ref_data_reg[1], ref_sat_reg[1]);
             errors++;
         end
         if (o_w12_re !== ref_data_reg[2] || o_sat_w12_re !== ref_sat_reg[2]) begin
             $error("%s o_w12_re: got (%0d,%0d) exp (%0d,%0d)", label,
-                   o_w12_re, o_sat_w12_re, ref_data_reg[2], ref_sat_reg[2]); 
+                   o_w12_re, o_sat_w12_re, ref_data_reg[2], ref_sat_reg[2]);
             errors++;
         end
         if (o_w12_im !== ref_data_reg[3] || o_sat_w12_im !== ref_sat_reg[3]) begin
             $error("%s o_w12_im: got (%0d,%0d) exp (%0d,%0d)", label,
-                   o_w12_im, o_sat_w12_im, ref_data_reg[3], ref_sat_reg[3]); 
+                   o_w12_im, o_sat_w12_im, ref_data_reg[3], ref_sat_reg[3]);
             errors++;
         end
         if (o_w21_re !== ref_data_reg[4] || o_sat_w21_re !== ref_sat_reg[4]) begin
             $error("%s o_w21_re: got (%0d,%0d) exp (%0d,%0d)", label,
-                   o_w21_re, o_sat_w21_re, ref_data_reg[4], ref_sat_reg[4]); 
+                   o_w21_re, o_sat_w21_re, ref_data_reg[4], ref_sat_reg[4]);
             errors++;
         end
         if (o_w21_im !== ref_data_reg[5] || o_sat_w21_im !== ref_sat_reg[5]) begin
             $error("%s o_w21_im: got (%0d,%0d) exp (%0d,%0d)", label,
-                   o_w21_im, o_sat_w21_im, ref_data_reg[5], ref_sat_reg[5]); 
+                   o_w21_im, o_sat_w21_im, ref_data_reg[5], ref_sat_reg[5]);
             errors++;
         end
         if (o_w22_re !== ref_data_reg[6] || o_sat_w22_re !== ref_sat_reg[6]) begin
             $error("%s o_w22_re: got (%0d,%0d) exp (%0d,%0d)", label,
-                   o_w22_re, o_sat_w22_re, ref_data_reg[6], ref_sat_reg[6]); 
+                   o_w22_re, o_sat_w22_re, ref_data_reg[6], ref_sat_reg[6]);
             errors++;
         end
         if (o_w22_im !== ref_data_reg[7] || o_sat_w22_im !== ref_sat_reg[7]) begin
             $error("%s o_w22_im: got (%0d,%0d) exp (%0d,%0d)", label,
-                   o_w22_im, o_sat_w22_im, ref_data_reg[7], ref_sat_reg[7]); 
+                   o_w22_im, o_sat_w22_im, ref_data_reg[7], ref_sat_reg[7]);
             errors++;
         end
     endtask
-    
+
     initial begin
     @(posedge clk);
     det_inv = 0;
@@ -139,7 +141,7 @@ module cmult_matrix_on_real_tb;
     i_m21_re = 0; i_m21_im = 0;
     i_m22_re = 0; i_m22_im = 0;
     @(posedge clk);
-    
+
 
     det_inv = 1;
     i_m11_re = 1; i_m11_im = 1;
@@ -147,7 +149,7 @@ module cmult_matrix_on_real_tb;
     i_m21_re = 1; i_m21_im = 1;
     i_m22_re = 1; i_m22_im = 1;
     @(posedge clk);
-    
+
 
     det_inv = 1;
     i_m11_re = -1; i_m11_im = -1;
@@ -155,8 +157,8 @@ module cmult_matrix_on_real_tb;
     i_m21_re = -1; i_m21_im = -1;
     i_m22_re = -1; i_m22_im = -1;
     @(posedge clk);
-    
-    
+
+
 
     det_inv = 256;
     i_m11_re = 32767; i_m11_im = 32767;
@@ -165,7 +167,7 @@ module cmult_matrix_on_real_tb;
     i_m22_re = 32767; i_m22_im = 32767;
     @(posedge clk);
     check_all("T1");
-    
+
 
     det_inv = 32768;
     i_m11_re = 256; i_m11_im = 256;
@@ -174,7 +176,7 @@ module cmult_matrix_on_real_tb;
     i_m22_re = 256; i_m22_im = 256;
     @(posedge clk);
     check_all("T2");
-    
+
 
     det_inv = 65535;
     i_m11_re = 32767; i_m11_im = 32767;
@@ -183,7 +185,7 @@ module cmult_matrix_on_real_tb;
     i_m22_re = 32767; i_m22_im = 32767;
     @(posedge clk);
     check_all("T3");
-    
+
 
     det_inv = 65535;
     i_m11_re = -32768; i_m11_im = -32768;
@@ -192,7 +194,7 @@ module cmult_matrix_on_real_tb;
     i_m22_re = -32768; i_m22_im = -32768;
     @(posedge clk);
     check_all("T4");
-    
+
 
     det_inv = 128;
     i_m11_re = 1; i_m11_im = -1;
@@ -201,7 +203,7 @@ module cmult_matrix_on_real_tb;
     i_m22_re = 1; i_m22_im = -1;
     @(posedge clk);
     check_all("T5");
-    
+
 
     det_inv = 32768;
     i_m11_re = 1; i_m11_im = -1;
@@ -210,7 +212,7 @@ module cmult_matrix_on_real_tb;
     i_m22_re = 1; i_m22_im = -1;
     @(posedge clk);
     check_all("T6");
-    
+
 
     det_inv = 65535;
     i_m11_re = 32767; i_m11_im = -32767;
@@ -231,5 +233,5 @@ module cmult_matrix_on_real_tb;
     else             $display("%0d TESTS FAILED", errors);
     $finish;
 end
-    
+
 endmodule

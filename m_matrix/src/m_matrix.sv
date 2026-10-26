@@ -1,7 +1,10 @@
+`timescale 1ns / 1ps
+
 module m_matrix #(
     parameter int    A_WIDTH       = 16,
     parameter int    H_WIDTH       = 16,
     parameter int    M_WIDTH       = A_WIDTH + H_WIDTH + 2,
+    parameter int M_CLIP           = 9,
     parameter int USE_DSP_VALUE    = 1
 )(
     input  logic clk,
@@ -11,7 +14,7 @@ module m_matrix #(
     input  logic signed [H_WIDTH-1:0] i_h21_re, i_h21_im,
     input  logic signed [H_WIDTH-1:0] i_h22_re, i_h22_im,
 
-    input  logic [A_WIDTH-1:0] i_a11, i_a22,
+    input  logic        [A_WIDTH-1:0] i_a11, i_a22,
     input  logic signed [A_WIDTH-1:0] i_a12_re, i_a12_im,
 
     output logic signed [M_WIDTH-1:0] o_m11_re, o_m11_im,
@@ -45,6 +48,7 @@ module m_matrix #(
             top_block_m_matrix #(
                 .A_WIDTH (A_WIDTH),
                 .H_WIDTH (H_WIDTH),
+                .M_CLIP  (M_CLIP),
                 .M_WIDTH (M_WIDTH),
                 .USE_DSP_VALUE (USE_DSP_VALUE)
             ) inst_top_block (
@@ -67,6 +71,7 @@ module m_matrix #(
                 .A_WIDTH (A_WIDTH),
                 .H_WIDTH (H_WIDTH),
                 .M_WIDTH (M_WIDTH),
+                .M_CLIP  (M_CLIP),
                 .USE_DSP_VALUE (USE_DSP_VALUE)
             ) inst_bot_block (
                 .clk(clk),

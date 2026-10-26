@@ -3,7 +3,8 @@
 module m_matrix_tb;
     parameter int    A_WIDTH       = 16;
     parameter int    H_WIDTH       = 16;
-    parameter int    M_WIDTH       = A_WIDTH + H_WIDTH + 2;
+    parameter int M_WIDTH          = A_WIDTH + H_WIDTH + 2;
+    parameter int M_CLIP           = 9;
     parameter int USE_DSP_VALUE    = 1;
 
     logic clk = 0;
@@ -42,6 +43,8 @@ module m_matrix_tb;
     m_matrix #(
         .A_WIDTH       ( A_WIDTH ),
         .H_WIDTH       ( H_WIDTH ),
+        .M_WIDTH ( M_WIDTH ),
+        .M_CLIP  ( M_CLIP ),
         .M_WIDTH ( M_WIDTH ),
         .USE_DSP_VALUE ( USE_DSP_VALUE )
     ) dut (
@@ -86,7 +89,7 @@ module m_matrix_tb;
         logic signed [M_WIDTH-1:0] exp_m22_re, exp_m22_im;
     } test_t;
 
-    localparam NUM_TESTS = 1;
+    localparam NUM_TESTS = 4;
 
     test_t tests[NUM_TESTS];
 
