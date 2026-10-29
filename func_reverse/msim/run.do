@@ -1,7 +1,7 @@
 transcript on
 vlib work
 
-vlog -sv ../src/func_reverse.sv
+vlog -sv ../src/func_reverse.sv ../mdl/func_reverse.c
 
 vlog -sv ../src/block_ram.sv
 
