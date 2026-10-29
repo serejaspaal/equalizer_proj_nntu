@@ -6,13 +6,13 @@ module a_det_tb;
     parameter int USE_DSP_VALUE = 1;
 
     typedef struct {
-        int a11;
-        int a22;
-        int a12_re;
-        int a12_im;
+        longint a11;
+        longint a22;
+        longint a12_re;
+        longint a12_im;
     } a_matrix_t;
 
-    import "DPI-C" function int a_det(
+    import "DPI-C" function longint a_det(
         input  a_matrix_t mat,
         input  int        a_width,
         input  int        det_width,
@@ -23,8 +23,8 @@ module a_det_tb;
     logic clk = 0;
     logic rst = 0;
 
-    logic [A_WIDTH-1:0]   i_a11, i_a22;
-    logic [A_WIDTH-1:0]   i_a12_re, i_a12_im;
+    logic [A_WIDTH-1:0]        i_a11, i_a22;
+    logic signed [A_WIDTH-1:0] i_a12_re, i_a12_im;
 
     logic [DET_WIDTH-1:0] o_det_a;
     logic                 o_det_sat;
@@ -48,18 +48,23 @@ module a_det_tb;
     a_matrix_t tests[NUM_TESTS];
 
     initial begin
-    
-        tests[0] = '{a11: 16'hFFFF, a22: 16'hFFFF, a12_re: 16'h8000, a12_im: 16'h8000};
+        // Тест 0: макс. беззнаковые a11, a22 (65535) и мин. знаковые a12_re, a12_im (-32768)
+        tests[0] = '{a11: 16'hFFFF, a22: 16'hFFFF, a12_re: -16'sd32768, a12_im: -16'sd32768};
 
-        tests[1] = '{a11: 16'hFFFF, a22: 16'hFFFF, a12_re: 16'h7FFF, a12_im: 16'h7FFF};
+        // Тест 1: макс. беззнаковые a11, a22 (65535) и макс. знаковые a12_re, a12_im (+32767)
+        tests[1] = '{a11: 16'hFFFF, a22: 16'hFFFF, a12_re: 16'sd32767,  a12_im: 16'sd32767};
 
-        tests[2] = '{a11: 16'h0001, a22: 16'h0001, a12_re: 16'h0001, a12_im: 16'h0001};
+        // Тест 2: проверка underflow (1*1 - (1^2 + 1^2) = -1)
+        tests[2] = '{a11: 16'h0001, a22: 16'h0001, a12_re: 16'sd1,      a12_im: 16'sd1};
 
-        tests[3] = '{a11: 16'h0000, a22: 16'h0000, a12_re: 16'h0000, a12_im: 16'h0000};
+        // Тест 3: нули
+        tests[3] = '{a11: 16'h0000, a22: 16'h0000, a12_re: 16'sd0,      a12_im: 16'sd0};
 
-        tests[4] = '{a11: 16'd100,  a22: 16'd200,  a12_re: 16'd5,    a12_im: -16'sd5};
+        // Тест 4: обычный случай без переполнения
+        tests[4] = '{a11: 16'd100,  a22: 16'd200,  a12_re: 16'sd5,      a12_im: -16'sd5};
 
-        tests[5] = '{a11: 16'd0,    a22: 16'd0,    a12_re: 16'd30000, a12_im: 16'd30000};
+        // Тест 5: сильный уход в underflow
+        tests[5] = '{a11: 16'd0,    a22: 16'd0,    a12_re: 16'sd30000,  a12_im: 16'sd30000};
     end
 
     int test_idx;
@@ -77,7 +82,8 @@ module a_det_tb;
         repeat (2) @(posedge clk);
 
         for (test_idx = 0; test_idx < NUM_TESTS; test_idx++) begin
-            int c_det, c_sat, c_udf;
+            longint c_det;
+            int     c_sat, c_udf;
 
             @(posedge clk);
             i_a11    = tests[test_idx].a11[A_WIDTH-1:0];

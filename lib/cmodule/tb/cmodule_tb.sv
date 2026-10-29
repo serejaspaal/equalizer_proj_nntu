@@ -4,9 +4,9 @@ module cmodule_tb;
 
     parameter int WIDTH = 8;
 
-    import "DPI-C" function int cmodule(
-        input int i_Re,
-        input int i_Im
+    import "DPI-C" function longint cmodule(
+        input longint i_Re,
+        input longint i_Im
     );
 
     logic        clk;
@@ -37,29 +37,30 @@ module cmodule_tb;
     always #5 clk = ~clk;
 
     task automatic test(
-            input int test_num,
-            input int in_re,
-            input int in_im
+        input int test_num,
+        input longint in_re,
+        input longint in_im
+    );
+        @(posedge clk);
+        test_number = test_num;
+        Re = in_re;
+        Im = in_im;
+
+        exp = cmodule(
+            Re,
+            Im
         );
-            @(posedge clk);
-            test_number = test_num;
-            Re = in_re;
-            Im = in_im;
 
-            exp = cmodule(
-                Re,
-                Im
-            );
+        repeat(3) @(posedge clk);
 
-            repeat(3) @(posedge clk);
+        if (MagSq !== exp) begin
+            $error("FAIL at %0t: MagSq=%0d (expected %0d)", $time, MagSq, exp);
+            errors++;
+        end else
+            $display("PASS at %0t: MagSq=%0d", $time, MagSq);
 
-            if (MagSq !== exp) begin
-                $error("FAIL at %0t: MagSq=%0d (expected %0d)", $time, MagSq, exp);
-                errors++;
-            end else
-                $display("PASS at %0t: MagSq=%0d", $time, MagSq);
+    endtask
 
-        endtask
     initial begin
         rst = 1; valid_in = 0; Re = 0; Im = 0;
         repeat(2) @(posedge clk);
@@ -78,6 +79,6 @@ module cmodule_tb;
         valid_in = 0;
         @(posedge clk);
         if (errors == 0) $display("ALL TESTS PASSED");
-        else             $display("%0d TESTS FAILED", errors);
+        else              $display("%0d TESTS FAILED", errors);
     end
 endmodule

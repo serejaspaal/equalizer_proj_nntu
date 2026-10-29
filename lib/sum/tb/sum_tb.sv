@@ -6,11 +6,11 @@ module sum_tb;
     localparam int B_WIDTH = 8;
     localparam int MAX_W   = (A_WIDTH > B_WIDTH) ? A_WIDTH : B_WIDTH;
 
-import "DPI-C" function int sum(
+import "DPI-C" function longint sum(
     input int sign,
     input int sub,
-    input int a,
-    input int b,
+    input longint a,
+    input longint b,
     output int udf
 );
 
@@ -66,7 +66,7 @@ import "DPI-C" function int sum(
         .SIGNED_OPERANDS (0)
     ) dut_unsigned (
         .clk       (clk),
-        .rst        (rst),
+        .rst       (rst),
         .valid_in  (valid_in2),
         .A         (A2),
         .B         (B2),
@@ -80,11 +80,11 @@ import "DPI-C" function int sum(
     always #5 clk = ~clk;
 
     task automatic test(
-        input int signed_a,
-        input int signed_b,
+        input longint signed_a,
+        input longint signed_b,
         input int signed_sub,
-        input int unsigned_a,
-        input int unsigned_b,
+        input longint unsigned_a,
+        input longint unsigned_b,
         input int unsigned_sub
     );
         int c_underflow;
@@ -117,7 +117,7 @@ import "DPI-C" function int sum(
 
         exp_S2 = sum(
             0,
-            signed_sub,
+            unsigned_sub,
             unsigned_a,
             unsigned_b,
             c_underflow

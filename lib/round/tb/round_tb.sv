@@ -8,13 +8,13 @@ module round_tb;
     localparam int POINT_POS  = 4;
 
     import "DPI-C" function void round(
-        input  int i_data,
-        input  int in_width,
-        input  int out_width,
-        input  int in_signed,
-        input  int clip_width,
-        output int o_data,
-        output int o_sat
+        input  longint i_data,
+        input  int     in_width,
+        input  int     out_width,
+        input  int     in_signed,
+        input  int     clip_width,
+        output longint o_data,
+        output int     o_sat
     );
 
     logic clk;
@@ -62,17 +62,16 @@ module round_tb;
         input int test_num,
         input logic [IN_WIDTH-1:0] val
     );
-        int c_data_u, c_sat_u;
-        int c_data_s, c_sat_s;
-        int c_data_p, c_sat_p;
+        longint c_data_u, c_data_s, c_data_p;
+        int     c_sat_u,  c_sat_s,  c_sat_p;
 
         @(posedge clk);
         test_number = test_num;
         i_data = val;
 
-        round(int'($unsigned(val)), IN_WIDTH, OUT_WIDTH, 0, CLIP_WIDTH, c_data_u, c_sat_u);
-        round(int'($signed(val)),   IN_WIDTH, OUT_WIDTH, 1, CLIP_WIDTH, c_data_s, c_sat_s);
-        round(int'($unsigned(val)), IN_WIDTH, IN_WIDTH,  0, 0,          c_data_p, c_sat_p);
+        round(longint'($unsigned(val)), IN_WIDTH, OUT_WIDTH, 0, CLIP_WIDTH, c_data_u, c_sat_u);
+        round(longint'($signed(val)),   IN_WIDTH, OUT_WIDTH, 1, CLIP_WIDTH, c_data_s, c_sat_s);
+        round(longint'($unsigned(val)), IN_WIDTH, IN_WIDTH,  0, 0,          c_data_p, c_sat_p);
 
         exp_data_u = c_data_u[OUT_WIDTH-1:0];
         exp_sat_u  = c_sat_u[0];
