@@ -1,10 +1,10 @@
 void round(
-    int i_data,
+    long long i_data,
     int in_width,
     int out_width,
     int in_signed,
     int clip_width,
-    int *o_data,
+    long long *o_data,
     int *o_sat
 ) {
     int drop = in_width - out_width - clip_width;
@@ -16,10 +16,10 @@ void round(
     }
 
     int round_bit = (i_data >> (drop - 1)) & 1;
-    int sum = (i_data >> drop) + round_bit;
+    long long sum = (i_data >> drop) + round_bit;
 
-    int max_val = in_signed ?  (1 << (out_width - 1)) - 1 : (1 << out_width) - 1;
-    int min_val = in_signed ? -(1 << (out_width - 1))     : 0;
+    long long max_val = in_signed ?  (1LL << (out_width - 1)) - 1 : (1LL << out_width) - 1;
+    long long min_val = in_signed ? -(1LL << (out_width - 1))     : 0;
 
     if (sum > max_val) {
         *o_data = max_val;

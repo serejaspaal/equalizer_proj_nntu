@@ -5,9 +5,9 @@ module mult_tb ();
     parameter B_WIDTH = 8;
     parameter int USE_DSP_VALUE = 1;
 
-    import "DPI-C" function int mult(
-        input int i_a,
-        input int i_b
+    import "DPI-C" function longint mult(
+        input longint i_a,
+        input longint i_b
     );
 
     logic clk;
@@ -45,17 +45,15 @@ module mult_tb ();
         .result(result_u)
     );
 
-
     initial clk = 0;
     always #2 clk = ~clk;
 
-
     task automatic test(
         input int test_num,
-        input int a_signed,
-        input int b_signed,
-        input int a_unsigned,
-        input int b_unsigned
+        input longint a_signed,
+        input longint b_signed,
+        input longint a_unsigned,
+        input longint b_unsigned
     );
         @(posedge clk);
         test_number = test_num;
