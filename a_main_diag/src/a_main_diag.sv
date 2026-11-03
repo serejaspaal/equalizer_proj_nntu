@@ -29,6 +29,7 @@ module a_main_diag #(
     localparam int S1_WIDTH = CMAG_WIDTH + 1;
     localparam int S2_WIDTH = (S1_WIDTH > C_WIDTH_EXT) ? S1_WIDTH : C_WIDTH_EXT;
     localparam int ROUND_IN = S2_WIDTH + 1;
+    localparam int C_DIAG_DELAY = 3;
     
     logic valid_cm [1:0], valid_s1 [1:0], valid_s2 [1:0];
     
@@ -44,6 +45,7 @@ module a_main_diag #(
             logic signed [H_WIDTH-1:0] h1_re, h1_im, h2_re, h2_im;
             logic [C_WIDTH-1:0] c_diag;
             logic [C_WIDTH_EXT-1:0] c_diag_ext;
+            logic [C_WIDTH_EXT-1:0] c_diag_dly;
             
             assign h1_re = (i == 0) ? i_h11_re : i_h21_re;
             assign h1_im = (i == 0) ? i_h11_im : i_h21_im;
@@ -51,6 +53,15 @@ module a_main_diag #(
             assign h2_im = (i == 0) ? i_h12_im : i_h22_im;
             assign c_diag = (i == 0) ? i_c11 : i_c22;
             assign c_diag_ext = c_diag << POINT_POS;
+            
+            dline #(
+                .DATA_WIDTH(C_WIDTH_EXT),
+                .DELAY(C_DIAG_DELAY)
+            ) inst_c_diag_dline (
+                .i_clk(clk),
+                .i_data(c_diag_ext),
+                .o_data(c_diag_dly)
+            );
             
             
             cmodule #(
@@ -104,7 +115,7 @@ module a_main_diag #(
                 .rst(rst),
                 .valid_in(valid_s1[i]),
                 .A(s1_out[i]),
-                .B(c_diag_ext),
+                .B(c_diag_dly),
                 .sub(1'b0),
                 .valid_out(valid_s2[i]),
                 .S(s2_out[i]),

@@ -15,6 +15,7 @@ module a_main_diag_tb;
     localparam int DROP = ROUND_IN - A_WIDTH;
     localparam int ROUND_BIT = (DROP > 0) ? DROP - 1 : 0;
     localparam int LATENCY = 5;
+    localparam int C_DIAG_DELAY = 3;
     localparam [A_WIDTH:0] MAXU = (1 <<< A_WIDTH) - 1;
 
     logic clk, rst, valid_in, valid_out;
@@ -48,6 +49,7 @@ module a_main_diag_tb;
     logic unsigned [CMAG_WIDTH-1:0] ref_re_sq [3:0], ref_im_sq [3:0], ref_cmag [3:0];
     logic [S1_WIDTH-1:0] ref_s1 [1:0];
     logic [ROUND_IN-1:0] ref_s2 [1:0];
+    logic [C_WIDTH_EXT-1:0] ref_c_dly [1:0][C_DIAG_DELAY-1:0];
     logic [A_WIDTH:0] ref_sum  [1:0];
     logic [A_WIDTH-1:0] exp_data [1:0];
     logic exp_sat [1:0];
@@ -59,8 +61,14 @@ module a_main_diag_tb;
                 ref_im_sq[k] <= '0;
                 ref_cmag[k] <= '0;
             end
+            
             ref_s1[0] <= '0; ref_s1[1] <= '0;
             ref_s2[0] <= '0; ref_s2[1] <= '0;
+            
+            for (int i = 0; i < 2; i++)
+                for (int k = 0; k < C_DIAG_DELAY; k++)
+                    ref_c_dly[i][k] <= '0;
+            
             exp_data[0] <= '0; exp_data[1] <= '0;
             exp_sat[0] <= 1'b0; exp_sat[1] <= 1'b0;
         end else begin
@@ -80,9 +88,16 @@ module a_main_diag_tb;
 
             ref_s1[0] <= ref_cmag[0] + ref_cmag[1];
             ref_s1[1] <= ref_cmag[2] + ref_cmag[3];
+            
+            ref_c_dly[0][0] <= i_c11 << POINT_POS;
+            ref_c_dly[1][0] <= i_c22 << POINT_POS;
+            
+            for (int i = 0; i < 2; i++)
+                for (int k = 1; k < C_DIAG_DELAY; k++)
+                    ref_c_dly[i][k] <= ref_c_dly[i][k-1];
 
-            ref_s2[0] <= ref_s1[0] + (i_c11 << POINT_POS);
-            ref_s2[1] <= ref_s1[1] + (i_c22 << POINT_POS);
+            ref_s2[0] <= ref_s1[0] + ref_c_dly[0][C_DIAG_DELAY-1];
+            ref_s2[1] <= ref_s1[1] + ref_c_dly[1][C_DIAG_DELAY-1];
 
             for (int i = 0; i < 2; i++) begin
                 if (ref_sum[i] > MAXU) begin
