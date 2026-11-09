@@ -86,8 +86,7 @@ module func_reverse_tb;
 
     task automatic test(
         input int test_num,
-        input longint i_x,
-        input real exp
+        input longint i_x
     );
         longint exp_res = 0;
         int exp_inf = 0;
@@ -126,33 +125,13 @@ module func_reverse_tb;
         repeat (4) @(posedge clk);
         #1;
 
-        // Приводим всё к вещественному виду, так как разрядность выходов разная:
-        // OFF:  IN_WIDTH + 1 бит,        масштаб 2^-FRAC_WIDTH
-        // ON:   IN_WIDTH + INTRP_WIDTH+1 бит, масштаб 2^-(FRAC_WIDTH+INTRP_WIDTH)
         result_fxp_off = $unsigned(o_result_off) * (2.0 ** (-FRAC_WIDTH));
         result_fxp_on  = $unsigned(o_result_on)  * (2.0 ** (-FRAC_WIDTH - INTRP_WIDTH));
-        exp_fxp        = 1.0 / ($unsigned(x) * (2.0 ** (-FRAC_WIDTH)));
-        // Модуль разницы от эталона
+        exp_fxp        = (x == 0) ? (0) : (1.0 / ($unsigned(x) * (2.0 ** (-FRAC_WIDTH))));
+
         err_off = (result_fxp_off > exp_fxp) ? (result_fxp_off - exp_fxp) : (exp_fxp - result_fxp_off);
         err_on  = (result_fxp_on  > exp_fxp) ? (result_fxp_on  - exp_fxp) : (exp_fxp - result_fxp_on);
 
-        //                 err_off = (actual_off > test_exp[check_idx]) ?
-        //                            actual_off - test_exp[check_idx] :
-        //                            test_exp[check_idx] - actual_off;
-        //                 err_on  = (actual_on > test_exp[check_idx]) ?
-        //                            actual_on  - test_exp[check_idx] :
-        //                            test_exp[check_idx] - actual_on;
-        //
-        //                 if (err_on < err_off) begin
-        //                     intrp_lose = 0;
-        //                     intrp_wins = intrp_wins + 1;
-        //                 end else if (err_off < err_on) begin
-        //                     intrp_lose = 1;
-        //                     no_intrp_wins = no_intrp_wins + 1;
-        //                 end else begin
-        //                     intrp_lose = 0;
-        //                     ties = ties + 1;
-        //                 end
         if (err_on < err_off) begin
             on_win = on_win + 1;
         end else if (err_off < err_on) begin
@@ -160,6 +139,7 @@ module func_reverse_tb;
         end else begin
             tie = tie + 1;
         end
+
         if (o_inf_on !== ref_inf_pipe_intrp[3]) begin
             $error("S%0d_ON FAIL: inf mismatch", test_num);
             errors++;
@@ -175,6 +155,7 @@ module func_reverse_tb;
             $error("S%0d FAIL: got (%0d,:on_win%0d), expected (%0d,%0d)", test_num, o_result_off, o_inf_off, ref_res_pipe[3], ref_inf_pipe[3]);
             errors++;
         end else $display("S%0d PASS: x=%0d result=%0d inf=%0d", test_num, x, ref_res_pipe[3], ref_inf_pipe[3]);
+        $display("S%0d CMP: x=%0d exp=%f off_raw=%0d off_fxp=%f on_raw=%0d on_fxp=%f", test_num, x, exp_fxp, o_result_off, result_fxp_off, o_result_on, result_fxp_on);
 
         // @(posedge clk);
 //         #1;
@@ -219,196 +200,51 @@ module func_reverse_tb;
 //     real    err_off, err_on;
 
     int test_number = 0;
-    longint exp_test;
     longint val_test;
     initial begin
 //         @(posedge clk);
-//         test(0,0);
-//         test(1,1);
-//         test(2,2);
-//         test(3,4);
-//         test(4,8);
-//         test(5,16);
-//         test(6,32);
-//         test(7,64);
-//         test(8,128);
-//         test(9,256);
-//         test(10,517);
-//         test(11,1537);
-//         test(12,2048);
-//         test(13,4096);
-//         test(14,8192);
-//         test(15,16384);
-//         test(16,32768);
-//         test(17,65536);
-//         test(18,131072);
-//         test(19,2147483647);
 //
         for (int i = 0; i < 10; i++) begin
             test_number += 1;
             val_test = i+1;
-            exp_test = real'(1<<FRAC_WIDTH) / (i+1);
-            test(test_number, val_test, exp_test);
+            test(test_number, val_test);
         end
 
         for (int i = 0; i < 10; i++) begin
             test_number += 1;
             val_test = (i+1)*10;
-            exp_test = real'(1<<FRAC_WIDTH) / ((i+1)*10);
-            test(test_number, val_test, exp_test);
+            test(test_number, val_test);
         end
 
         for (int i = 0; i < 10; i++) begin
             test_number += 1;
             val_test = (i+1)*100;
-            exp_test = real'(1<<FRAC_WIDTH) / ((i+1)*100);
-            test(test_number, val_test, exp_test);
+            test(test_number, val_test);
         end
 
         for (int i = 0; i < 65; i++) begin
             test_number += 1;
             val_test = (i+1)*1000;
-            exp_test = real'(1<<FRAC_WIDTH) / ((i+1)*1000);
-            test(test_number, val_test, exp_test);
+            test(test_number, val_test);
         end
 
         for (int i = 0; i < 65; i++) begin
             test_number += 1;
             val_test = ((i+1)*1000)<<FRAC_WIDTH;
-            exp_test = 1.0 / ((i+1)*1000);
-            test(test_number, val_test, exp_test);
+            test(test_number, val_test);
         end
         @(posedge clk);
 
         $display("");
         $display("=========================================");
-        $display("  OFF wins (ближе к exp): %0d", off_win);
-        $display("  ON  wins (ближе к exp): %0d", on_win);
+        $display("  OFF wins: %0d", off_win);
+        $display("  ON  wins: %0d", on_win);
         $display("  Ties:                   %0d", tie);
         $display("=========================================");
         if (errors == 0) $display("ALL TESTS PASSED");
         else             $display("%0d TESTS FAILED", errors);
 
 
-//         for (int i = 0; i < 10; i++) begin
-//             val_test = i+1;
-//             exp_test = real'(1<<FRAC_WIDTH) / (i+1);
-//             test(test_number, val_test, exp_test);
-//         end
-//
-//         for (int i = 0; i < 10; i++) begin
-//             val_test = (i+1)*10;
-//             exp_test = real'(1<<FRAC_WIDTH) / ((i+1)*10);
-//             test(test_number, val_test, exp_test);
-//         end
-//
-//         for (int i = 0; i < 10; i++) begin
-//             val_test = (i+1)*100;
-//             exp_test = real'(1<<FRAC_WIDTH) / ((i+1)*100);
-//             test(test_number, val_test, exp_test);
-//         end
-//
-//         for (int i = 0; i < 65; i++) begin
-//             val_test = (i+1)*1000;
-//             exp_test = real'(1<<FRAC_WIDTH) / ((i+1)*1000);
-//             test(test_number, val_test, exp_test);
-//         end
-//
-//         for (int i = 0; i < 65; i++) begin
-//             val_test = ((i+1)*1000)<<FRAC_WIDTH;
-//             exp_test = 1.0 / ((i+1)*1000);
-//             test(test_number, val_test, exp_test);
-//         end
-
-        // pass_off      = 0;
-        // fail_off      = 0;
-        // pass_on       = 0;
-        // fail_on       = 0;
-        // intrp_wins    = 0;
-        // no_intrp_wins = 0;
-        // ties          = 0;
-        // start         = 0;
-//
-//         @(posedge clk);
-//         @(negedge clk);
-//         start = 1;
-//
-//         repeat (4) @(posedge clk);
-//
-//         for (check_idx = 0; check_idx < NTESTS; check_idx = check_idx + 1) begin
-//             @(posedge clk);
-//             #1;
-//             input_x    = $unsigned(test_val[check_idx]) * (2.0 ** (-FRAC_WIDTH));
-//             actual_off = result_fxp_off;
-//             actual_on  = result_fxp_on;
-//
-//             if (test_exp[check_idx] != 0.0) begin
-//                 err_off = (actual_off > test_exp[check_idx]) ?
-//                            actual_off - test_exp[check_idx] :
-//                            test_exp[check_idx] - actual_off;
-//                 err_on  = (actual_on > test_exp[check_idx]) ?
-//                            actual_on  - test_exp[check_idx] :
-//                            test_exp[check_idx] - actual_on;
-//
-//                 if (err_on < err_off) begin
-//                     intrp_lose = 0;
-//                     intrp_wins = intrp_wins + 1;
-//                 end else if (err_off < err_on) begin
-//                     intrp_lose = 1;
-//                     no_intrp_wins = no_intrp_wins + 1;
-//                 end else begin
-//                     intrp_lose = 0;
-//                     ties = ties + 1;
-//                 end
-//             end
-//
-//             $display("test =%.4d \t x=%f \t expected=%f \t intrp_lose=%.1d", check_idx, input_x, test_exp[check_idx], intrp_lose);
-//
-//             if (test_exp[check_idx] == 0.0) begin
-//                 if (o_inf_off) begin
-//                     $display("  x=%f : OFF=inf    expected=inf    PASS", input_x);
-//                     pass_off = pass_off + 1;
-//                 end else begin
-//                     $display("  x=%f : OFF=%f  expected=inf    FAIL", input_x, actual_off);
-//                     fail_off = fail_off + 1;
-//                 end
-//                 if (o_inf_on) begin
-//                     $display("         ON =inf    expected=inf    PASS");
-//                     pass_on = pass_on + 1;
-//                 end else begin
-//                     $display("         ON =%f  expected=inf    FAIL", actual_on);
-//                     fail_on = fail_on + 1;
-//                 end
-//             end else begin
-//                 if (actual_off > test_exp[check_idx] - 0.05 &&
-//                     actual_off < test_exp[check_idx] + 0.05) begin
-//                     $display("OFF=%f PASS  err_off=%.10f", actual_off, err_off);
-//                     pass_off = pass_off + 1;
-//                 end else begin
-//                     $display("OFF=%f FAIL  err_off=%.10f", actual_off, err_off);
-//                     fail_off = fail_off + 1;
-//                 end
-//                 if (actual_on > test_exp[check_idx] - 0.05 &&
-//                     actual_on < test_exp[check_idx] + 0.05) begin
-//                     $display("ON =%f PASS  err_on =%.10f", actual_on, err_on);
-//                     pass_on = pass_on + 1;
-//                 end else begin
-//                     $display("ON =%f FAIL  err_on =%.10f", actual_on, err_on);
-//                     fail_on = fail_on + 1;
-//                 end
-//             end
-//         end
-//
-//         $display("");
-//         $display("=========================================");
-//         $display("  OFF (no intrp):  PASSED %0d / %0d", pass_off, pass_off + fail_off);
-//         $display("  ON  (intrp):     PASSED %0d / %0d", pass_on,  pass_on  + fail_on);
-//         $display("-----------------------------------------");
-//         $display("  INTRP wins:      %0d / %0d", intrp_wins,    intrp_wins + no_intrp_wins + ties);
-//         $display("  NO_INTRP wins:   %0d / %0d", no_intrp_wins, intrp_wins + no_intrp_wins + ties);
-//         $display("  Ties:            %0d / %0d", ties,          intrp_wins + no_intrp_wins + ties);
-//         $display("=========================================");
-        // $finish;
     end
 
 endmodule
