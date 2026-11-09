@@ -1,9 +1,17 @@
-// #include <stdio.h>
+void linear_intrp(
+    long long i_a0,
+    long long i_a1,
+    long long i_xf,
+    int intrp_width,
+    long long *o_res
+);
 
 void func_reverse(
     int IN_WIDTH,
     int FRAC_WIDTH,
     long long i_x,
+    int USE_INTRP,
+    int INTRP_WIDTH,
     long long *o_result,
     int *o_inf
 )
@@ -15,7 +23,6 @@ void func_reverse(
     }
     *o_inf = 0;
     long long x = i_x & ((1LL << IN_WIDTH)- 1LL);
-
     int msb_pos = 0;
     int i;
     for (i = 0; i < IN_WIDTH; i++){
@@ -35,32 +42,47 @@ void func_reverse(
         norm = x << shift_k;
 
 
-    double mantissa = (double)norm / (double)(1LL << FRAC_WIDTH);
-    double scaled = (1.0 / mantissa) * 65536.0;
-    long long val = (long long)(scaled + 0.5);
+    const int lut_aw = 11;
+    long long addr_comb = 0;
+    long long xfrac = 0;
 
-    val &= (1LL << 18) - 1;
+    for (i = 0; i < lut_aw; i++) {
+        if (msb_pos > 0 && msb_pos - 1 >= i) {
+            long long bit = (x >> (msb_pos - 1 - i)) & 1LL;
+            addr_comb |= (bit << (lut_aw - 1 - i));
+        }
+    }
+
+    for (i = 0; i < INTRP_WIDTH; i++) {
+        if (msb_pos >= lut_aw + 1 + i) {
+            long long bit = (x >> (msb_pos - 1 - lut_aw - i)) & 1LL;
+            xfrac |= (bit << (INTRP_WIDTH - 1 - i));
+        }
+    }
+
+    double x0 = (2048.0 + (double)addr_comb) / 4096.0;
+    double x1 = (2048.0 + (double)addr_comb + 1.0) / 4096.0;
+
+    long long a0 = (long long)(round((1.0 / x0) * 65536.0));
+    a0 &= (1LL << 18) - 1;
+
+    long long a1 = (long long)(round((1.0 / x1) * 65536.0));
+    a1 &= (1LL << 18) - 1;
+
+    long long interp;
+    if (USE_INTRP) {
+        linear_intrp(a0, a1, xfrac, INTRP_WIDTH, &interp);
+    } else {
+        interp = a0;
+    }
 
     long long wide_res;
     if (shift_right)
-        wide_res = val >> shift_k;
+        wide_res = interp >> shift_k;
     else
-        wide_res = val << shift_k;
+        wide_res = interp << shift_k;
 
-    int out_width = IN_WIDTH + 1;
+    int out_width = IN_WIDTH + (USE_INTRP ? INTRP_WIDTH : 0) + 1;
     long long mask_out = (1LL << out_width) - 1LL;
     *o_result = wide_res & mask_out;
 }
-
-// int main(void){
-//     int inwidth = 32;
-//     int fracwidth = 16;
-//     long long i_x = 131072;
-//     // long long i_x = 16384;
-//     long long o_res;
-//     int o_inf;
-//     func_reverse(inwidth, fracwidth, i_x, &o_res, &o_inf);
-//     printf("o_res = %lld\n", o_res);
-//     printf("o_inf = %d\n", o_inf);
-//     return 0;
-// }

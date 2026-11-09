@@ -1,7 +1,7 @@
 transcript on
 vlib work
 
-vlog -sv ../src/func_reverse.sv ../mdl/func_reverse.c
+vlog -sv ../src/func_reverse.sv ../mdl/func_reverse.c ../mdl/linear_intrp.c
 
 vlog -sv ../src/block_ram.sv
 
@@ -17,4 +17,4 @@ view wave
 view structure
 view signals
 
-run 2000ns
+run 9000ns
