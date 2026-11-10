@@ -1,13 +1,13 @@
 transcript on
 vlib work
 
-vlog -sv ../../lib/cmult/src/cmult.sv
-vlog -sv ../../lib/sum/src/sum.sv
-vlog -sv ../../lib/round/src/round.sv
+vlog -sv ../../lib/cmult/src/cmult.sv ../../lib/cmult/mdl/cmult.c
+vlog -sv ../../lib/sum/src/sum.sv ../../lib/sum/mdl/sum.c
+vlog -sv ../../lib/round/src/round.sv ../../lib/round/mdl/round.c
 vlog -sv ../../lib/dline/src/dline.sv
 
 vlog -sv ../src/one_block_s_recover.sv
-vlog -sv ../src/s_recover.sv
+vlog -sv ../src/s_recover.sv ../mdl/s_recover.c
 
 vlog -sv ../tb/s_recover_tb.sv
 
@@ -18,4 +18,4 @@ view wave
 view structure
 view signals
 
-run 1us
+run 300ns
