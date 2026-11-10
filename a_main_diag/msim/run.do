@@ -1,7 +1,7 @@
 transcript on
 vlib work
 
-vlog -sv ../../lib/cmodule/src/cmodule.sv
+vlog -sv ../../lib/cmodule/src/cmodule.sv ../../lib/cmodule/mdl/cmodule.c
 vlog -sv ../../lib/round/src/round.sv ../../lib/round/mdl/round.c
 vlog -sv ../../lib/sum/src/sum.sv ../../lib/sum/mdl/sum.c
 vlog -sv ../../lib/dline/src/dline.sv
