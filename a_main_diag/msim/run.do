@@ -1,12 +1,12 @@
 transcript on
 vlib work
 
-vlog -sv ../../lib/cmodule/src/cmodule.sv
-vlog -sv ../../lib/round/src/round.sv
-vlog -sv ../../lib/sum/src/sum.sv
+vlog -sv ../../lib/cmodule/src/cmodule.sv ../../lib/cmodule/mdl/cmodule.c
+vlog -sv ../../lib/round/src/round.sv ../../lib/round/mdl/round.c
+vlog -sv ../../lib/sum/src/sum.sv ../../lib/sum/mdl/sum.c
 vlog -sv ../../lib/dline/src/dline.sv
 
-vlog -sv ../src/a_main_diag.sv
+vlog -sv ../src/a_main_diag.sv ../mdl/a_main_diag.c
 
 vlog -sv ../tb/a_main_diag_tb.sv
 
@@ -18,4 +18,4 @@ view wave
 view structure
 view signals
 
-run 300ns
+run -all

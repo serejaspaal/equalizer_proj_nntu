@@ -16,9 +16,15 @@ add wave -noupdate -radix decimal /a_main_diag_tb/i_c11
 add wave -noupdate -radix decimal /a_main_diag_tb/i_c22
 add wave -noupdate -radix decimal /a_main_diag_tb/o_a11
 add wave -noupdate -radix decimal /a_main_diag_tb/o_a22
+add wave -noupdate -radix binary /a_main_diag_tb/o_sat_a11
+add wave -noupdate -radix binary /a_main_diag_tb/o_sat_a22
+add wave -noupdate -radix decimal /a_main_diag_tb/expected_a11_pipe
+add wave -noupdate -radix decimal /a_main_diag_tb/expected_a22_pipe
+add wave -noupdate -radix binary /a_main_diag_tb/valid_pipe
+add wave -noupdate -radix decimal /a_main_diag_tb/sent
+add wave -noupdate -radix decimal /a_main_diag_tb/checked
+add wave -noupdate -radix decimal /a_main_diag_tb/errors
 TreeUpdate [SetDefaultTree]
-WaveRestoreCursors {{Cursor 1} {152 ns} 0}
-quietly wave cursor active 1
 configure wave -namecolwidth 239
 configure wave -valuecolwidth 100
 configure wave -justifyvalue left
@@ -33,4 +39,4 @@ configure wave -griddelta 40
 configure wave -timeline 0
 configure wave -timelineunits ns
 update
-WaveRestoreZoom {0 ns} {895 ns}
+WaveRestoreZoom {0 ns} {300 ns}
