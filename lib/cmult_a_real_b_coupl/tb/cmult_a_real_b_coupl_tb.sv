@@ -6,11 +6,11 @@ module cmult_a_real_b_coupl_tb;
     parameter int B_WIDTH = 8;
 
     import "DPI-C" function void cmult_a_real_b_coupl(
-        input int a,
-        input int x1,
-        input int y1,
-        output int out_re,
-        output int out_im
+        input  longint a,
+        input  longint x1,
+        input  longint y1,
+        output longint out_re,
+        output longint out_im
     );
 
     logic clk;
@@ -45,14 +45,14 @@ module cmult_a_real_b_coupl_tb;
     always #5 clk = ~clk;
 
     task automatic test(
-        input int test_num,
-        input int a_signed,
-        input int a_unsigned,
-        input int in_re,
-        input int in_im
+        input int     test_num,
+        input longint a_signed,
+        input longint a_unsigned,
+        input longint in_re,
+        input longint in_im
     );
-        int exp_re = 0;
-        int exp_im = 0;
+        longint exp_re = 0;
+        longint exp_im = 0;
         @(posedge clk);
         a_s = a_signed;
         a_u = a_unsigned;
@@ -117,7 +117,7 @@ module cmult_a_real_b_coupl_tb;
         @(posedge clk);
 
         if (errors == 0) $display("ALL TESTS PASSED");
-        else             $display("%0d TESTS FAILED", errors);
+        else              $display("%0d TESTS FAILED", errors);
     end
 
 endmodule
