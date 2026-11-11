@@ -1,9 +1,9 @@
 `timescale 1ns / 1ps
 
 import "DPI-C" function void cmult_b_coupl(
-    input  int x0, input int y0,
-    input  int x1, input int y1,
-    output int out_re, output int out_im
+    input  longint x0, input longint y0,
+    input  longint x1, input longint y1,
+    output longint out_re, output longint out_im
 );
 
 module cmult_b_coupl_tb;
@@ -41,7 +41,7 @@ module cmult_b_coupl_tb;
             exp_pipe[i] <= exp_pipe[i-1];
     end 
     
-    task automatic check(string name, int ix0, int iy0, int ix1, int iy1);
+    task automatic check(string name, longint ix0, longint iy0, longint ix1, longint iy1);
         int c_re, c_im;
         cmult_b_coupl(ix0, iy0, ix1, iy1, c_re, c_im);
         ref_re = c_re;
