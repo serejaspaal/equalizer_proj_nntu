@@ -1,9 +1,9 @@
 void cmult_a_real_b_coupl(
-    int a,
-    int x1,
-    int y1,
-    int *out_re,
-    int *out_im
+    long long a,
+    long long x1,
+    long long y1,
+    long long *out_re,
+    long long *out_im
 )
 {
     *out_re = a * x1;

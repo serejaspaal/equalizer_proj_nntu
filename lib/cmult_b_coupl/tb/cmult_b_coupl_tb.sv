@@ -42,7 +42,7 @@ module cmult_b_coupl_tb;
     end 
     
     task automatic check(string name, longint ix0, longint iy0, longint ix1, longint iy1);
-        int c_re, c_im;
+        longint c_re, c_im;
         cmult_b_coupl(ix0, iy0, ix1, iy1, c_re, c_im);
         ref_re = c_re;
         ref_im = c_im;
@@ -128,7 +128,7 @@ module cmult_b_coupl_tb;
         
         #20;
         if (errors == 0) $display("ALL TESTS PASSED");
-        else             $display("%0d TESTS FAILED", errors);
+        else              $display("%0d TESTS FAILED", errors);
         $finish;
     end
 
