@@ -98,14 +98,14 @@ module cmult_matrix_on_real_tb;
                      o_w22_re !== out.w22_re[W_WIDTH-1:0]|| o_w22_im !== out.w22_im[W_WIDTH-1:0]) begin
             $error("S%0d_ON FAIL: got \n(%0d,%0d)\n(%0d,%0d)\n(%0d,%0d)\n(%0d,%0d)\nexpected\n(%0d,%0d)\n(%0d,%0d)\n(%0d,%0d)\n(%0d,%0d)", test_num,
                    o_w11_re,o_w11_im, o_w12_re,o_w12_im, o_w21_re,o_w21_im, o_w22_re,o_w22_im,
-                   out.w11_re, out.w11_im, out.w12_re,out.w12_im,
-                   out.w21_re,out.w21_im, out.w22_re,out.w22_im);
+                   out.w11_re[W_WIDTH-1:0], out.w11_im[W_WIDTH-1:0], out.w12_re[W_WIDTH-1:0],out.w12_im[W_WIDTH-1:0],
+                   out.w21_re[W_WIDTH-1:0],out.w21_im[W_WIDTH-1:0], out.w22_re[W_WIDTH-1:0],out.w22_im[W_WIDTH-1:0]);
             errors++;
         end else
             $display("S%0d_ON PASS: got \n(%0d,%0d)\n(%0d,%0d)\n(%0d,%0d)\n(%0d,%0d)\nexpected\n(%0d,%0d)\n(%0d,%0d)\n(%0d,%0d)\n(%0d,%0d)", test_num,
                                o_w11_re,o_w11_im, o_w12_re,o_w12_im, o_w21_re,o_w21_im, o_w22_re,o_w22_im,
-                               out.w11_re,out.w11_im, out.w12_re,out.w12_im,
-                               out.w21_re,out.w21_im, out.w22_re,out.w22_im);
+                               out.w11_re[W_WIDTH-1:0],out.w11_im[W_WIDTH-1:0], out.w12_re[W_WIDTH-1:0],out.w12_im[W_WIDTH-1:0],
+                               out.w21_re[W_WIDTH-1:0],out.w21_im[W_WIDTH-1:0], out.w22_re[W_WIDTH-1:0],out.w22_im[W_WIDTH-1:0]);
 
     endtask
     initial begin
