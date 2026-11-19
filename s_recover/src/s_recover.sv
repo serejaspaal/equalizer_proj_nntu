@@ -1,8 +1,8 @@
 `timescale 1ns / 1ps
 
 module s_recover #(
-    parameter int W_WIDTH = 8,
-    parameter int S_WIDTH = 8,
+    parameter int W_WIDTH = 16,
+    parameter int S_WIDTH = 16,
     parameter int SR_WIDTH = W_WIDTH + S_WIDTH + 2,
     parameter int USE_DSP_VALUE = 1
 )(

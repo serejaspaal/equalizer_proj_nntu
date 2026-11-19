@@ -2,18 +2,18 @@
 
 module s_recover_tb;
 
-    localparam int W_WIDTH = 8;
-    localparam int S_WIDTH = 8;
+    localparam int W_WIDTH = 16;
+    localparam int S_WIDTH = 16;
     localparam int SR_WIDTH = W_WIDTH + S_WIDTH + 2;
     localparam int USE_DSP_VALUE = 1;
     
     localparam int EXP_STAGE = 5;
 
-    localparam longint W_MIN = -128;
-    localparam longint W_MAX = 127;
+    localparam longint W_MIN = -32768;
+    localparam longint W_MAX = 32767;
 
-    localparam longint S_MIN = -128;
-    localparam longint S_MAX = 127;
+    localparam longint S_MIN = -32768;
+    localparam longint S_MAX = 32767;
 
     localparam int NUM_TESTS = 9;
     
@@ -387,7 +387,7 @@ module s_recover_tb;
             0, 0,
             0, 1
         };
-        test_s[1] = '{5, 2, -3, 4};
+        test_s[1] = '{10000, 20000, -15000, 25000};
 
         test_w[2] = '{
             1, 0,
@@ -395,7 +395,7 @@ module s_recover_tb;
             1, 0,
             -1, 0
         };
-        test_s[2] = '{2, 0, 4, 0};
+        test_s[2] = '{30000, 0, 25000, 0};
 
         test_w[3] = '{
              1,  2,
@@ -403,7 +403,7 @@ module s_recover_tb;
              2, -1,
              1,  1
         };
-        test_s[3] = '{3, 1, 2, -1};
+        test_s[3] = '{300, 100, 200, -100};
 
         test_w[4] = '{
             -1, 1,
@@ -411,18 +411,18 @@ module s_recover_tb;
              0, 0,
             -1, 1
         };
-        test_s[4] = '{-2, 3, 1, -2};
+        test_s[4] = '{-2000, 3000, 1000, -2000};
 
         test_w[5] = '{
-            100, 0,
+            10000, 0,
               0, 0,
               0, 0,
-           -100, 0
+           -10000, 0
         };
-        test_s[5] = '{2, 3, 1, 1};
+        test_s[5] = '{20000, 30000, 10000, 10000};
 
         test_w[6] = '{0, 0, 0, 0, 0, 0, 0, 0};
-        test_s[6] = '{7, 3, -4, 5};
+        test_s[6] = '{7000, 3000, -4000, 5000};
 
         test_w[7] = '{
             W_MAX, W_MAX,
